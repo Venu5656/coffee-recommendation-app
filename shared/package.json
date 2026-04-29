@@ -1,0 +1,10 @@
+{
+  "name": "@coffee/shared",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    "./coffeeProfiles": "./coffeeProfiles.js",
+    "./insights": "./insights.js",
+    "./recommendation": "./recommendation.js"
+  }
+}
