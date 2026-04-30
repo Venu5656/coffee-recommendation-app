@@ -1,10 +1,15 @@
-export function HistoryPage({ history }) {
-  const ordered = [...history].reverse();
+export function HistoryPage({ history, user }) {
+  const ordered = user ? history : [...history].reverse();
 
   return (
     <section className="panel">
       <p className="eyebrow">Personalization History</p>
       <h2>Recent selections and feedback</h2>
+      <p className="subtle-note">
+        {user
+          ? "This history is coming from your authenticated database record."
+          : "You are viewing guest history stored only in this browser."}
+      </p>
       {ordered.length ? (
         <div className="history-list">
           {ordered.map((entry, index) => (

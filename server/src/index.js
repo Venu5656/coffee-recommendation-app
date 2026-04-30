@@ -5,6 +5,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import apiRouter from "./routes/api.js";
+import { initializeDatabase } from "./db.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,10 +28,17 @@ if (fs.existsSync(clientDist)) {
 }
 
 app.use((error, _req, res, _next) => {
-  res.status(500).json({
+  const statusCode = error.message?.includes("Invalid email or password") ||
+    error.message?.includes("already exists")
+    ? 400
+    : 500;
+
+  res.status(statusCode).json({
     error: error.message || "Unexpected server error"
   });
 });
+
+await initializeDatabase();
 
 app.listen(port, () => {
   console.log(`Coffee API listening on http://localhost:${port}`);

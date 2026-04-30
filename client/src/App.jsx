@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Layout } from "./components/Layout.jsx";
 import { HomePage } from "./pages/HomePage.jsx";
 import { RecommendationPage } from "./pages/RecommendationPage.jsx";
@@ -6,18 +7,111 @@ import { ChatPage } from "./pages/ChatPage.jsx";
 import { ResultPage } from "./pages/ResultPage.jsx";
 import { HistoryPage } from "./pages/HistoryPage.jsx";
 import { InsightsPage } from "./pages/InsightsPage.jsx";
+import { AuthPage } from "./pages/AuthPage.jsx";
 import { useLocalStorage } from "./hooks/useLocalStorage.js";
+import { apiRequest } from "./lib/api.js";
 
 export default function App() {
-  const [history, setHistory] = useLocalStorage("coffee-history", []);
+  const [guestHistory, setGuestHistory] = useLocalStorage("coffee-history", []);
   const [lastResult, setLastResult] = useLocalStorage("coffee-last-result", null);
+  const [token, setToken] = useLocalStorage("coffee-auth-token", "");
+  const [user, setUser] = useState(null);
+  const [remoteHistory, setRemoteHistory] = useState([]);
+  const [authLoading, setAuthLoading] = useState(false);
+
+  const history = token ? remoteHistory : guestHistory;
+
+  useEffect(() => {
+    if (!token) {
+      setUser(null);
+      setRemoteHistory([]);
+      return;
+    }
+
+    let cancelled = false;
+
+    async function hydrateSession() {
+      setAuthLoading(true);
+
+      try {
+        const [{ user: currentUser }, { history: currentHistory }] = await Promise.all([
+          apiRequest("/api/auth/me", { token }),
+          apiRequest("/api/history", { token })
+        ]);
+
+        if (!cancelled) {
+          setUser(currentUser);
+          setRemoteHistory(currentHistory);
+        }
+      } catch {
+        if (!cancelled) {
+          setToken("");
+          setUser(null);
+          setRemoteHistory([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setAuthLoading(false);
+        }
+      }
+    }
+
+    hydrateSession();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token, setToken]);
 
   function addHistory(entry) {
-    setHistory((current) => [...current, entry]);
+    setGuestHistory((current) => [...current, entry]);
   }
 
-  function addFeedback(feedback, recommendation) {
-    setHistory((current) => [
+  async function refreshHistory() {
+    if (!token) {
+      return;
+    }
+
+    const { history: currentHistory } = await apiRequest("/api/history", { token });
+    setRemoteHistory(currentHistory);
+  }
+
+  async function handleAuthenticate(path, body) {
+    setAuthLoading(true);
+
+    try {
+      const response = await apiRequest(path, {
+        method: "POST",
+        body: JSON.stringify(body)
+      });
+
+      setToken(response.token);
+      setUser(response.user);
+      const { history: currentHistory } = await apiRequest("/api/history", { token: response.token });
+      setRemoteHistory(currentHistory);
+    } finally {
+      setAuthLoading(false);
+    }
+  }
+
+  function handleLogout() {
+    setToken("");
+    setUser(null);
+    setRemoteHistory([]);
+  }
+
+  async function addFeedback(feedback, recommendation) {
+    if (token) {
+      await apiRequest("/api/feedback", {
+        method: "POST",
+        token,
+        body: JSON.stringify({ feedback, recommendation })
+      });
+      await refreshHistory();
+      return;
+    }
+
+    setGuestHistory((current) => [
       ...current,
       {
         type: "feedback",
@@ -30,8 +124,18 @@ export default function App() {
 
   return (
     <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<HomePage />} />
+      <Route element={<Layout user={user} onLogout={handleLogout} />}>
+        <Route path="/" element={<HomePage user={user} />} />
+        <Route
+          path="/account"
+          element={
+            <AuthPage
+              onAuthenticate={handleAuthenticate}
+              authLoading={authLoading}
+              user={user}
+            />
+          }
+        />
         <Route
           path="/recommend"
           element={
@@ -39,18 +143,28 @@ export default function App() {
               history={history}
               setLastResult={setLastResult}
               addHistory={addHistory}
+              token={token}
+              refreshHistory={refreshHistory}
             />
           }
         />
         <Route
           path="/chat"
-          element={<ChatPage history={history} setLastResult={setLastResult} addHistory={addHistory} />}
+          element={
+            <ChatPage
+              history={history}
+              setLastResult={setLastResult}
+              addHistory={addHistory}
+              token={token}
+              refreshHistory={refreshHistory}
+            />
+          }
         />
         <Route
           path="/result"
           element={<ResultPage lastResult={lastResult} addFeedback={addFeedback} />}
         />
-        <Route path="/history" element={<HistoryPage history={history} />} />
+        <Route path="/history" element={<HistoryPage history={history} user={user} />} />
         <Route path="/insights" element={<InsightsPage />} />
       </Route>
     </Routes>

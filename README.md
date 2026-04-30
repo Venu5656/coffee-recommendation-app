@@ -1,6 +1,6 @@
 # Coffee Recommendation System with Data-Driven Insight Integration
 
-This project turns a prior midterm analysis of global coffee consumption into a practical application. It combines a rule-based recommendation engine, an AI chat workflow, local personalization, an exploration layer for variety, a beaker-style ingredient visualization, and a separate "Did You Know?" section that presents the earlier analysis findings without affecting recommendation logic.
+This project turns a prior midterm analysis of global coffee consumption into a practical application. It combines a rule-based recommendation engine, an AI chat workflow, PostgreSQL-backed user accounts and history, an exploration layer for variety, a beaker-style ingredient visualization, and a separate "Did You Know?" section that presents the earlier analysis findings without affecting recommendation logic.
 
 ## How this extends the midterm analysis
 
@@ -12,8 +12,9 @@ The earlier analysis found that coffee consumption is stable in high-income coun
 - Shared coffee profile model across rule-based and chat-based recommendation flows
 - Exploration mode that occasionally diversifies suggestions outside familiar user patterns
 - AI chatbot endpoint that extracts preferences from free text and maps them to the same drink profiles
+- PostgreSQL-backed account system with registration, login, and synced recommendation history
 - Beaker-style composition graph for ingredient percentages
-- Local history and feedback tracking with `localStorage`
+- Guest-mode local history plus authenticated database persistence for real users
 - Separate "Did You Know?" page for prior analytical insights
 
 ## Recommendation logic
@@ -39,6 +40,41 @@ If the user explicitly asks to try something new, or if history shows repetitive
 
 This keeps the chatbot and rule-based recommendation outputs aligned.
 
+## Authentication and persistence
+
+The backend now supports:
+
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/auth/me`
+- `GET /api/history`
+- `POST /api/feedback`
+
+Signed-in users store recommendations and feedback in PostgreSQL. Guests can still browse and test the app without an account, but their history remains browser-local only.
+
+## Database choice
+
+PostgreSQL is the right fit for this phase because it supports concurrent users, durable storage, hosted deployment, and straightforward backup workflows. It is a much stronger production path than relying only on browser storage or JSON files.
+
+For convenience, the server can fall back to a local Unix-socket PostgreSQL connection when `DATABASE_URL` is not set. For normal local development and deployment, set `DATABASE_URL` explicitly.
+
+## Backup strategy
+
+User accounts and recommendation history should now be backed up at the database level.
+
+Example backup:
+
+```bash
+mkdir -p backups
+pg_dump "$DATABASE_URL" > backups/coffee_recommendation_app.sql
+```
+
+Example restore:
+
+```bash
+psql "$DATABASE_URL" < backups/coffee_recommendation_app.sql
+```
+
 ## Beaker visualization
 
 Each coffee profile includes ingredient composition percentages that total 100. The result page renders those percentages as a vertical beaker with stacked ingredient segments for coffee, milk, sugar, foam, water, and chocolate.
@@ -47,7 +83,7 @@ Each coffee profile includes ingredient composition percentages that total 100. 
 
 ```text
 client/   React + Vite frontend
-server/   Express API and chatbot integration
+server/   Express API, PostgreSQL access, and authentication
 shared/   Shared coffee profiles, insights, and recommendation logic
 ```
 
@@ -65,15 +101,17 @@ npm install
 cp .env.example .env
 ```
 
-3. Optional: add an OpenAI key to enable LLM-based extraction:
+3. Configure the environment variables:
 
 ```env
 OPENAI_API_KEY=your_key_here
 OPENAI_MODEL=gpt-4o-mini
 PORT=8787
+DATABASE_URL=postgresql://localhost:5432/coffee_recommendation_app
+JWT_SECRET=replace_this_before_production
 ```
 
-4. Start the frontend and backend together:
+4. Make sure PostgreSQL is available locally, then start the frontend and backend together:
 
 ```bash
 npm run dev

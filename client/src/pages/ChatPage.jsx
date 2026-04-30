@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { apiRequest } from "../lib/api.js";
 
-export function ChatPage({ history, setLastResult, addHistory }) {
+export function ChatPage({ history, setLastResult, addHistory, token, refreshHistory }) {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([
     {
@@ -21,27 +22,31 @@ export function ChatPage({ history, setLastResult, addHistory }) {
     const userMessage = { role: "user", content: input };
     setMessages((current) => [...current, userMessage]);
     setLoading(true);
-
-    const response = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: input, history })
-    });
-
-    const result = await response.json();
-    const payload = { ...result.recommendation, source: "chat", chatReply: result.reply };
-    setMessages((current) => [...current, { role: "assistant", content: result.reply }]);
-    setLatest(payload);
-    setLastResult(payload);
-    addHistory({
-      type: "chat",
-      prompt: input,
-      recommendation: result.recommendation.drink.name,
-      extractedPreferences: result.extractedPreferences,
-      timestamp: new Date().toISOString()
-    });
-    setInput("");
-    setLoading(false);
+    try {
+      const result = await apiRequest("/api/chat", {
+        method: "POST",
+        token,
+        body: JSON.stringify({ message: input, history })
+      });
+      const payload = { ...result.recommendation, source: "chat", chatReply: result.reply };
+      setMessages((current) => [...current, { role: "assistant", content: result.reply }]);
+      setLatest(payload);
+      setLastResult(payload);
+      if (token) {
+        await refreshHistory();
+      } else {
+        addHistory({
+          type: "chat",
+          prompt: input,
+          recommendation: result.recommendation.drink.name,
+          extractedPreferences: result.extractedPreferences,
+          timestamp: new Date().toISOString()
+        });
+      }
+      setInput("");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

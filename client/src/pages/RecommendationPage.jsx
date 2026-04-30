@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiRequest } from "../lib/api.js";
 
 const initialForm = {
   mood: "tired",
@@ -10,40 +11,43 @@ const initialForm = {
   trySomethingNew: false
 };
 
-export function RecommendationPage({ history, setLastResult, addHistory }) {
+export function RecommendationPage({ history, setLastResult, addHistory, token, refreshHistory }) {
   const [form, setForm] = useState(initialForm);
   const [options, setOptions] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("/api/profiles")
-      .then((response) => response.json())
+    apiRequest("/api/profiles")
       .then((data) => setOptions(data.filterOptions));
   }, []);
 
   async function handleSubmit(event) {
     event.preventDefault();
     setLoading(true);
-
-    const response = await fetch("/api/recommend", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ preferences: form, history })
-    });
-
-    const result = await response.json();
-    const payload = { ...result, source: "filters" };
-    setLastResult(payload);
-    addHistory({
-      type: "filter",
-      preferences: form,
-      recommendation: result.drink.name,
-      explorationUsed: result.explorationUsed,
-      timestamp: new Date().toISOString()
-    });
-    navigate("/result");
-    setLoading(false);
+    try {
+      const result = await apiRequest("/api/recommend", {
+        method: "POST",
+        token,
+        body: JSON.stringify({ preferences: form, history })
+      });
+      const payload = { ...result, source: "filters" };
+      setLastResult(payload);
+      if (token) {
+        await refreshHistory();
+      } else {
+        addHistory({
+          type: "filter",
+          preferences: form,
+          recommendation: result.drink.name,
+          explorationUsed: result.explorationUsed,
+          timestamp: new Date().toISOString()
+        });
+      }
+      navigate("/result");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

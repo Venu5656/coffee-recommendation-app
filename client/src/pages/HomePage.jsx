@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export function HomePage() {
+export function HomePage({ user }) {
   return (
     <div className="home-grid">
       <section className="panel feature-panel">
@@ -14,6 +14,7 @@ export function HomePage() {
         <div className="cta-row">
           <Link className="primary-button" to="/recommend">Start with Filters</Link>
           <Link className="secondary-button" to="/chat">Ask the AI Barista</Link>
+          {!user ? <Link className="secondary-button" to="/account">Create Account</Link> : null}
         </div>
       </section>
       <section className="panel">
