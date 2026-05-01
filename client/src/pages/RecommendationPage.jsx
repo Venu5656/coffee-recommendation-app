@@ -8,7 +8,23 @@ const initialForm = {
   time: "morning",
   temperature: "hot",
   effort: "quick",
+  caffeinePreference: "medium",
+  sweetnessPreference: "lightly-sweet",
+  texturePreference: "creamy",
+  drinkStyle: "milky",
   trySomethingNew: false
+};
+
+const fieldLabels = {
+  mood: "Mood",
+  taste: "Taste",
+  time: "Time",
+  temperature: "Temperature",
+  effort: "Effort",
+  caffeinePreference: "Caffeine",
+  sweetnessPreference: "Sweetness",
+  texturePreference: "Texture",
+  drinkStyle: "Drink Style"
 };
 
 export function RecommendationPage({ history, setLastResult, addHistory, token, refreshHistory }) {
@@ -59,12 +75,11 @@ export function RecommendationPage({ history, setLastResult, addHistory, token, 
           {options
             ? Object.entries(options).map(([key, values]) => (
                 <label key={key}>
-                  <span>{key.replace(/s$/, "")}</span>
+                  <span>{fieldLabels[key] || key}</span>
                   <select
-                    value={form[key.replace(/s$/, "")] ?? form[key]}
+                    value={form[key]}
                     onChange={(event) => {
-                      const targetKey = key.replace(/s$/, "");
-                      setForm((current) => ({ ...current, [targetKey]: event.target.value }));
+                      setForm((current) => ({ ...current, [key]: event.target.value }));
                     }}
                   >
                     {values.map((value) => (

@@ -24,6 +24,27 @@ const keywordMap = {
   effort: {
     quick: ["quick", "fast", "simple", "easy"],
     elaborate: ["elaborate", "treat", "special", "fancy"]
+  },
+  caffeinePreference: {
+    low: ["low caffeine", "gentle", "light", "not too strong", "mild"],
+    medium: ["balanced", "moderate", "normal"],
+    high: ["strong", "extra caffeine", "high caffeine", "powerful", "wake me up"]
+  },
+  sweetnessPreference: {
+    "not-sweet": ["not sweet", "unsweetened", "plain", "no sugar"],
+    "lightly-sweet": ["slightly sweet", "lightly sweet", "subtle sweetness"],
+    sweet: ["sweet", "dessert", "sugary", "vanilla", "caramel", "chocolate"]
+  },
+  texturePreference: {
+    light: ["light", "clean", "thin", "crisp"],
+    creamy: ["creamy", "comforting", "smooth", "velvety", "milky"],
+    foamy: ["foamy", "airy", "dry foam"]
+  },
+  drinkStyle: {
+    straight: ["straight", "black coffee", "no milk", "pure coffee"],
+    milky: ["milky", "latte", "with milk", "soft"],
+    refreshing: ["refreshing", "cold", "iced", "summer"],
+    indulgent: ["indulgent", "treat", "dessert", "fancy", "fun"]
   }
 };
 
@@ -39,6 +60,10 @@ function heuristicExtraction(message) {
     time: inferValue(message, "time") || "afternoon",
     temperature: inferValue(message, "temperature") || "hot",
     effort: inferValue(message, "effort") || "quick",
+    caffeinePreference: inferValue(message, "caffeinePreference") || "medium",
+    sweetnessPreference: inferValue(message, "sweetnessPreference") || "lightly-sweet",
+    texturePreference: inferValue(message, "texturePreference") || "creamy",
+    drinkStyle: inferValue(message, "drinkStyle") || "milky",
     trySomethingNew: /new|different|surprise|explore|adventurous/.test(message.toLowerCase())
   };
 }
@@ -57,7 +82,7 @@ async function llmExtraction(message) {
       {
         role: "system",
         content:
-          "Extract coffee recommendation preferences. Return strict JSON with mood, taste, time, temperature, effort, trySomethingNew. Allowed values: mood=tired|relaxed|energetic, taste=bitter|smooth|sweet, time=morning|afternoon|night, temperature=hot|iced, effort=quick|elaborate, trySomethingNew=true|false."
+          "Extract coffee recommendation preferences. Return strict JSON with mood, taste, time, temperature, effort, caffeinePreference, sweetnessPreference, texturePreference, drinkStyle, trySomethingNew. Allowed values: mood=tired|relaxed|energetic, taste=bitter|smooth|sweet, time=morning|afternoon|night, temperature=hot|iced, effort=quick|elaborate, caffeinePreference=low|medium|high, sweetnessPreference=not-sweet|lightly-sweet|sweet, texturePreference=light|creamy|foamy, drinkStyle=straight|milky|refreshing|indulgent, trySomethingNew=true|false."
       },
       {
         role: "user",

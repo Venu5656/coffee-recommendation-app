@@ -5,7 +5,11 @@ const ATTRIBUTE_WEIGHTS = {
   taste: 3,
   time: 2,
   temperature: 2,
-  effort: 2
+  effort: 2,
+  caffeinePreference: 3,
+  sweetnessPreference: 2,
+  texturePreference: 2,
+  drinkStyle: 2
 };
 
 function buildHistorySignals(history = []) {
@@ -60,6 +64,26 @@ function scoreProfile(profile, preferences, historySignals) {
     reasons.push(`matches your ${preferences.effort} effort preference`);
   }
 
+  if (preferences.caffeinePreference && profile.caffeineLevel === preferences.caffeinePreference) {
+    score += ATTRIBUTE_WEIGHTS.caffeinePreference;
+    reasons.push(`lands at your preferred ${preferences.caffeinePreference} caffeine level`);
+  }
+
+  if (preferences.sweetnessPreference && profile.sweetnessLevel === preferences.sweetnessPreference) {
+    score += ATTRIBUTE_WEIGHTS.sweetnessPreference;
+    reasons.push(`matches your ${preferences.sweetnessPreference} sweetness preference`);
+  }
+
+  if (preferences.texturePreference && profile.texture === preferences.texturePreference) {
+    score += ATTRIBUTE_WEIGHTS.texturePreference;
+    reasons.push(`fits the ${preferences.texturePreference} texture you tend to like`);
+  }
+
+  if (preferences.drinkStyle && profile.drinkStyle === preferences.drinkStyle) {
+    score += ATTRIBUTE_WEIGHTS.drinkStyle;
+    reasons.push(`aligns with your ${preferences.drinkStyle} drink style`);
+  }
+
   const likedBoost = historySignals.likes[profile.name] || 0;
   if (likedBoost > 0) {
     score += Math.min(2, likedBoost);
@@ -71,14 +95,17 @@ function scoreProfile(profile, preferences, historySignals) {
 
 function createReasoning(drink, preferences, reasons, explorationUsed) {
   const tasteLine = `Its ${drink.tastes.join(" and ")} profile aligns with what you asked for.`;
-  const caffeineLine = `It delivers a ${drink.caffeineLevel} caffeine level, which suits a ${preferences.mood || "current"} mood.`;
+  const caffeineLine = `It delivers a ${drink.caffeineLevel} caffeine level, which suits a ${preferences.mood || "current"} mood and a ${preferences.caffeinePreference || drink.caffeineLevel} energy preference.`;
   const timeLine = `It is a strong fit for ${preferences.time || "this time of day"} and works as a ${drink.temperature.join(" or ")} option.`;
+  const textureLine = `Its body is ${drink.texture} with a ${drink.drinkStyle} profile, which helps it feel closer to an everyday drinking style rather than a one-off match.`;
   const effortLine = `The preparation is ${drink.effort}, so it stays compatible with the amount of effort you want.`;
   const exploreLine = explorationUsed
     ? "Exploration mode nudged the result slightly outside your most familiar pattern to encourage discovery."
     : "The recommendation stays close to your stated preferences and recent habits.";
 
-  return `${drink.name} was selected because it ${reasons.slice(0, 2).join(" and ")}. ${tasteLine} ${caffeineLine} ${timeLine} ${effortLine} ${exploreLine}`;
+  const topReasons = reasons.length ? reasons.slice(0, 3).join(" and ") : "fits your overall profile";
+
+  return `${drink.name} was selected because it ${topReasons}. ${tasteLine} ${caffeineLine} ${timeLine} ${textureLine} ${effortLine} ${exploreLine}`;
 }
 
 export function recommendCoffee(preferences, history = [], profiles = coffeeProfiles) {
@@ -120,6 +147,9 @@ export function recommendCoffee(preferences, history = [], profiles = coffeeProf
     reasonDetails: {
       tasteMatch: selected.profile.tastes,
       caffeineLevel: selected.profile.caffeineLevel,
+      sweetnessLevel: selected.profile.sweetnessLevel,
+      texture: selected.profile.texture,
+      drinkStyle: selected.profile.drinkStyle,
       timeSuitability: selected.profile.times,
       effortCompatibility: selected.profile.effort
     },
