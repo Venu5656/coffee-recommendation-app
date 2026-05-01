@@ -86,7 +86,8 @@ textarea {
 .page-shell,
 .page-grid,
 .home-grid,
-.result-layout {
+.result-layout,
+.insights-layout {
   display: grid;
   gap: 20px;
 }
@@ -264,6 +265,356 @@ textarea {
   grid-template-columns: 1.35fr 0.9fr;
 }
 
+.insights-hero {
+  overflow: hidden;
+  position: relative;
+  background:
+    radial-gradient(circle at right top, rgba(214, 162, 96, 0.25), transparent 28%),
+    linear-gradient(135deg, rgba(255, 248, 236, 0.94), rgba(235, 216, 186, 0.92));
+}
+
+.dashboard-passport {
+  background:
+    radial-gradient(circle at 85% 15%, rgba(105, 62, 32, 0.18), transparent 24%),
+    linear-gradient(135deg, rgba(255, 248, 236, 0.95), rgba(222, 193, 153, 0.92));
+}
+
+.passport-badge {
+  min-width: 180px;
+  padding: 16px 18px;
+  border-radius: 24px;
+  background: rgba(92, 59, 34, 0.9);
+  color: #fff6ea;
+  display: grid;
+  gap: 8px;
+  align-self: start;
+}
+
+.passport-badge span {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(255, 246, 234, 0.72);
+}
+
+.dashboard-main-grid {
+  align-items: start;
+}
+
+.dashboard-profile-grid,
+.dashboard-drink-list {
+  display: grid;
+  gap: 14px;
+}
+
+.dashboard-drink-gallery {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.dashboard-profile-grid {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.profile-pill-card,
+.dashboard-drink-card {
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(255, 251, 244, 0.78);
+  border: 1px solid rgba(92, 59, 34, 0.08);
+}
+
+.drink-visual-card {
+  padding: 14px;
+  border-radius: 24px;
+  background: rgba(255, 251, 244, 0.82);
+  border: 1px solid rgba(92, 59, 34, 0.08);
+  box-shadow: 0 14px 34px rgba(92, 59, 34, 0.08);
+  display: grid;
+  gap: 12px;
+}
+
+.drink-visual-stage {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.drink-visual-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.drink-visual-label {
+  fill: #5b3b23;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.drink-visual-meta strong {
+  display: block;
+  font-size: 1rem;
+}
+
+.drink-visual-meta span {
+  display: block;
+  color: #7b5636;
+  font-size: 0.82rem;
+  margin-top: 4px;
+}
+
+.profile-pill-card span,
+.dashboard-drink-card span {
+  display: block;
+  color: #7b5636;
+  font-size: 0.82rem;
+}
+
+.profile-pill-card strong,
+.dashboard-drink-card strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 1.2rem;
+}
+
+.exploration-meter {
+  display: grid;
+  gap: 20px;
+}
+
+.exploration-track {
+  height: 22px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: linear-gradient(90deg, rgba(92, 59, 34, 0.14), rgba(214, 161, 94, 0.2));
+}
+
+.exploration-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #8f552b, #d6a15e);
+}
+
+.exploration-stats {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.insight-metric-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-top: 18px;
+}
+
+.insight-metric-card,
+.story-card,
+.timeline-card,
+.scatter-readout,
+.bar-row {
+  background: rgba(255, 251, 244, 0.72);
+  border: 1px solid rgba(92, 59, 34, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.38);
+}
+
+.insight-metric-card {
+  padding: 16px;
+  border-radius: 22px;
+}
+
+.insight-metric-card span,
+.timeline-era {
+  display: block;
+  color: #7b5636;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.insight-metric-card strong {
+  display: block;
+  font-size: 1.6rem;
+  margin: 8px 0 6px;
+}
+
+.insight-metric-card p {
+  margin: 0;
+}
+
+.chart-tabs,
+.chart-legend-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.legend-chip,
+.bar-row {
+  border: none;
+  cursor: pointer;
+  transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.legend-chip {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(239, 225, 201, 0.75);
+  color: #54331f;
+}
+
+.legend-chip.active {
+  background: #5c3b22;
+  color: #fff6ea;
+  box-shadow: 0 10px 22px rgba(92, 59, 34, 0.18);
+}
+
+.insight-graph-shell {
+  display: grid;
+  gap: 16px;
+}
+
+.insight-svg {
+  width: 100%;
+  height: auto;
+  min-height: 260px;
+}
+
+.chart-surface {
+  fill: rgba(255, 250, 241, 0.78);
+  stroke: rgba(92, 59, 34, 0.08);
+}
+
+.chart-grid-line {
+  stroke: rgba(92, 59, 34, 0.14);
+  stroke-dasharray: 5 8;
+}
+
+.chart-grid-line.strong {
+  stroke-dasharray: none;
+  stroke: rgba(92, 59, 34, 0.28);
+}
+
+.chart-axis-label {
+  fill: #734d30;
+  font-size: 12px;
+}
+
+.chart-axis-vertical {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(-90deg);
+}
+
+.trend-line {
+  stroke: rgba(92, 59, 34, 0.32);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.scatter-point {
+  fill: #d6a15e;
+  opacity: 0.8;
+}
+
+.scatter-point.active {
+  fill: #5c3b22;
+  opacity: 1;
+}
+
+.scatter-readout {
+  padding: 16px;
+  border-radius: 20px;
+  display: grid;
+  gap: 4px;
+}
+
+.scatter-readout p {
+  margin: 6px 0 0;
+}
+
+.bar-chart {
+  display: grid;
+  gap: 14px;
+}
+
+.bar-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(120px, 180px) 1fr 56px;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: rgba(255, 250, 241, 0.72);
+  text-align: left;
+}
+
+.bar-row.active,
+.legend-chip:hover,
+.bar-row:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(92, 59, 34, 0.12);
+}
+
+.bar-label {
+  font-weight: 600;
+}
+
+.bar-track {
+  height: 14px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(92, 59, 34, 0.08);
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.timeline {
+  display: grid;
+  gap: 14px;
+}
+
+.timeline-card {
+  position: relative;
+  padding: 18px 18px 18px 24px;
+  border-radius: 22px;
+}
+
+.timeline-card::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 18px;
+  bottom: 18px;
+  width: 4px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #5c3b22, #d39a56);
+}
+
+.timeline-card strong,
+.story-card h3 {
+  display: block;
+  margin: 8px 0 6px;
+}
+
+.timeline-card small {
+  color: #8a6447;
+}
+
+.story-card {
+  padding: 18px;
+}
+
+.insight-footnote {
+  background:
+    linear-gradient(135deg, rgba(255, 248, 236, 0.88), rgba(226, 205, 172, 0.8));
+}
+
 .mode-switch {
   display: flex;
   gap: 10px;
@@ -310,7 +661,8 @@ textarea {
   }
 
   .chat-layout,
-  .beaker-card {
+  .beaker-card,
+  .bar-row {
     grid-template-columns: 1fr;
   }
 

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { coffeeProfiles, filterOptions } from "@coffee/shared/coffeeProfiles";
-import { didYouKnowInsights } from "@coffee/shared/insights";
+import { deriveDashboardData } from "@coffee/shared/dashboard";
+import { didYouKnowInsights, insightsDashboard } from "@coffee/shared/insights";
 import { recommendCoffee } from "@coffee/shared/recommendation";
 import { getChatRecommendation } from "../services/chatService.js";
 import { loginUser, registerUser } from "../services/authService.js";
@@ -56,13 +57,23 @@ router.get("/profiles", (_req, res) => {
 });
 
 router.get("/insights", (_req, res) => {
-  res.json({ insights: didYouKnowInsights });
+  res.json({ insights: didYouKnowInsights, dashboard: insightsDashboard });
 });
 
 router.get("/history", requireAuth, async (req, res, next) => {
   try {
     const history = await listUserEvents(req.user.id);
     res.json({ history });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/dashboard", requireAuth, async (req, res, next) => {
+  try {
+    const history = await listUserEvents(req.user.id, 200);
+    const dashboard = deriveDashboardData(history, req.user.name);
+    res.json({ dashboard });
   } catch (error) {
     next(error);
   }

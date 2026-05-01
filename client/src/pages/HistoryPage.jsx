@@ -7,8 +7,8 @@ export function HistoryPage({ history, user }) {
       <h2>Recent selections and feedback</h2>
       <p className="subtle-note">
         {user
-          ? "This history is coming from your authenticated database record."
-          : "You are viewing guest history stored only in this browser."}
+          ? "This is the raw event stream behind your dashboard and personalized recommendations."
+          : "You are viewing guest history stored only in this browser. The dashboard uses this local data too."}
       </p>
       {ordered.length ? (
         <div className="history-list">

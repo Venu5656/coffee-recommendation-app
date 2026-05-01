@@ -4,6 +4,7 @@
   "type": "module",
   "exports": {
     "./coffeeProfiles": "./coffeeProfiles.js",
+    "./dashboard": "./dashboard.js",
     "./insights": "./insights.js",
     "./recommendation": "./recommendation.js"
   }
