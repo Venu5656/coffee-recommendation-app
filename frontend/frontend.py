@@ -767,8 +767,9 @@ st.markdown(
 nav = st.columns([1.75, 1.05, 1.26, 1.18, 1.08, 1.08])
 with nav[0]:
     user_name = st.session_state.get("auth_user", {}).get("name", "Coffee Lover")
+    greeting = f'<p class="nav-user">Hi, {escape(str(user_name))}</p>' if page == "home" else ""
     st.markdown(
-        f'<p class="nav-brand">Coffee Companion</p><p class="nav-user">Hi, {escape(str(user_name))}</p>',
+        f'<p class="nav-brand">Coffee<br>Companion</p>{greeting}',
         unsafe_allow_html=True,
     )
 with nav[1]:

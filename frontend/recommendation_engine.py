@@ -14,7 +14,7 @@ from history import HistoryTracker
 # ── Asset loaders ─────────────────────────────────────────────────────────────
 
 def _img_url(filename: str) -> str:
-    path = Path(__file__).parent.parent / "images" / filename
+    path = Path(__file__).parent / "static" / filename
     if not path.exists():
         return ""
     ext  = filename.rsplit(".", 1)[-1]
@@ -24,7 +24,7 @@ def _img_url(filename: str) -> str:
 
 
 def _img_src(filename: str) -> str:
-    path = Path(__file__).parent.parent / "images" / filename
+    path = Path(__file__).parent / "static" / filename
     if not path.exists():
         return ""
     ext  = filename.rsplit(".", 1)[-1]
@@ -84,119 +84,14 @@ _CAFE_TIPS = {
 }
 
 _BREW_STEPS = {
-    "French Press": [
-        "Dose: use 30g coarse-ground coffee with 450ml water for a full, heavy-bodied cup.",
-        "Heat: bring water to 93-96 C, then let it sit for 20-30 seconds after boiling.",
-        "Bloom: add just enough water to wet all grounds, stir gently, and wait 30 seconds.",
-        "Brew: pour in the remaining water, place the lid on top, and steep for 4 minutes.",
-        "Break crust: gently stir the floating crust, skim excess foam if you want a cleaner cup.",
-        "Press: push the plunger down slowly with steady pressure, stopping before compacting the bed.",
-        "Serve: pour everything out immediately so the coffee does not keep extracting in the press.",
-    ],
-    "Pour-Over": [
-        "Dose: start with 20g medium-ground coffee and 300ml water for a balanced 1:15 ratio.",
-        "Rinse: place the paper filter in the dripper, rinse with hot water, then discard that water.",
-        "Bloom: pour 40g water over the grounds and wait 30-40 seconds for trapped gas to escape.",
-        "First pour: add water in slow circles until the scale reaches about 150g.",
-        "Second pour: continue in controlled circles up to 240g, keeping the coffee bed evenly wet.",
-        "Final pour: finish at 300g and let the drawdown complete; aim for 2:45-3:45 total time.",
-        "Adjust: if it tastes bitter, grind coarser next time; if sour or thin, grind slightly finer.",
-    ],
-    "Aeropress": [
-        "Dose: use 15g medium-fine coffee and 200ml water for a clean, concentrated cup.",
-        "Prep: insert a paper filter, rinse it, attach the cap, and place the brewer over a sturdy mug.",
-        "Pour: add coffee, start a timer, and pour water at 88-92 C up to the 200ml mark.",
-        "Stir: stir for 8-10 seconds so all grounds are fully saturated.",
-        "Steep: let it sit until 1:15 for a bright cup or 1:45 for more body.",
-        "Press: press slowly for 20-30 seconds, stopping when you hear the first hiss.",
-        "Finish: drink as-is, or dilute with hot water for an Americano-style cup.",
-    ],
-    "Moka Pot Espresso": [
-        "Dose: fill the basket with fine coffee, level it with a finger, and do not tamp.",
-        "Water: fill the bottom chamber with hot water up to just below the pressure valve.",
-        "Assemble: screw the pot together carefully using a towel, because the base will be hot.",
-        "Heat: place on low-medium heat with the lid open so you can watch the flow.",
-        "Extract: when coffee flows honey-slow and golden brown, keep the heat gentle.",
-        "Stop: remove from heat as soon as it turns pale or starts gurgling loudly.",
-        "Cool: run the base under cool water for a few seconds to stop extraction, then serve.",
-    ],
-    "Drip Coffee": [
-        "Dose: use about 60g medium-ground coffee per liter of water, or 1 tablespoon per 90ml.",
-        "Filter: rinse the paper filter if your machine allows it to reduce papery taste.",
-        "Water: use filtered water if possible; old or hard water makes the brew taste flat.",
-        "Load: add grounds evenly into the basket and gently shake to level the bed.",
-        "Brew: start the machine and let it complete the full cycle without removing the carafe early.",
-        "Serve: swirl the carafe once before pouring because the first drips are stronger than the last.",
-        "Protect flavor: move coffee to a thermal carafe if you are not drinking it within 15 minutes.",
-    ],
-    "Chemex": [
-        "Dose: use 30g medium-coarse coffee with 450ml water for a clean 1:15 brew.",
-        "Rinse: unfold the thick Chemex filter with three layers toward the spout and rinse thoroughly.",
-        "Bloom: add 60g water, saturate all grounds, and wait 40-45 seconds.",
-        "Main pour: pour slowly in spirals up to 250g, avoiding the paper walls.",
-        "Pulse: continue with 2-3 smaller pours until you reach 450g total water.",
-        "Drawdown: target 3:45-4:45 total brew time; the bed should finish mostly flat.",
-        "Serve: remove the filter, swirl the Chemex, and pour while the aromatics are fresh.",
-    ],
-    "Cold Brew (DIY)": [
-        "Dose: combine 100g coarse-ground coffee with 400ml cold filtered water for concentrate.",
-        "Mix: stir until every dry pocket is gone, then press floating grounds under the surface.",
-        "Steep: cover and refrigerate for 12-18 hours; longer steeping gives deeper chocolate notes.",
-        "Strain: pour through a fine mesh sieve, then through a paper filter for a cleaner texture.",
-        "Dilute: serve 1 part concentrate with 1 part water or milk over plenty of ice.",
-        "Store: keep concentrate refrigerated in a sealed jar for up to 5-7 days.",
-        "Tune: if it tastes harsh, shorten steeping next time; if weak, use less dilution.",
-    ],
-    "Iced Coffee": [
-        "Dose: brew double strength using 30g medium-ground coffee with 240ml hot water.",
-        "Chill setup: fill a heat-safe glass or carafe with 180-220g ice before brewing.",
-        "Brew: pour hot coffee directly over the ice so it chills fast without tasting stale.",
-        "Balance: stir until the outside of the glass feels cold and some ice remains.",
-        "Serve: add fresh ice to a new glass, then pour the chilled coffee over it.",
-        "Finish: add milk, cream, or syrup after chilling so the flavor stays clean.",
-        "Adjust: if watery, brew stronger next time; if sharp, add a small splash of milk.",
-    ],
-    "Cafe au Lait": [
-        "Dose: brew a strong coffee base using 24-28g medium-ground coffee with 300ml water.",
-        "Brew: use your chosen home method, aiming for a fuller cup than usual so the milk does not flatten the flavor.",
-        "Warm milk: heat 180-220ml milk until steaming but not boiling; target about 60-65 C.",
-        "Texture: whisk or froth the warm milk lightly until it looks glossy with small bubbles.",
-        "Combine: pour equal parts brewed coffee and warm milk into a preheated mug.",
-        "Balance: taste before sweetening; add a small amount of sugar or syrup only if the coffee tastes sharp.",
-        "Serve: drink while the milk is still silky and the coffee aroma is fresh.",
-    ],
-    "Café au Lait": [
-        "Dose: brew a strong coffee base using 24-28g medium-ground coffee with 300ml water.",
-        "Brew: use your chosen home method, aiming for a fuller cup than usual so the milk does not flatten the flavor.",
-        "Warm milk: heat 180-220ml milk until steaming but not boiling; target about 60-65 C.",
-        "Texture: whisk or froth the warm milk lightly until it looks glossy with small bubbles.",
-        "Combine: pour equal parts brewed coffee and warm milk into a preheated mug.",
-        "Balance: taste before sweetening; add a small amount of sugar or syrup only if the coffee tastes sharp.",
-        "Serve: drink while the milk is still silky and the coffee aroma is fresh.",
-    ],
-    "Latte": [
-        "Brew: make a concentrated coffee base with a moka pot, Aeropress, or very strong drip coffee.",
-        "Dose: use about 18-20g coffee with 90-120ml water so the coffee stays present under the milk.",
-        "Steam substitute: warm 180-220ml milk, then shake in a sealed jar or whisk until silky and lightly foamed.",
-        "Pour: add the coffee base first, then slowly pour the milk so the cup fills in smooth layers.",
-        "Finish: spoon a thin cap of foam on top for a softer café-style texture.",
-        "Taste: if it feels too milky, reduce milk next time or brew the coffee base stronger.",
-    ],
-    "Oat Latte": [
-        "Brew: make a concentrated coffee base with a moka pot, Aeropress, or strong pour-over.",
-        "Choose milk: use barista-style oat milk if available because it foams more smoothly.",
-        "Warm: heat 180-220ml oat milk gently and stop before it boils, which can make it taste grainy.",
-        "Foam: whisk or shake until glossy, then let large bubbles settle for 10 seconds.",
-        "Combine: pour the coffee base into the mug, then add oat milk slowly to preserve the layers.",
-        "Finish: add cinnamon or a tiny pinch of salt if you want a rounder, nuttier finish.",
-    ],
-    "Americano": [
-        "Brew: make a concentrated coffee base with a moka pot or Aeropress.",
-        "Heat water: prepare 180-220ml hot water at about 90-94 C.",
-        "Pour: add hot water to the mug first, then pour the coffee concentrate over it.",
-        "Taste: adjust strength by adding more water in small splashes instead of diluting all at once.",
-        "Serve: drink while hot for a clean, long cup with a softer espresso edge.",
-    ],
+    "French Press":      ["Coarse grind · 30g : 450ml water", "Heat water to 93°C (just off boil)", "Pour all at once, stir gently", "Steep 4 minutes with lid on", "Press slowly · serve immediately"],
+    "Pour-Over":         ["Medium grind · 1:15 ratio", "Pre-wet filter, discard water", "Bloom 30s with 2× coffee weight in water", "Pour in slow circles every 30–45s", "Total brew time: 3–4 minutes"],
+    "Aeropress":         ["Medium-fine grind · 15g : 200ml", "Add grounds, pour at 90°C", "Stir 10s, steep for 1 minute", "Press firmly in 20–30 seconds", "Dilute with water or milk to taste"],
+    "Moka Pot Espresso": ["Fine grind · fill basket level (no tamp)", "Fill base to below the pressure valve", "Assemble and heat on low-medium", "Remove at first gurgling sound", "Pour immediately, enjoy concentrated"],
+    "Drip Coffee":       ["Medium grind · 1:15 ratio", "Pre-wet the paper filter", "Add coffee and press start", "Total brew: 5–7 minutes", "Serve fresh — don't let it sit on the warmer"],
+    "Chemex":            ["Medium-coarse grind · 1:15 ratio", "Pre-wet thick filter, discard water", "Bloom 45s with 2× coffee weight", "Pour in slow circles every 45s", "Total: ~4 minutes for a clear, clean cup"],
+    "Cold Brew (DIY)":   ["Coarse grind · 1:4 ratio (100g : 400ml)", "Combine in jar, stir gently", "Cover and refrigerate", "Steep 12–18 hours", "Strain through fine mesh or paper filter"],
+    "Iced Coffee":       ["Medium grind · brew at 1:8 ratio (double strength)", "Fill glass with ice", "Pour hot coffee directly over ice", "Add milk or cream to taste", "Drink immediately for best flavour"],
 }
 
 _METHOD_TO_DRINK = {
@@ -208,19 +103,6 @@ _METHOD_TO_DRINK = {
     "moka-pot":     "Moka Pot Espresso",
     "cold-brew":    "Cold Brew (DIY)",
     "iced-coffee":  "Iced Coffee",
-}
-
-_HOME_STEP_ALIASES = {
-    "cafe au lait": "Cafe au Lait",
-    "café au lait": "Café au Lait",
-    "latte": "Latte",
-    "oat latte": "Oat Latte",
-    "americano": "Americano",
-    "cold brew": "Cold Brew (DIY)",
-    "cold brew (diy)": "Cold Brew (DIY)",
-    "iced coffee": "Iced Coffee",
-    "iced latte": "Iced Coffee",
-    "iced americano": "Iced Coffee",
 }
 
 # Cup layers list: (hex_color, label, flex_weight) — bottom → top
@@ -265,19 +147,6 @@ _BASE_REQUIRED_FIELDS = [
     "texture_preference",
     "drink_style",
 ]
-
-_FILTER_META = {
-    "mood": ("01", "Energy signal"),
-    "taste": ("02", "Flavor lane"),
-    "time_of_day": ("03", "Daily rhythm"),
-    "drink_style": ("04", "Cup personality"),
-    "brew_method": ("05", "Brew ritual"),
-    "temperature": ("05", "Serve style"),
-    "effort": ("06", "Order speed"),
-    "caffeine": ("07", "Buzz level"),
-    "sweetness_preference": ("08", "Sweet finish"),
-    "texture_preference": ("09", "Mouthfeel"),
-}
 
 _COMPOSITION_COLORS = {
     "coffee": "#6E2F19",
@@ -354,36 +223,6 @@ def _score_ring(score: int) -> str:
     </div>"""
 
 
-def _animated_cup_html(is_iced: bool) -> str:
-    if is_iced:
-        return """
-        <div class="res-cup-art">
-          <div class="rca-glass-wrap">
-            <div class="rca-glass">
-              <div class="rca-liquid rca-liquid--iced"></div>
-              <div class="rca-ice rca-ice1"></div>
-              <div class="rca-ice rca-ice2"></div>
-              <div class="rca-shine"></div>
-            </div>
-            <div class="rca-straw"></div>
-            <div class="rca-glass-base"></div>
-          </div>
-        </div>"""
-    return """
-    <div class="res-cup-art">
-      <div class="bca-steam">
-        <div class="bca-s bca-s1"></div>
-        <div class="bca-s bca-s2"></div>
-        <div class="bca-s bca-s3"></div>
-      </div>
-      <div class="bca-cup">
-        <div class="bca-liquid"></div>
-        <div class="bca-handle"></div>
-      </div>
-      <div class="bca-saucer"></div>
-    </div>"""
-
-
 def _cup_html(drink: str) -> str:
     layers = _LAYERS.get(drink, [("#2A1208","Coffee",4)])
     is_iced = drink in _ICED
@@ -416,7 +255,7 @@ def _cup_html(drink: str) -> str:
     </div>"""
 
 
-def _composition_cup_html(composition: dict, is_iced: bool, compact: bool = False) -> str:
+def _composition_cup_html(composition: dict, is_iced: bool) -> str:
     composition = composition or {}
     percent_map = {
         "coffee_percent": "coffee",
@@ -457,6 +296,7 @@ def _composition_cup_html(composition: dict, is_iced: bool, compact: bool = Fals
         return ""
 
     stops = []
+    label_blocks = []
     cursor = 0.0
     for name, value in segments:
         pct = value / total * 100
@@ -464,36 +304,25 @@ def _composition_cup_html(composition: dict, is_iced: bool, compact: bool = Fals
         cursor += pct
         color = _COMPOSITION_FILL_COLORS.get(name, _COMPOSITION_COLORS.get(name, "#8B6B4A"))
         stops.append(f"{color} {start:.2f}% {cursor:.2f}%")
+        label_blocks.append(
+            f'<span class="cup-composition-label" style="bottom:{start:.2f}%;height:{pct:.2f}%;">'
+            f'{_format_choice(name)} {pct:.0f}%</span>'
+        )
     fill_gradient = f"linear-gradient(to top, {', '.join(stops)})"
+    labels_html = "".join(label_blocks)
 
-    if compact:
-        labels_html = ""
-        layers_html = ""
-        legend_html = ""
-    else:
-        label_blocks = []
-        cursor = 0.0
-        for name, value in segments:
-            pct = value / total * 100
-            label_y = min(92.0, max(8.0, cursor + pct / 2))
-            label_blocks.append(
-                f'<span class="cup-composition-label" style="bottom:{label_y:.2f}%;">'
-                f'{_format_choice(name)} {pct:.0f}%</span>'
-            )
-            cursor += pct
-        labels_html = "".join(label_blocks)
-        layers_html = "".join(
-            f'<div class="cup-layer" style="--lbg:{_COMPOSITION_COLORS.get(name, "#8B6B4A")};'
-            f'--lf:{max(1, value)};--ld:{i*0.12:.2f}s;">'
-            f'<span class="cup-lbl">{_format_choice(name)} {value / total * 100:.0f}%</span></div>'
-            for i, (name, value) in enumerate(segments)
-        )
-        legend_html = "".join(
-            f'<div class="composition-legend-item">'
-            f'<span style="background:{_COMPOSITION_COLORS.get(name, "#8B6B4A")}"></span>'
-            f'<b>{_format_choice(name)}</b><em>{value / total * 100:.0f}%</em></div>'
-            for name, value in segments
-        )
+    layers_html = "".join(
+        f'<div class="cup-layer" style="--lbg:{_COMPOSITION_COLORS.get(name, "#8B6B4A")};'
+        f'--lf:{max(1, value)};--ld:{i*0.12:.2f}s;">'
+        f'<span class="cup-lbl">{_format_choice(name)} {value / total * 100:.0f}%</span></div>'
+        for i, (name, value) in enumerate(segments)
+    )
+    legend_html = "".join(
+        f'<div class="composition-legend-item">'
+        f'<span style="background:{_COMPOSITION_COLORS.get(name, "#8B6B4A")}"></span>'
+        f'<b>{_format_choice(name)}</b><em>{value / total * 100:.0f}%</em></div>'
+        for name, value in segments
+    )
 
     if is_iced:
         cup = f"""<div class="cup-viz cup-glass">
@@ -523,8 +352,6 @@ def _composition_cup_html(composition: dict, is_iced: bool, compact: bool = Fals
           <div class="cup-mug-saucer"></div>
         </div>"""
 
-    if compact:
-        return cup
     return f'<div class="composition-wrap">{cup}<div class="composition-legend">{legend_html}</div></div>'
 
 
@@ -533,19 +360,7 @@ def _format_choice(value: str) -> str:
 
 
 def _chips(label: str, key: str, options: list[str]) -> None:
-    num, note = _FILTER_META.get(key, ("", ""))
-    st.markdown(
-        f"""
-        <div class="rec-filter-head">
-          <span>{num}</span>
-          <div>
-            <p class="rec-chip-label">{label}</p>
-            <small>{note}</small>
-          </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    st.markdown(f'<p class="rec-chip-label">{label}</p>', unsafe_allow_html=True)
     st.radio(
         label,
         options,
@@ -647,7 +462,7 @@ def _show_mode_select() -> None:
             <div class="mc-icon-wrap">{home_icon}</div>
             <div class="mc-body">
               <h2 class="mc-title">Homebrew</h2>
-              <p class="mc-desc">Slow down and craft something beautiful — artisan brewing in your kitchen</p>
+              <p class="mc-desc">Slow down and craft something beautiful. Artisan brewing in your kitchen</p>
               <div class="mc-tags">
                 <span>French Press</span><span>Pour-Over</span><span>Aeropress</span><span>Chemex</span>
               </div>
@@ -673,24 +488,13 @@ def _show_result(result: dict, payload: dict, is_home: bool) -> None:
     cup_html = _composition_cup_html(composition, temp == "iced") or _cup_html(drink)
 
     if is_home:
-        method_drink = _METHOD_TO_DRINK.get(str(payload.get("brew_method", "")))
-        step_key = (
-            drink
-            if drink in _BREW_STEPS
-            else _HOME_STEP_ALIASES.get(str(drink).strip().lower())
-            or method_drink
-        )
-        steps = _BREW_STEPS.get(step_key or "", _BREW_STEPS["Drip Coffee"])
+        steps   = _BREW_STEPS.get(drink, ["Brew and enjoy!"])
         steps_h = "".join(
             f'<li class="res-step" style="--d:{0.1 + i * 0.1:.2f}s">'
             f'<span class="res-step-n">{i + 1}</span><span>{s}</span></li>'
             for i, s in enumerate(steps)
         )
-        detail = (
-            '<div class="res-detail-label">DETAILED BREW GUIDE</div>'
-            f'<ul class="res-steps home-brew-steps">{steps_h}</ul>'
-            '<div class="home-brew-note">Tip: keep the ratio, grind, water temperature, and timing consistent once you like the taste.</div>'
-        )
+        detail = f'<div class="res-detail-label">PREPARATION</div><ul class="res-steps">{steps_h}</ul>'
     else:
       detail = (
         '<div class="res-detail-label">HOW TO ORDER</div>'
@@ -909,7 +713,6 @@ def render_recommendation_page(client: CoffeeBackendClient) -> None:
             "texture_preference":     st.session_state["texture_preference"],
             "drink_style":            st.session_state["drink_style"],
             "try_something_new":      st.session_state.get("try_something_new", False),
-            "brew_method":            st.session_state.get("brew_method", ""),
         }
         with st.spinner("Brewing your recommendation..."):
             result = client.get_recommendation(payload)
