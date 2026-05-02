@@ -6,6 +6,7 @@
     "./coffeeProfiles": "./coffeeProfiles.js",
     "./dashboard": "./dashboard.js",
     "./insights": "./insights.js",
+    "./personalization": "./personalization.js",
     "./recommendation": "./recommendation.js"
   }
 }

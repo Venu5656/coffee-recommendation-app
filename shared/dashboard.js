@@ -1,6 +1,4 @@
-import { coffeeProfiles } from "./coffeeProfiles.js";
-
-const profileByName = Object.fromEntries(coffeeProfiles.map((profile) => [profile.name, profile]));
+import { normalizeHistory, buildFeedbackMap, deriveAdaptiveProfile, scoreHistoricalEvent } from "./personalization.js";
 
 function countBy(items) {
   return items.reduce((accumulator, item) => {
@@ -25,53 +23,12 @@ function topEntries(map, limit = 3) {
     .map(([label, count]) => ({ label, count }));
 }
 
-function normalizeEvents(history = []) {
-  return history
-    .filter((entry) => entry?.recommendation)
-    .map((entry) => {
-      const profile = profileByName[entry.recommendation] || null;
-      const preferences = entry.preferences || entry.extractedPreferences || null;
-      const metadata = entry.metadata || {};
-
-      return {
-        recommendation: entry.recommendation,
-        type: entry.type,
-        timestamp: entry.timestamp,
-        preferences,
-        feedback: entry.feedback || null,
-        explorationUsed: Boolean(metadata.explorationUsed || entry.explorationUsed),
-        profile
-      };
-    });
-}
-
-function buildFeedbackMap(history = []) {
-  return history.reduce((accumulator, entry) => {
-    if (!entry?.recommendation || !entry.feedback) {
-      return accumulator;
-    }
-
-    accumulator[entry.recommendation] = entry.feedback;
-    return accumulator;
-  }, {});
-}
-
 function scoreDrink(event, feedbackMap) {
-  let score = 1;
-
-  if (feedbackMap[event.recommendation] === "like") {
-    score += 4;
-  }
-
-  if (feedbackMap[event.recommendation] === "dislike") {
-    score -= 2;
-  }
-
-  if (event.explorationUsed) {
-    score += 1;
-  }
-
-  return score;
+  return Math.max(1, scoreHistoricalEvent({
+    ...event,
+    liked: feedbackMap[event.recommendation] === "like" || event.liked,
+    disliked: feedbackMap[event.recommendation] === "dislike" || event.disliked
+  }));
 }
 
 function buildContextLeaders(events, feedbackMap, key) {
@@ -90,33 +47,6 @@ function buildContextLeaders(events, feedbackMap, key) {
   return Object.fromEntries(
     Object.entries(buckets).map(([bucket, scores]) => [bucket, topEntries(scores)])
   );
-}
-
-function buildTasteProfile(events, feedbackMap) {
-  const weightedProfiles = events.flatMap((event) => {
-    if (!event.profile) {
-      return [];
-    }
-
-    const weight = Math.max(1, scoreDrink(event, feedbackMap));
-    return Array.from({ length: weight }, () => event.profile);
-  });
-
-  const caffeineCounts = countBy(weightedProfiles.map((profile) => profile.caffeineLevel));
-  const sweetnessCounts = countBy(weightedProfiles.map((profile) => profile.sweetnessLevel));
-  const textureCounts = countBy(weightedProfiles.map((profile) => profile.texture));
-  const styleCounts = countBy(weightedProfiles.map((profile) => profile.drinkStyle));
-  const tasteCounts = countBy(weightedProfiles.flatMap((profile) => profile.tastes));
-  const timeCounts = countBy(events.map((event) => event.preferences?.time).filter(Boolean));
-
-  return {
-    preferredCaffeine: topEntry(caffeineCounts, "medium"),
-    sweetnessTolerance: topEntry(sweetnessCounts, "lightly-sweet"),
-    favoriteTexture: topEntry(textureCounts, "creamy"),
-    favoriteStyle: topEntry(styleCounts, "milky"),
-    dominantTaste: topEntry(tasteCounts, "smooth"),
-    signatureTime: topEntry(timeCounts, "afternoon")
-  };
 }
 
 function deriveExploration(events) {
@@ -204,11 +134,19 @@ function buildTimeline(history = []) {
 }
 
 export function deriveDashboardData(history = [], userName = "Guest") {
-  const events = normalizeEvents(history);
+  const events = normalizeHistory(history);
   const feedbackMap = buildFeedbackMap(history);
   const recommendationEvents = events.filter((event) => event.type === "filter" || event.type === "chat");
   const recommendationCounts = countBy(recommendationEvents.map((event) => event.recommendation));
-  const tasteProfile = buildTasteProfile(recommendationEvents, feedbackMap);
+  const adaptiveProfile = deriveAdaptiveProfile(history);
+  const tasteProfile = {
+    preferredCaffeine: adaptiveProfile.preferredCaffeine,
+    sweetnessTolerance: adaptiveProfile.preferredSweetness,
+    favoriteTexture: adaptiveProfile.preferredTexture,
+    favoriteStyle: adaptiveProfile.preferredStyle,
+    dominantTaste: adaptiveProfile.dominantTaste,
+    signatureTime: adaptiveProfile.signatureTime
+  };
   const exploration = deriveExploration(recommendationEvents);
   const passport = buildPassport(userName, tasteProfile, exploration, feedbackMap, recommendationCounts);
   const timeLeaders = buildContextLeaders(recommendationEvents, feedbackMap, "time");
@@ -218,6 +156,7 @@ export function deriveDashboardData(history = [], userName = "Guest") {
     passport,
     tasteProfile,
     exploration,
+    evaluationMetrics: adaptiveProfile.evaluationMetrics,
     topDrinks: topEntries(recommendationCounts, 5),
     timeLeaders,
     moodLeaders,

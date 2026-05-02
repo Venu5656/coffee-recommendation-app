@@ -142,6 +142,33 @@ export function DashboardPage({ dashboard, user }) {
         </section>
       </div>
 
+      <section className="panel">
+        <p className="eyebrow">Live Evaluation</p>
+        <h2>How the adaptive model is performing on your account</h2>
+        <div className="insight-metric-grid">
+          <article className="insight-metric-card">
+            <span>Recommendations logged</span>
+            <strong>{dashboard.evaluationMetrics.totalRecommendations}</strong>
+            <p>Used as the training stream for personalization.</p>
+          </article>
+          <article className="insight-metric-card">
+            <span>Like rate</span>
+            <strong>{Math.round(dashboard.evaluationMetrics.likeRate * 100)}%</strong>
+            <p>Positive feedback share across rated recommendations.</p>
+          </article>
+          <article className="insight-metric-card">
+            <span>Exploration success</span>
+            <strong>{Math.round(dashboard.evaluationMetrics.explorationSuccessRate * 100)}%</strong>
+            <p>How often exploratory picks later converted into likes.</p>
+          </article>
+          <article className="insight-metric-card">
+            <span>Adaptation readiness</span>
+            <strong>{dashboard.evaluationMetrics.adaptationReadiness}</strong>
+            <p>Confidence band for how strongly the model should trust your history.</p>
+          </article>
+        </div>
+      </section>
+
       <div className="page-grid dashboard-main-grid">
         <section className="panel">
           <p className="eyebrow">Drinking Rhythm</p>

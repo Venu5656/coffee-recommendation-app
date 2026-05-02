@@ -104,7 +104,7 @@ router.post("/recommend", async (req, res, next) => {
   try {
     const { preferences = {}, history = [] } = req.body || {};
     const effectiveHistory = req.user
-      ? buildRecommendationHistory(await listUserEvents(req.user.id))
+      ? await listUserEvents(req.user.id, 200)
       : history;
 
     const recommendation = recommendCoffee(preferences, effectiveHistory);
