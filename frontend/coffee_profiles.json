@@ -1,0 +1,150 @@
+{
+  "coffee_profiles": {
+    "Espresso": {
+      "moods": ["focused", "energetic", "productive"],
+      "taste": ["bold", "intense", "classic"],
+      "time": ["morning", "afternoon"],
+      "temperature": "hot",
+      "effort": "low",
+      "caffeine": "high",
+      "available_at": ["cafe", "home"],
+      "composition": {
+        "caffeine_mg": 64,
+        "sugar_g": 0,
+        "foam_percent": 5,
+        "milk_percent": 0,
+        "coffee_percent": 95,
+        "volume_ml": 30
+      },
+      "fun_fact": "Espresso means 'pressed' in Italian, referring to how water is forced through grounds."
+    },
+    "Americano": {
+      "moods": ["focused", "relaxed", "productive"],
+      "taste": ["mild", "balanced", "classic"],
+      "time": ["morning", "afternoon", "evening"],
+      "temperature": "hot",
+      "effort": "low",
+      "caffeine": "medium",
+      "available_at": ["cafe", "home"],
+      "composition": {
+        "caffeine_mg": 77,
+        "sugar_g": 0,
+        "foam_percent": 2,
+        "milk_percent": 0,
+        "coffee_percent": 98,
+        "volume_ml": 237
+      },
+      "fun_fact": "Created by American soldiers during WWII who diluted espresso with hot water."
+    },
+    "Latte": {
+      "moods": ["relaxed", "cozy", "comfort"],
+      "taste": ["creamy", "smooth", "mild"],
+      "time": ["morning", "afternoon"],
+      "temperature": "hot",
+      "effort": "medium",
+      "caffeine": "medium",
+      "available_at": ["cafe", "home"],
+      "composition": {
+        "caffeine_mg": 75,
+        "sugar_g": 10,
+        "foam_percent": 20,
+        "milk_percent": 65,
+        "coffee_percent": 15,
+        "volume_ml": 354
+      },
+      "fun_fact": "Latte means 'milk' in Italian—it's one of the milkiest espresso drinks!"
+    },
+    "Cappuccino": {
+      "moods": ["cozy", "balanced", "uplifted"],
+      "taste": ["frothy", "balanced", "classic"],
+      "time": ["morning", "afternoon"],
+      "temperature": "hot",
+      "effort": "medium",
+      "caffeine": "medium",
+      "available_at": ["cafe", "home"],
+      "composition": {
+        "caffeine_mg": 75,
+        "sugar_g": 8,
+        "foam_percent": 40,
+        "milk_percent": 35,
+        "coffee_percent": 25,
+        "volume_ml": 296
+      },
+      "fun_fact": "Named after Capuchin monks, whose robes matched the drink's brown color!"
+    },
+    "Mocha": {
+      "moods": ["indulgent", "happy", "comfort"],
+      "taste": ["chocolatey", "sweet", "rich"],
+      "time": ["morning", "afternoon"],
+      "temperature": "hot",
+      "effort": "medium",
+      "caffeine": "medium",
+      "available_at": ["cafe", "home"],
+      "composition": {
+        "caffeine_mg": 75,
+        "sugar_g": 15,
+        "foam_percent": 15,
+        "milk_percent": 50,
+        "coffee_percent": 20,
+        "volume_ml": 296
+      },
+      "fun_fact": "Mocha beans originally came from the port city of Mocha in Yemen."
+    },
+    "Cold Brew": {
+      "moods": ["focused", "refreshing", "energetic"],
+      "taste": ["bold", "smooth", "refreshing"],
+      "time": ["morning", "afternoon"],
+      "temperature": "cold",
+      "effort": "low",
+      "caffeine": "high",
+      "available_at": ["cafe", "home"],
+      "composition": {
+        "caffeine_mg": 150,
+        "sugar_g": 0,
+        "foam_percent": 0,
+        "milk_percent": 0,
+        "coffee_percent": 95,
+        "volume_ml": 240,
+        "ice_percent": 40
+      },
+      "fun_fact": "Takes 12-24 hours to brew, but stays fresh for 2 weeks!"
+    },
+    "Iced Latte": {
+      "moods": ["refreshing", "calm", "productive"],
+      "taste": ["creamy", "smooth", "refreshing"],
+      "time": ["morning", "afternoon", "evening"],
+      "temperature": "cold",
+      "effort": "medium",
+      "caffeine": "medium",
+      "available_at": ["cafe", "home"],
+      "composition": {
+        "caffeine_mg": 75,
+        "sugar_g": 10,
+        "foam_percent": 5,
+        "milk_percent": 70,
+        "coffee_percent": 15,
+        "volume_ml": 354,
+        "ice_percent": 30
+      },
+      "fun_fact": "The milky version of cold brew—perfect for summer afternoons!"
+    },
+    "Macchiato": {
+      "moods": ["focused", "adventurous", "energetic"],
+      "taste": ["bold", "intense", "classic"],
+      "time": ["morning", "afternoon"],
+      "temperature": "hot",
+      "effort": "medium",
+      "caffeine": "high",
+      "available_at": ["cafe", "home"],
+      "composition": {
+        "caffeine_mg": 86,
+        "sugar_g": 5,
+        "foam_percent": 25,
+        "milk_percent": 10,
+        "coffee_percent": 65,
+        "volume_ml": 236
+      },
+      "fun_fact": "Macchiato means 'marked' or 'stained'—espresso stained with milk!"
+    }
+  }
+}
