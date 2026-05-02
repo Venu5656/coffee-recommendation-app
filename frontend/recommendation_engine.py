@@ -14,7 +14,7 @@ from history import HistoryTracker
 # ── Asset loaders ─────────────────────────────────────────────────────────────
 
 def _img_url(filename: str) -> str:
-    path = Path(__file__).parent / "static" / filename
+    path = Path(__file__).parent.parent / "images" / filename
     if not path.exists():
         return ""
     ext  = filename.rsplit(".", 1)[-1]
@@ -24,7 +24,7 @@ def _img_url(filename: str) -> str:
 
 
 def _img_src(filename: str) -> str:
-    path = Path(__file__).parent / "static" / filename
+    path = Path(__file__).parent.parent / "images" / filename
     if not path.exists():
         return ""
     ext  = filename.rsplit(".", 1)[-1]
