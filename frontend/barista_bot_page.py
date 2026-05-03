@@ -134,7 +134,7 @@ def render_barista_bot_page(client: CoffeeBackendClient | None = None):
         st.markdown("</div></section>", unsafe_allow_html=True)
 
         st.markdown('<div class="barista-desk-input">', unsafe_allow_html=True)
-        input_col, send_col = st.columns([0.82, 0.18], gap="small")
+        input_col, send_col = st.columns([0.76, 0.24], gap="small")
         with input_col:
             user_input = st.text_input(
                 "Message",

@@ -1627,6 +1627,38 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
 .barista-desk-input {
     margin-top: 1rem;
 }
+div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) {
+    align-items: stretch;
+}
+div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) input {
+    min-height: 3.55rem;
+    border-radius: 14px !important;
+}
+div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stButton > button {
+    min-height: 3.55rem !important;
+    height: 3.55rem !important;
+    width: 100% !important;
+    min-width: 104px !important;
+    padding: 0 1rem !important;
+    border-radius: 14px 999px 999px 14px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
+    font-size: 0.82rem !important;
+    letter-spacing: 2px !important;
+    line-height: 1 !important;
+}
+div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stButton > button p,
+div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stButton > button span,
+div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stButton > button div {
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
+    line-height: 1 !important;
+}
 .barista-decision-panel p {
     margin-bottom: 1rem;
 }
