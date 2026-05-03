@@ -255,7 +255,7 @@ def _cup_html(drink: str) -> str:
     </div>"""
 
 
-def _composition_cup_html(composition: dict, is_iced: bool) -> str:
+def _composition_cup_html(composition: dict, is_iced: bool, compact: bool = False) -> str:
     composition = composition or {}
     percent_map = {
         "coffee_percent": "coffee",
@@ -324,6 +324,11 @@ def _composition_cup_html(composition: dict, is_iced: bool) -> str:
         for name, value in segments
     )
 
+    if compact:
+        labels_html = ""
+        layers_html = ""
+        legend_html = ""
+
     if is_iced:
         cup = f"""<div class="cup-viz cup-glass">
           <div class="cup-glass-body cup-fill-body" style="--drink-fill:{fill_gradient};">
@@ -352,6 +357,8 @@ def _composition_cup_html(composition: dict, is_iced: bool) -> str:
           <div class="cup-mug-saucer"></div>
         </div>"""
 
+    if compact:
+        return cup
     return f'<div class="composition-wrap">{cup}<div class="composition-legend">{legend_html}</div></div>'
 
 
