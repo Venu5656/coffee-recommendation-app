@@ -655,6 +655,35 @@ def _render_profile_corner_logout(user_name: str) -> None:
     )
 
 
+def _render_profile_display_name_editor() -> None:
+    current = st.session_state.get("display_name", "")
+    st.markdown(
+        """
+        <section class="profile-name-editor">
+          <div id="profile-name-editor-marker"></div>
+          <div class="pne-copy">
+            <span>Account name</span>
+            <strong>Personalize your profile</strong>
+          </div>
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
+    name_col, save_col = st.columns([0.78, 0.22], gap="small")
+    with name_col:
+        display_name = st.text_input(
+            "Display name",
+            value=current,
+            label_visibility="collapsed",
+            placeholder="Your display name",
+            key="profile_display_name_input",
+        )
+    with save_col:
+        if st.button("Save name", key="save_display_name", use_container_width=True):
+            st.session_state["display_name"] = display_name.strip()
+            st.success("Display name updated.")
+
+
 def _format_history_date(timestamp: str) -> str:
     try:
         dt = datetime.fromisoformat(str(timestamp))
@@ -909,6 +938,7 @@ elif page == "profile":
     user_name = st.session_state.get("display_name") or st.session_state.get("auth_user", {}).get("name", "Coffee Lover")
     dashboard = _build_streamlit_dashboard(tracker, str(user_name or "Coffee Lover"))
     _render_profile_corner_logout(str(user_name or "Coffee Lover"))
+    _render_profile_display_name_editor()
     profile_view = st.query_params.get("profile_view", "dashboard")
     if profile_view not in {"dashboard", "history"}:
         profile_view = "dashboard"
@@ -917,9 +947,3 @@ elif page == "profile":
         _render_profile_history(tracker)
     else:
         _render_profile_dashboard(dashboard)
-        # Display name editor — compact, at bottom
-        with st.expander("Edit display name"):
-            display_name = st.text_input("Display name", value=st.session_state.get("display_name", ""), label_visibility="collapsed", placeholder="Your name")
-            if st.button("Save", key="save_display_name"):
-                st.session_state["display_name"] = display_name
-                st.success("Saved")

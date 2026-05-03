@@ -38,7 +38,6 @@ def render_barista_bot_page(client: CoffeeBackendClient | None = None):
           <div class="bdh-copy">
             <span>Barista Bot</span>
             <h1>Find a coffee that fits today.</h1>
-            <p>Tell me your mood, taste, and time. I'll suggest one drink.</p>
           </div>
         </section>
         <section class="barista-desk-prompts">

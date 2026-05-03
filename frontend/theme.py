@@ -1390,8 +1390,8 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
 .barista-desk-hero {
     width: calc(100% + 6rem);
     margin-left: -3rem;
-    min-height: 300px;
-    padding: 3.6rem 4rem 4.6rem;
+    min-height: 180px;
+    padding: 2.5rem 4rem 3.5rem;
     display: grid;
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -1417,24 +1417,14 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
     text-transform: uppercase;
 }
 .bdh-copy h1 {
-    max-width: 860px;
-    margin: 0.8rem 0 1rem !important;
+    max-width: 760px;
+    margin: 0.55rem 0 0 !important;
     color: #1A0D06 !important;
     font-family: 'Cormorant Garamond', serif !important;
-    font-size: clamp(3.4rem, 6vw, 6.4rem) !important;
+    font-size: clamp(2.8rem, 5vw, 5.2rem) !important;
     font-weight: 500 !important;
     line-height: 0.92 !important;
 }
-.bdh-copy p {
-    max-width: 620px;
-    margin: 0;
-    color: rgba(24,14,8,0.68);
-    font-family: 'Satoshi', sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.75;
-}
-.bdh-ticket,
 .barista-ticket-panel,
 .barista-transcript-panel,
 .barista-decision-panel {
@@ -1442,48 +1432,9 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
     border-radius: 18px;
     box-shadow: 0 22px 54px rgba(90,55,27,0.12), inset 0 1px 0 rgba(255,255,255,0.72);
 }
-.bdh-ticket {
-    padding: 1.15rem;
-    background: rgba(24,14,8,0.88);
-    color: #FFF8EE;
-    align-self: center;
-}
-.bdh-ticket-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255,248,238,0.14);
-}
-.bdh-ticket-top span,
-.bdh-ticket-line span {
-    color: rgba(255,248,238,0.52);
-    font-size: 0.58rem;
-    font-weight: 900;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-}
-.bdh-ticket-top strong {
-    color: #F1D49B;
-    font-size: 0.72rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-}
-.bdh-ticket-line {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.88rem 0;
-    border-bottom: 1px solid rgba(255,248,238,0.09);
-}
-.bdh-ticket-line strong {
-    color: #FFF8EE;
-    font-size: 0.86rem;
-    text-align: right;
-}
 .barista-desk-prompts {
     width: min(1320px, calc(100% - 2rem));
-    margin: -2.2rem auto 2rem;
+    margin: -1.8rem auto 2rem;
     position: relative;
     z-index: 2;
     display: grid;
@@ -3358,27 +3309,21 @@ button[kind="primary"]:hover,
     display: none !important;
 }
 .pp-dashboard .pp-drink-tile .cup-mug-handle {
-    right: -29px;
-    top: 48px;
-    width: 52px;
-    height: 62px;
-    border: 5px solid #6B4423;
+    right: -34px;
+    top: 45px;
+    width: 58px;
+    height: 70px;
+    border: 7px solid rgba(107,68,35,0.82);
     border-left: 0;
-    border-radius: 0 38px 38px 0;
-    background: transparent;
+    border-radius: 0 44px 44px 0;
+    background: rgba(255,248,238,0.24);
+    box-shadow:
+        inset -2px 0 0 rgba(255,255,255,0.26),
+        0 8px 18px rgba(90,55,27,0.14);
 }
 .pp-dashboard .pp-drink-tile .cup-mug-saucer,
 .pp-dashboard .pp-drink-tile .cup-glass-base {
-    width: 160px;
-    height: 22px;
-    background: radial-gradient(ellipse at center, rgba(90,55,27,0.22), rgba(90,55,27,0.08) 52%, transparent 74%);
-    border: 0;
-    filter: none;
-    margin-top: 2px;
-}
-.pp-dashboard .pp-drink-tile .cup-glass-base {
-    width: 145px;
-    margin-top: 6px;
+    display: none;
 }
 .pp-dashboard .pp-drink-tile .cup-composition-labels,
 .pp-dashboard .pp-drink-tile .cup-mug-layers,
@@ -3562,6 +3507,71 @@ button[kind="primary"]:hover,
     font-size: 0.68rem;
     letter-spacing: 0.2px;
     font-weight: 900;
+}
+
+.profile-name-editor {
+    width: min(720px, calc(100% - 2rem));
+    margin: 0.85rem auto 0.7rem;
+    padding: 1rem 1.15rem 0.9rem;
+    border-radius: 18px;
+    background:
+        radial-gradient(circle at 96% 0%, rgba(201,168,124,0.20), transparent 34%),
+        linear-gradient(135deg, rgba(255,249,241,0.98), rgba(239,222,194,0.86));
+    border: 1px solid rgba(126,83,46,0.14);
+    box-shadow: 0 18px 44px rgba(90,55,27,0.10), inset 0 1px 0 rgba(255,255,255,0.74);
+}
+.pne-copy {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.pne-copy span {
+    color: rgba(107,68,35,0.66);
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.56rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+.pne-copy strong {
+    color: var(--espresso);
+    font-family: 'Satoshi', sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+}
+div[data-testid="stHorizontalBlock"]:has(input[placeholder="Your display name"]) {
+    width: min(720px, calc(100% - 2rem));
+    margin: -0.45rem auto 1.15rem;
+    padding: 0 1.15rem 1rem;
+    border-radius: 0 0 18px 18px;
+    background: rgba(255,249,241,0.92);
+    border: 1px solid rgba(126,83,46,0.14);
+    border-top: 0;
+    box-shadow: 0 18px 44px rgba(90,55,27,0.08);
+}
+div[data-testid="stHorizontalBlock"]:has(input[placeholder="Your display name"]) input {
+    min-height: 3rem;
+    border-radius: 999px !important;
+    background: #FFFDFC !important;
+    border: 1px solid rgba(126,83,46,0.18) !important;
+    color: var(--espresso) !important;
+    font-family: 'Satoshi', sans-serif !important;
+    font-weight: 800 !important;
+    padding-left: 1rem !important;
+}
+div[data-testid="stHorizontalBlock"]:has(input[placeholder="Your display name"]) .stButton > button {
+    min-height: 3rem !important;
+    border-radius: 999px !important;
+    background: linear-gradient(135deg, #9A6B3F, #7A4B28) !important;
+    color: #FFF8EE !important;
+    border: 1px solid rgba(90,55,27,0.30) !important;
+    box-shadow: 0 12px 24px rgba(90,55,27,0.13) !important;
+}
+div[data-testid="stHorizontalBlock"]:has(input[placeholder="Your display name"]) .stButton > button:hover {
+    transform: translateY(-1px);
+    background: linear-gradient(135deg, #A8794C, #845331) !important;
+    color: #FFFDFC !important;
 }
 
 .profile-history-page {
@@ -5387,12 +5397,12 @@ a.home-card:hover .hc-arrow {
     position: absolute;
     left: 6%;
     right: 6%;
-    transform: translateY(50%);
+    transform: none;
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 14px;
-    padding: 0.1rem 0;
+    padding: 0;
     border-top: 1px solid rgba(255,255,255,0.22);
     border-bottom: 1px solid rgba(0,0,0,0.15);
     color: rgba(255,255,255,0.94);
@@ -5437,6 +5447,22 @@ a.home-card:hover .hc-arrow {
     font-size: 0.58rem;
     letter-spacing: 1.7px;
     text-shadow: 0 1px 5px rgba(0,0,0,0.72);
+}
+.res-right .cup-glass {
+    width: 122px;
+    align-items: center;
+}
+.res-right .cup-glass-straw {
+    left: 78px;
+    right: auto;
+    top: -26px;
+    height: 148px;
+    width: 5px;
+    z-index: 4;
+    transform: rotate(5deg);
+    transform-origin: 50% 100%;
+    background: linear-gradient(180deg, rgba(218,184,132,0.88), rgba(143,105,67,0.72));
+    box-shadow: 0 0 8px rgba(201,168,124,0.16);
 }
 .res-right .cup-mug-handle {
     right: -38px;
