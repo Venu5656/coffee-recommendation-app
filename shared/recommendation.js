@@ -29,6 +29,18 @@ const PERSONALIZATION_WEIGHTS = {
   rankingAffinity: 2.2
 };
 
+const EXPLICIT_MISMATCH_PENALTIES = {
+  caffeinePreference: 4.2,
+  temperature: 3.2,
+  drinkStyle: 2.8,
+  taste: 2.2,
+  sweetnessPreference: 1.6,
+  texturePreference: 1.4,
+  effort: 1.2,
+  time: 1,
+  mood: 1
+};
+
 function valueSignal(map, key) {
   if (!key) {
     return 0;
@@ -81,9 +93,17 @@ function scoreProfile(profile, preferences, historySignals) {
   const reasons = [];
   const personalizationReasons = [];
 
+  if (preferences.mood && !profile.moods.includes(preferences.mood)) {
+    score -= EXPLICIT_MISMATCH_PENALTIES.mood;
+  }
+
   if (preferences.mood && profile.moods.includes(preferences.mood)) {
     score += ATTRIBUTE_WEIGHTS.mood;
     reasons.push(`matches your ${preferences.mood} mood`);
+  }
+
+  if (preferences.taste && !profile.tastes.includes(preferences.taste)) {
+    score -= EXPLICIT_MISMATCH_PENALTIES.taste;
   }
 
   if (preferences.taste && profile.tastes.includes(preferences.taste)) {
@@ -91,9 +111,17 @@ function scoreProfile(profile, preferences, historySignals) {
     reasons.push(`fits your preference for ${preferences.taste} flavors`);
   }
 
+  if (preferences.time && !profile.times.includes(preferences.time)) {
+    score -= EXPLICIT_MISMATCH_PENALTIES.time;
+  }
+
   if (preferences.time && profile.times.includes(preferences.time)) {
     score += ATTRIBUTE_WEIGHTS.time;
     reasons.push(`works well for ${preferences.time}`);
+  }
+
+  if (preferences.temperature && !profile.temperature.includes(preferences.temperature)) {
+    score -= EXPLICIT_MISMATCH_PENALTIES.temperature;
   }
 
   if (preferences.temperature && profile.temperature.includes(preferences.temperature)) {
@@ -101,9 +129,17 @@ function scoreProfile(profile, preferences, historySignals) {
     reasons.push(`is available as a ${preferences.temperature} drink`);
   }
 
+  if (preferences.effort && profile.effort !== preferences.effort) {
+    score -= EXPLICIT_MISMATCH_PENALTIES.effort;
+  }
+
   if (preferences.effort && profile.effort === preferences.effort) {
     score += ATTRIBUTE_WEIGHTS.effort;
     reasons.push(`matches your ${preferences.effort} effort preference`);
+  }
+
+  if (preferences.caffeinePreference && profile.caffeineLevel !== preferences.caffeinePreference) {
+    score -= EXPLICIT_MISMATCH_PENALTIES.caffeinePreference;
   }
 
   if (preferences.caffeinePreference && profile.caffeineLevel === preferences.caffeinePreference) {
@@ -111,14 +147,26 @@ function scoreProfile(profile, preferences, historySignals) {
     reasons.push(`lands at your preferred ${preferences.caffeinePreference} caffeine level`);
   }
 
+  if (preferences.sweetnessPreference && profile.sweetnessLevel !== preferences.sweetnessPreference) {
+    score -= EXPLICIT_MISMATCH_PENALTIES.sweetnessPreference;
+  }
+
   if (preferences.sweetnessPreference && profile.sweetnessLevel === preferences.sweetnessPreference) {
     score += ATTRIBUTE_WEIGHTS.sweetnessPreference;
     reasons.push(`matches your ${preferences.sweetnessPreference} sweetness preference`);
   }
 
+  if (preferences.texturePreference && profile.texture !== preferences.texturePreference) {
+    score -= EXPLICIT_MISMATCH_PENALTIES.texturePreference;
+  }
+
   if (preferences.texturePreference && profile.texture === preferences.texturePreference) {
     score += ATTRIBUTE_WEIGHTS.texturePreference;
     reasons.push(`fits the ${preferences.texturePreference} texture you tend to like`);
+  }
+
+  if (preferences.drinkStyle && profile.drinkStyle !== preferences.drinkStyle) {
+    score -= EXPLICIT_MISMATCH_PENALTIES.drinkStyle;
   }
 
   if (preferences.drinkStyle && profile.drinkStyle === preferences.drinkStyle) {
@@ -142,37 +190,37 @@ function scoreProfile(profile, preferences, historySignals) {
   if (adaptive.historyDepth >= 3) {
     const rankingSignals = adaptive.rankingSignals || {};
 
-    if (profile.caffeineLevel === adaptive.preferredCaffeine) {
+    if (!preferences.caffeinePreference && profile.caffeineLevel === adaptive.preferredCaffeine) {
       score += PERSONALIZATION_WEIGHTS.preferredCaffeine;
       personalizationReasons.push("matches your learned caffeine band");
     }
 
-    if (profile.sweetnessLevel === adaptive.preferredSweetness) {
+    if (!preferences.sweetnessPreference && profile.sweetnessLevel === adaptive.preferredSweetness) {
       score += PERSONALIZATION_WEIGHTS.preferredSweetness;
       personalizationReasons.push("fits your learned sweetness tolerance");
     }
 
-    if (profile.texture === adaptive.preferredTexture) {
+    if (!preferences.texturePreference && profile.texture === adaptive.preferredTexture) {
       score += PERSONALIZATION_WEIGHTS.preferredTexture;
       personalizationReasons.push("fits the texture you usually enjoy");
     }
 
-    if (profile.drinkStyle === adaptive.preferredStyle) {
+    if (!preferences.drinkStyle && profile.drinkStyle === adaptive.preferredStyle) {
       score += PERSONALIZATION_WEIGHTS.preferredStyle;
       personalizationReasons.push("aligns with your usual drink style");
     }
 
-    if (profile.temperature.includes(adaptive.preferredTemperature)) {
+    if (!preferences.temperature && profile.temperature.includes(adaptive.preferredTemperature)) {
       score += PERSONALIZATION_WEIGHTS.preferredTemperature;
       personalizationReasons.push("stays close to your normal temperature preference");
     }
 
-    if (profile.effort === adaptive.preferredEffort) {
+    if (!preferences.effort && profile.effort === adaptive.preferredEffort) {
       score += PERSONALIZATION_WEIGHTS.preferredEffort;
       personalizationReasons.push("matches the effort level you usually choose");
     }
 
-    if (profile.tastes.includes(adaptive.dominantTaste)) {
+    if (!preferences.taste && profile.tastes.includes(adaptive.dominantTaste)) {
       score += PERSONALIZATION_WEIGHTS.dominantTaste;
       personalizationReasons.push("tracks with your strongest flavor direction");
     }
@@ -197,13 +245,13 @@ function scoreProfile(profile, preferences, historySignals) {
     }
 
     const affinityScore =
-      valueSignal(rankingSignals.caffeineAffinities, profile.caffeineLevel) +
-      valueSignal(rankingSignals.sweetnessAffinities, profile.sweetnessLevel) +
-      valueSignal(rankingSignals.textureAffinities, profile.texture) +
-      valueSignal(rankingSignals.styleAffinities, profile.drinkStyle) +
-      valueSignal(rankingSignals.effortAffinities, profile.effort) +
-      listSignal(rankingSignals.temperatureAffinities, profile.temperature) +
-      listSignal(rankingSignals.tasteAffinities, profile.tastes) +
+      (preferences.caffeinePreference ? 0 : valueSignal(rankingSignals.caffeineAffinities, profile.caffeineLevel)) +
+      (preferences.sweetnessPreference ? 0 : valueSignal(rankingSignals.sweetnessAffinities, profile.sweetnessLevel)) +
+      (preferences.texturePreference ? 0 : valueSignal(rankingSignals.textureAffinities, profile.texture)) +
+      (preferences.drinkStyle ? 0 : valueSignal(rankingSignals.styleAffinities, profile.drinkStyle)) +
+      (preferences.effort ? 0 : valueSignal(rankingSignals.effortAffinities, profile.effort)) +
+      (preferences.temperature ? 0 : listSignal(rankingSignals.temperatureAffinities, profile.temperature)) +
+      (preferences.taste ? 0 : listSignal(rankingSignals.tasteAffinities, profile.tastes)) +
       valueSignal(rankingSignals.drinkAffinities, profile.name);
 
     if (affinityScore !== 0) {

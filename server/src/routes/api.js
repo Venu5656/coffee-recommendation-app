@@ -130,23 +130,24 @@ router.post("/recommend", async (req, res, next) => {
 
 router.post("/chat", async (req, res, next) => {
   try {
-    const { message = "", history = [] } = req.body || {};
+    const { message = "", history = [], messages = [] } = req.body || {};
     const effectiveHistory = req.user
-      ? buildRecommendationHistory(await listUserEvents(req.user.id))
+      ? await listUserEvents(req.user.id, 200)
       : history;
 
-    const result = await getChatRecommendation(message, effectiveHistory);
+    const result = await getChatRecommendation(message, effectiveHistory, messages);
     let persistedEntry = null;
 
     if (req.user) {
       persistedEntry = await createUserEvent(req.user.id, {
         type: "chat",
-        recommendation: result.recommendation.drink.name,
+        recommendation: result.recommendation?.drink?.name || result.customDrink?.name || null,
         prompt: message,
         extractedPreferences: result.extractedPreferences,
         metadata: {
           source: "chat",
-          usedLlm: result.usedLlm
+          chatMode: result.mode,
+          assistantEngine: result.assistantEngine
         }
       });
     }

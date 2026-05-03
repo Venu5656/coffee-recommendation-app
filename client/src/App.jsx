@@ -174,6 +174,7 @@ export default function App() {
               history={history}
               setLastResult={setLastResult}
               addHistory={addHistory}
+              addFeedback={addFeedback}
               token={token}
               refreshHistory={refreshHistory}
             />

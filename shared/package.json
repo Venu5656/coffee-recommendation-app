@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "exports": {
+    "./baristaKnowledge": "./baristaKnowledge.js",
     "./coffeeProfiles": "./coffeeProfiles.js",
     "./dashboard": "./dashboard.js",
     "./insights": "./insights.js",

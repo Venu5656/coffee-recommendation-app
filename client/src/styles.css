@@ -265,6 +265,15 @@ textarea {
   grid-template-columns: 1.35fr 0.9fr;
 }
 
+.chat-result-stack {
+  display: grid;
+  gap: 16px;
+}
+
+.panel-nested {
+  background: rgba(255, 249, 239, 0.88);
+}
+
 .insights-hero {
   overflow: hidden;
   position: relative;
