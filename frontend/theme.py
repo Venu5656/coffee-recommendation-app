@@ -1662,6 +1662,300 @@ div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stBut
 .barista-decision-panel p {
     margin-bottom: 1rem;
 }
+
+.barista-local-hero {
+    width: min(1180px, calc(100% - 2rem));
+    margin: 1.25rem auto 0;
+    padding: clamp(1.4rem, 3vw, 2.7rem);
+    border-radius: 18px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.4rem;
+    background:
+        radial-gradient(circle at 88% 18%, rgba(168,112,64,0.20), transparent 34%),
+        linear-gradient(135deg, #FFF8EA 0%, #E6CAA0 100%);
+    border: 1px solid rgba(126,83,46,0.16);
+    box-shadow: 0 26px 60px rgba(90,55,27,0.12), inset 0 1px 0 rgba(255,255,255,0.70);
+}
+.barista-local-hero span,
+.barista-mode-strip span,
+.barista-signal-row span,
+.barista-ai-chat-panel header span,
+.barista-ai-row span,
+.barista-latest-panel > span,
+.barista-pref-grid span,
+.barista-guide-block strong {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(126,83,46,0.72);
+}
+.barista-local-hero h1 {
+    max-width: 820px;
+    margin: 0.55rem 0 0;
+    color: var(--espresso);
+    font-family: 'Satoshi', sans-serif;
+    font-size: clamp(2.5rem, 5.7vw, 5.7rem);
+    font-weight: 900;
+    line-height: 0.94;
+    letter-spacing: 0;
+}
+.barista-local-hero a {
+    flex: 0 0 auto;
+    min-height: 2.7rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1.1rem;
+    border-radius: 999px;
+    background: rgba(24,14,8,0.92);
+    color: #FFF8EE !important;
+    text-decoration: none !important;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.64rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+.barista-mode-strip {
+    width: min(1120px, calc(100% - 2rem));
+    margin: -1rem auto 1rem;
+    padding: 0.9rem;
+    display: grid;
+    grid-template-columns: 0.62fr 1.38fr;
+    gap: 0.75rem;
+    align-items: center;
+    border-radius: 16px;
+    background: rgba(255,250,242,0.94);
+    border: 1px solid rgba(126,83,46,0.13);
+    box-shadow: 0 18px 44px rgba(90,55,27,0.10);
+}
+.barista-mode-strip strong {
+    display: block;
+    margin-top: 0.22rem;
+    color: var(--espresso);
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 900;
+}
+.barista-mode-strip nav {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.55rem;
+}
+.barista-mode-strip a {
+    min-height: 4rem;
+    padding: 0.7rem 0.85rem;
+    border-radius: 12px;
+    background: #FFFDFC;
+    border: 1px solid rgba(126,83,46,0.12);
+    color: var(--espresso) !important;
+    text-decoration: none !important;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 900;
+    line-height: 1.22;
+    box-shadow: 0 10px 24px rgba(90,55,27,0.06);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.barista-mode-strip a:hover {
+    transform: translateY(-2px);
+    border-color: rgba(126,83,46,0.28);
+}
+.barista-mode-strip a span {
+    display: block;
+    margin-bottom: 0.28rem;
+    font-size: 0.48rem;
+    letter-spacing: 2px;
+}
+.barista-signal-row {
+    width: min(1180px, calc(100% - 2rem));
+    margin: 0 auto 1rem;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.62rem;
+}
+.barista-signal-row div {
+    min-height: 4.6rem;
+    padding: 0.85rem 0.95rem;
+    border-radius: 14px;
+    background: rgba(255,249,241,0.88);
+    border: 1px solid rgba(126,83,46,0.12);
+    box-shadow: 0 12px 28px rgba(90,55,27,0.06);
+}
+.barista-signal-row strong {
+    display: block;
+    margin-top: 0.28rem;
+    color: var(--espresso);
+    font-family: 'Satoshi', sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+}
+.barista-ai-chat-panel,
+.barista-latest-panel {
+    min-height: 580px;
+    border-radius: 18px;
+    border: 1px solid rgba(126,83,46,0.14);
+    box-shadow: 0 22px 52px rgba(90,55,27,0.10);
+}
+.barista-ai-chat-panel {
+    padding: 1.15rem;
+    background:
+        radial-gradient(circle at top right, rgba(201,168,124,0.16), transparent 35%),
+        linear-gradient(150deg, #160A04 0%, #2B160A 100%);
+}
+.barista-ai-chat-panel header {
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid rgba(255,248,238,0.12);
+}
+.barista-ai-chat-panel header strong {
+    display: block;
+    margin-top: 0.28rem;
+    color: rgba(255,248,238,0.84);
+    font-family: 'Satoshi', sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+}
+.barista-ai-scroll {
+    max-height: 445px;
+    overflow-y: auto;
+    padding: 1rem 0.25rem 0 0;
+}
+.barista-ai-row {
+    display: flex;
+    margin-bottom: 0.82rem;
+    animation: messageBubbleIn 0.42s cubic-bezier(0.22,1,0.36,1) both;
+}
+.barista-ai-row.user {
+    justify-content: flex-end;
+}
+.barista-ai-row > div {
+    max-width: min(88%, 620px);
+    padding: 0.88rem 1rem;
+    border-radius: 14px;
+    background: rgba(255,248,238,0.10);
+    border: 1px solid rgba(255,248,238,0.10);
+}
+.barista-ai-row.user > div {
+    background: #FFF8EE;
+}
+.barista-ai-row p {
+    margin: 0.3rem 0 0;
+    color: rgba(255,248,238,0.78);
+    font-size: 0.92rem;
+    line-height: 1.58;
+}
+.barista-ai-row.user p {
+    color: var(--espresso);
+}
+[data-testid="stForm"]:has(#barista-ai-input-marker) {
+    margin-top: 0.9rem;
+    padding: 0.75rem;
+    border-radius: 18px;
+    background: rgba(255,249,241,0.88);
+    border: 1px solid rgba(126,83,46,0.12);
+    box-shadow: 0 16px 36px rgba(90,55,27,0.08);
+}
+[data-testid="stForm"]:has(#barista-ai-input-marker) textarea {
+    min-height: 5.6rem !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(126,83,46,0.12) !important;
+    background: #FFFDFC !important;
+    color: var(--espresso) !important;
+    font-weight: 700 !important;
+}
+[data-testid="stForm"]:has(#barista-ai-input-marker) .stFormSubmitButton > button {
+    min-height: 5.6rem !important;
+    border-radius: 14px !important;
+    white-space: nowrap !important;
+    letter-spacing: 1.6px !important;
+    background: linear-gradient(135deg, #9A6B3F, #6B3F22) !important;
+    color: #FFF8EE !important;
+}
+.barista-latest-panel {
+    padding: 1.25rem;
+    background:
+        radial-gradient(circle at 100% 0%, rgba(201,168,124,0.16), transparent 32%),
+        linear-gradient(145deg, #FFF8EE 0%, #F1DFC0 100%);
+}
+.barista-latest-panel.empty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.barista-latest-panel h2 {
+    margin: 0.4rem 0 0.65rem;
+    color: var(--espresso);
+    font-family: 'Satoshi', sans-serif;
+    font-size: clamp(1.8rem, 3vw, 3.1rem);
+    font-weight: 900;
+    line-height: 1;
+}
+.barista-latest-panel p,
+.barista-latest-panel li {
+    color: rgba(24,14,8,0.68);
+    font-size: 0.92rem;
+    line-height: 1.55;
+}
+.barista-latest-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.barista-latest-top b {
+    flex: 0 0 auto;
+    padding: 0.5rem 0.72rem;
+    border-radius: 999px;
+    background: var(--espresso);
+    color: #FFF8EE;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 900;
+}
+.barista-latest-cup {
+    min-height: 255px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.9rem 0;
+    border-radius: 16px;
+    background: linear-gradient(150deg, #150804, #2A1408);
+}
+.barista-latest-cup .composition-wrap {
+    max-width: 470px;
+}
+.barista-pref-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.55rem;
+    margin-top: 0.85rem;
+}
+.barista-pref-grid div,
+.barista-guide-block {
+    padding: 0.75rem 0.85rem;
+    border-radius: 12px;
+    background: rgba(255,253,250,0.72);
+    border: 1px solid rgba(126,83,46,0.10);
+}
+.barista-pref-grid strong {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--espresso);
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 900;
+}
+.barista-guide-block {
+    margin-top: 0.7rem;
+}
+.barista-guide-block ul,
+.barista-guide-block ol {
+    margin: 0.55rem 0 0;
+    padding-left: 1.15rem;
+}
 .bdp-checks {
     display: grid;
     gap: 0.65rem;

@@ -38,7 +38,14 @@ app.use((error, _req, res, _next) => {
   });
 });
 
-await initializeDatabase();
+try {
+  await initializeDatabase();
+} catch (error) {
+  console.warn(
+    "Database unavailable; starting API with unauthenticated routes only.",
+    error.message || error
+  );
+}
 
 app.listen(port, () => {
   console.log(`Coffee API listening on http://localhost:${port}`);

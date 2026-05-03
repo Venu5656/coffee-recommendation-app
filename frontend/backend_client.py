@@ -135,6 +135,25 @@ class CoffeeBackendClient:
             payload, note="Backend unavailable — showing mock response."
         )
 
+    def chat(
+        self,
+        message: str,
+        history: list[dict[str, Any]] | None = None,
+        messages: list[dict[str, str]] | None = None,
+    ) -> dict[str, Any] | None:
+        """Ask the backend barista assistant for the same response used by the web app."""
+        if self.use_mock:
+            self.last_error = "Backend mock mode is enabled."
+            return None
+        return self._post_json(
+            "/chat",
+            {
+                "message": message,
+                "history": history or [],
+                "messages": messages or [],
+            },
+        )
+
     def get_insights(self) -> list[str]:
         if self.use_mock:
             return self._mock_insights()
