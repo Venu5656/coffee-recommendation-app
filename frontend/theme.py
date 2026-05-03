@@ -268,16 +268,10 @@ section[data-testid="stSidebar"] {
 
 /* ── Login ─────────────────────────────────────────────────────────────── */
 .login-page {
-    width: calc(100% + 6rem);
-    margin-left: -3rem;
-    min-height: 100vh;
-    padding: 3rem 4rem 5rem;
-    background-image:
-        linear-gradient(170deg, rgba(6,3,1,0.74) 0%, rgba(12,6,2,0.38) 48%, rgba(6,3,1,0.80) 100%),
-        var(--login-bg, linear-gradient(180deg,#2A1208 0%,#0F0804 100%));
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    width: 100%;
+    padding: 3.5rem 2rem 1rem;
+    text-align: center;
+    background: transparent;
 }
 .login-brand {
     display: flex;
@@ -328,16 +322,30 @@ section[data-testid="stSidebar"] {
     transform: scale(1.07) rotate(-2deg);
     filter: drop-shadow(0 6px 36px rgba(201,168,124,0.65));
 }
+[data-testid="stHorizontalBlock"]:has(#login-form-marker) {
+    margin-top: 0;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    position: relative;
+    z-index: 2;
+    padding: 0 1rem;
+}
+[data-testid="stHorizontalBlock"]:has(#login-form-marker) > [data-testid="column"]:not(:has(#login-form-marker)) {
+    display: none !important;
+}
 [data-testid="column"]:has(#login-form-marker) {
-    margin-top: -80vh;
-    width: min(980px, calc(100vw - 8rem)) !important;
+    margin-top: 0;
+    flex: 0 1 min(980px, calc(100vw - 7rem)) !important;
+    width: min(980px, calc(100vw - 7rem)) !important;
     max-width: 980px !important;
     justify-self: center;
     padding: 2.6rem 5.2rem 2.4rem;
-    background: transparent !important;
-    backdrop-filter: blur(18px) saturate(1.4);
-    -webkit-backdrop-filter: blur(18px) saturate(1.4);
-    border: 1px solid rgba(255,255,255,0.18) !important;
+    background:
+        linear-gradient(145deg, rgba(255,255,255,0.11), rgba(255,255,255,0.035)) !important;
+    backdrop-filter: blur(18px) saturate(1.35);
+    -webkit-backdrop-filter: blur(18px) saturate(1.35);
+    border: 1px solid rgba(255,255,255,0.24) !important;
     border-radius: 12px !important;
     box-shadow:
         0 24px 72px rgba(0,0,0,0.28),
@@ -356,12 +364,58 @@ section[data-testid="stSidebar"] {
 .login-form-heading h2 {
     color: #FFF8EE !important;
     font-family: 'Cormorant Garamond', serif !important;
-    font-size: clamp(4rem, 7vw, 6.5rem) !important;
+    font-size: clamp(3.2rem, 5.4vw, 5rem) !important;
     font-weight: 700 !important;
     line-height: 0.96 !important;
     text-align: center;
-    margin: 0 0 1.1rem !important;
+    margin: 1.25rem 0 0.85rem !important;
     letter-spacing: -0.01em !important;
+}
+.login-info-panel {
+    text-align: center;
+    padding-bottom: 1.3rem;
+    margin-bottom: 0.2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+.login-info-panel span {
+    display: block;
+    color: rgba(212,169,106,0.92);
+    font-size: 0.62rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 900;
+    margin-bottom: 0.65rem;
+}
+.login-info-panel h1 {
+    color: #FFF8EE !important;
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: clamp(2rem, 3.6vw, 3.4rem) !important;
+    line-height: 0.98 !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+}
+.login-info-panel p {
+    max-width: 540px;
+    margin: 0.8rem auto 1rem;
+    color: rgba(255,248,238,0.68);
+    line-height: 1.6;
+    font-size: 0.9rem;
+}
+.login-info-panel div {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+}
+.login-info-panel strong {
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 999px;
+    padding: 0.42rem 0.72rem;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,248,238,0.82);
+    font-size: 0.7rem;
+    letter-spacing: 0.4px;
+    font-family: 'Satoshi', sans-serif;
 }
 .login-form-heading p {
     color: rgba(255,248,238,0.52);
@@ -389,20 +443,30 @@ section[data-testid="stSidebar"] {
     color: #FFF8EE !important;
 }
 [data-testid="column"]:has(#login-form-marker) .stTextInput input {
-    background: rgba(255,252,245,0.10) !important;
-    border: 1px solid rgba(255,255,255,0.16) !important;
+    background: rgba(255,255,255,0.18) !important;
+    border: 1px solid rgba(255,255,255,0.22) !important;
     border-radius: 6px !important;
     color: #2A1208 !important;
+    -webkit-text-fill-color: #2A1208 !important;
+    caret-color: #2A1208 !important;
     min-height: 48px !important;
     transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease !important;
 }
+[data-testid="column"]:has(#login-form-marker) .stTextInput input:focus,
+[data-testid="column"]:has(#login-form-marker) .stTextInput input:active,
+[data-testid="column"]:has(#login-form-marker) .stTextInput input:not(:placeholder-shown) {
+    color: #2A1208 !important;
+    -webkit-text-fill-color: #2A1208 !important;
+    caret-color: #2A1208 !important;
+}
 [data-testid="column"]:has(#login-form-marker) .stTextInput input::placeholder {
-    color: rgba(255,248,238,0.30) !important;
+    color: rgba(42,18,8,0.42) !important;
+    -webkit-text-fill-color: rgba(42,18,8,0.42) !important;
 }
 [data-testid="column"]:has(#login-form-marker) .stTextInput input:focus {
     border-color: var(--gold) !important;
     box-shadow: 0 0 0 3px rgba(212,169,106,0.18) !important;
-    background: rgba(255,252,245,0.16) !important;
+    background: rgba(255,255,255,0.24) !important;
 }
 [data-testid="column"]:has(#login-form-marker) .stForm {
     border: 0;
@@ -1682,6 +1746,7 @@ div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stBut
 .barista-mode-strip span,
 .barista-signal-row span,
 .barista-ai-chat-panel header span,
+.barista-chat-header span,
 .barista-ai-row span,
 .barista-latest-panel > span,
 .barista-pref-grid span,
@@ -1794,7 +1859,42 @@ div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stBut
     font-size: 1rem;
     font-weight: 900;
 }
-.barista-ai-chat-panel,
+/* Column-level dark card — targets the column containing #barista-chat-col-marker */
+[data-testid="column"]:has(#barista-chat-col-marker) {
+    min-height: 580px;
+    border-radius: 18px;
+    border: 1px solid rgba(126,83,46,0.14);
+    box-shadow: 0 22px 52px rgba(90,55,27,0.10);
+    padding: 1.15rem !important;
+    background:
+        radial-gradient(circle at top right, rgba(201,168,124,0.16), transparent 35%),
+        linear-gradient(150deg, #160A04 0%, #2B160A 100%);
+}
+[data-testid="column"]:has(#barista-chat-col-marker) > div {
+    gap: 0 !important;
+}
+#barista-chat-col-marker { display: none; }
+.barista-chat-header {
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid rgba(255,248,238,0.12);
+    margin-bottom: 0.4rem;
+}
+.barista-chat-header span {
+    display: block;
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,248,238,0.46);
+    font-family: 'Satoshi', sans-serif;
+}
+.barista-chat-header strong {
+    display: block;
+    margin-top: 0.28rem;
+    color: rgba(255,248,238,0.84);
+    font-family: 'Satoshi', sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+}
 .barista-latest-panel {
     min-height: 580px;
     border-radius: 18px;
@@ -5183,7 +5283,7 @@ a.home-card:hover .hc-arrow {
 }
 .cafe-subtitle {
     margin: 0.35rem 0 1rem;
-    color: rgba(255,255,255,0.38);
+    color: rgba(42,18,8,0.72);
     font-size: 0.68rem;
     letter-spacing: 2.6px;
     text-transform: uppercase;
@@ -5362,8 +5462,8 @@ a.home-card:hover .hc-arrow {
         padding: 0.45rem 0.9rem;
     }
     .login-page {
-        width: calc(100% + 2rem);
-        margin-left: -1rem;
+        width: 100vw;
+        margin-left: 0;
         min-height: 100vh;
         padding: 1.8rem 1.4rem 4rem;
         background-image:
@@ -5373,12 +5473,24 @@ a.home-card:hover .hc-arrow {
         background-position: center;
     }
     [data-testid="column"]:has(#login-form-marker) {
-        margin-top: -82vh;
+        margin-top: 0;
         width: calc(100vw - 2.2rem) !important;
+        max-width: calc(100vw - 2.2rem) !important;
+        flex-basis: calc(100vw - 2.2rem) !important;
         padding: 1.45rem 1.1rem;
+    }
+    [data-testid="stHorizontalBlock"]:has(#login-form-marker) {
+        margin-top: 1.2rem;
+        padding: 0;
     }
     .login-form-heading h2 {
         font-size: 2.2rem !important;
+    }
+    .login-info-panel h1 {
+        font-size: 1.9rem !important;
+    }
+    .login-info-panel p {
+        font-size: 0.82rem;
     }
 }
 

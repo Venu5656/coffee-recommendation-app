@@ -157,11 +157,42 @@ def _login_bg_url(filename: str) -> str:
 
 def _render_login_page(auth_client: CoffeeBackendClient, backend_live: bool) -> None:
     beans_url = _login_bg_url("login_bg.jpg")
-    if beans_url:
-        st.markdown(
-            f"<style>:root{{--login-bg:{beans_url};}}</style>",
-            unsafe_allow_html=True,
-        )
+    bg_image = beans_url or "linear-gradient(180deg,#2A1208 0%,#0F0804 100%)"
+    st.markdown(
+        f"""<style>
+        :root{{--login-bg:{bg_image};}}
+        html, body, .stApp {{
+            height: 100vh !important;
+            overflow: hidden !important;
+            background-image:
+                linear-gradient(170deg, rgba(6,3,1,0.78) 0%, rgba(12,6,2,0.42) 48%, rgba(6,3,1,0.82) 100%),
+                {bg_image} !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }}
+        [data-testid="stAppViewContainer"] {{
+            height: 100vh !important;
+            overflow: hidden !important;
+            background: transparent !important;
+        }}
+        [data-testid="stMain"] {{
+            height: 100vh !important;
+            overflow: hidden !important;
+            background: transparent !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+        }}
+        [data-testid="stMainBlockContainer"] {{
+            background: transparent !important;
+            overflow: hidden !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }}
+        [data-testid="stBottom"] {{ background: transparent !important; }}
+        </style>""",
+        unsafe_allow_html=True,
+    )
     logo_src = _img_data_uri("coffee_logo.png") or _img_data_uri("coffe_logo.png")
     logo_markup = (
         f'<img src="{logo_src}" class="login-logo-img" alt="Coffee Companion logo"/>'
@@ -183,6 +214,20 @@ def _render_login_page(auth_client: CoffeeBackendClient, backend_live: bool) -> 
     _, form_col, _ = st.columns([0.32, 1.9, 0.32], gap="large")
     with form_col:
         st.markdown('<div id="login-form-marker"></div>', unsafe_allow_html=True)
+        st.markdown(
+            """
+            <div class="login-info-panel">
+              <h1>Your personal coffee space.</h1>
+              <p>Log in to keep your taste profile, saved brews, recommendations, and barista chat history together.</p>
+              <div>
+                <strong>Personalized picks</strong>
+                <strong>Saved history</strong>
+                <strong>Profile dashboard</strong>
+              </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
         st.markdown(
             f"""
             <div class="login-form-heading">
