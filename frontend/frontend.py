@@ -696,7 +696,6 @@ def _render_profile_history(tracker: HistoryTracker) -> None:
             _composition_cup_html(
                 rec.composition or {},
                 str(rec.temperature).lower() in {"iced", "cold"},
-                compact=True,
             )
             or _cup_html(str(rec.drink_name))
         )

@@ -3123,8 +3123,14 @@ button[kind="primary"]:hover,
 }
 .ph-card-cup .cup-composition-labels,
 .ph-card-cup .cup-mug-layers,
-.ph-card-cup .cup-glass-layers {
+.ph-card-cup .cup-glass-layers,
+.ph-card-cup .composition-legend {
     display: none;
+}
+.ph-card-cup .composition-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .ph-card-body {
     min-width: 0;
