@@ -751,12 +751,15 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
 .barista-hero {
     width: calc(100% + 6rem);
     margin-left: -3rem;
-    min-height: 280px;
-    padding: 3.5rem 4rem 3rem;
+    min-height: 360px;
+    padding: 4rem;
     background:
-        linear-gradient(135deg, rgba(8,4,2,0.97) 52%, rgba(22,12,5,0.92) 100%),
-        radial-gradient(ellipse at 88% 50%, rgba(201,168,124,0.16) 0%, transparent 55%);
-    border-bottom: 1px solid rgba(201,168,124,0.14);
+        radial-gradient(circle at 84% 42%, rgba(255,248,230,0.46), transparent 18%),
+        radial-gradient(circle at 72% 28%, rgba(192,127,58,0.34), transparent 32%),
+        linear-gradient(128deg, #FFF3DA 0%, #E8C58D 47%, #7B4A24 100%);
+    border: 1px solid rgba(126,83,46,0.16);
+    border-radius: 0 0 34px 34px;
+    box-shadow: 0 26px 70px rgba(90,55,27,0.14);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -765,15 +768,21 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
 }
 .barista-hero-left {
     flex: 1;
+    max-width: 760px;
     animation: heroTextSlide 0.75s cubic-bezier(0.22,1,0.36,1) both;
 }
 .barista-hero-right {
+    width: min(420px, 34vw);
     flex-shrink: 0;
     animation: heroTextSlide 0.75s cubic-bezier(0.22,1,0.36,1) 0.12s both;
 }
 .barista-hero-kicker {
     display: block;
-    color: var(--accent);
+    width: fit-content;
+    padding: 0.5rem 0.78rem;
+    border-radius: 999px;
+    background: rgba(24,14,8,0.88);
+    color: #FFF8EE;
     font-size: 0.59rem;
     letter-spacing: 4px;
     text-transform: uppercase;
@@ -782,45 +791,174 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
 }
 .barista-hero h1 {
     font-family: 'Cormorant Garamond', serif !important;
-    color: #FFFFFF !important;
-    font-size: clamp(3.2rem, 6vw, 5.6rem) !important;
-    font-weight: 300 !important;
+    color: #1A0D06 !important;
+    font-size: clamp(3.4rem, 6.4vw, 6.4rem) !important;
+    font-weight: 500 !important;
     letter-spacing: 1px !important;
-    line-height: 0.92 !important;
+    line-height: 0.9 !important;
     margin: 0 0 1.3rem !important;
 }
 .barista-hero h1 em {
     font-style: italic;
-    color: var(--accent) !important;
+    color: #6F3E1E !important;
 }
 .barista-hero-rule {
-    width: 60px;
-    height: 1px;
-    background: var(--accent);
+    width: 112px;
+    height: 3px;
+    border-radius: 999px;
+    background: #1A0D06;
     margin: 0 0 1.15rem;
     animation: heroRuleGrow 0.65s cubic-bezier(0.22,1,0.36,1) 0.28s both;
 }
 .barista-hero p {
-    max-width: 500px;
-    color: rgba(255,255,255,0.44);
-    font-size: 0.91rem;
-    line-height: 1.8;
+    max-width: 690px;
+    color: rgba(24,14,8,0.72);
+    font-size: 1rem;
+    line-height: 1.75;
+    font-weight: 600;
     margin: 0;
+}
+.barista-prompt-strip {
+    width: min(1320px, calc(100% - 2rem));
+    margin: -2rem auto 2.2rem;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 0.75fr 1.25fr;
+    gap: 1rem;
+    align-items: stretch;
+    padding: 1rem;
+    border: 1px solid rgba(126,83,46,0.14);
+    border-radius: 24px;
+    background: rgba(255,249,241,0.94);
+    box-shadow: 0 22px 58px rgba(90,55,27,0.12), inset 0 1px 0 rgba(255,255,255,0.78);
+}
+.barista-prompt-strip > div:first-child {
+    padding: 0.55rem 0.7rem;
+}
+.barista-prompt-strip strong {
+    display: block;
+    color: var(--espresso);
+    font-size: 1rem;
+    line-height: 1.25;
 }
 .barista-hero-prompts {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.55rem;
-    margin-top: 1.25rem;
+    gap: 0.7rem;
+    margin-top: 0;
 }
-.barista-hero-prompts span {
-    color: rgba(255,255,255,0.68);
-    background: rgba(255,255,255,0.055);
-    border: 1px solid rgba(201,168,124,0.16);
+.barista-prompt-card {
+    flex: 1 1 180px;
+    min-height: 76px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.barista-prompt-card span {
+    display: block;
+    margin-bottom: 0.28rem;
+    color: rgba(107,68,35,0.58);
+    font-size: 0.52rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+.barista-prompt-card strong {
+    display: block;
+    color: inherit;
+    font-size: 0.88rem;
+    line-height: 1.25;
+}
+.barista-hero-prompts a {
+    color: #1A0D06;
+    background: rgba(255,255,255,0.58);
+    border: 1px solid rgba(24,14,8,0.12);
     border-radius: 999px;
-    padding: 0.46rem 0.72rem;
-    font-size: 0.76rem;
+    padding: 0.85rem 0.95rem;
+    font-size: 0.8rem;
+    font-weight: 800;
     line-height: 1;
+    text-decoration: none !important;
+    box-shadow: 0 12px 22px rgba(90,55,27,0.10);
+    transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.barista-hero-prompts a:hover {
+    transform: translateY(-3px);
+    color: #FFF8EE;
+    background: #1A0D06;
+    border-color: #1A0D06;
+    box-shadow: 0 18px 30px rgba(90,55,27,0.18);
+}
+.barista-step-track {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: 1.45rem;
+}
+
+.barista-process-card {
+    display: grid;
+    gap: 0.7rem;
+    padding: 1.1rem;
+    border-radius: 24px;
+    background: rgba(24,14,8,0.88);
+    border: 1px solid rgba(255,248,238,0.18);
+    box-shadow: 0 26px 60px rgba(90,55,27,0.20);
+}
+.barista-process-card div {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    column-gap: 0.85rem;
+    align-items: start;
+    padding: 0.8rem;
+    border-radius: 16px;
+    background: rgba(255,248,238,0.065);
+    border: 1px solid rgba(255,248,238,0.08);
+}
+.barista-process-card span {
+    grid-row: span 2;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #E8C58D;
+    color: #1A0D06;
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 900;
+    font-size: 0.68rem;
+    letter-spacing: 1px;
+}
+.barista-process-card strong {
+    color: #FFF8EE;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.9rem;
+}
+.barista-process-card p {
+    margin: 0.18rem 0 0;
+    color: rgba(255,248,238,0.56);
+    font-size: 0.74rem;
+    line-height: 1.45;
+}
+
+.barista-step-track span {
+    color: rgba(24,14,8,0.56);
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 900;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+}
+.barista-step-track span + span::before {
+    content: '';
+    display: inline-block;
+    width: 34px;
+    height: 1px;
+    margin: 0 0.7rem 0 0;
+    vertical-align: middle;
+    background: rgba(24,14,8,0.28);
 }
 
 /* ── CSS coffee cup art ───────────────────────────────────────────────── */
@@ -829,6 +967,10 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
     flex-direction: column;
     align-items: center;
     animation: cupFloat 4.2s ease-in-out infinite;
+    padding: 2.3rem;
+    border-radius: 999px;
+    background: rgba(255,248,238,0.42);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.66), 0 26px 70px rgba(90,55,27,0.20);
 }
 .bca-steam {
     display: flex;
@@ -838,44 +980,45 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
     margin-bottom: 2px;
 }
 .bca-s {
-    width: 2px;
+    width: 3px;
     border-radius: 2px;
-    background: linear-gradient(to top, rgba(201,168,124,0.72), transparent);
+    background: linear-gradient(to top, rgba(24,14,8,0.44), transparent);
     animation: steamRiseNew 2.8s ease-in-out infinite;
 }
 .bca-s1 { height: 34px; animation-delay: 0s;    }
 .bca-s2 { height: 48px; animation-delay: 0.55s; }
 .bca-s3 { height: 28px; animation-delay: 1.1s;  }
 .bca-cup {
-    width: 96px;
-    height: 76px;
-    background: linear-gradient(160deg, #2C1708, #160B04);
-    border: 1.5px solid rgba(201,168,124,0.42);
-    border-radius: 6px 6px 22px 22px;
+    width: 134px;
+    height: 106px;
+    background: linear-gradient(160deg, #FFF8EE, #E8D0A8);
+    border: 2px solid rgba(24,14,8,0.54);
+    border-radius: 10px 10px 34px 34px;
     position: relative;
+    box-shadow: 0 18px 35px rgba(90,55,27,0.14);
 }
 .bca-liquid {
     position: absolute;
     bottom: 0; left: 0; right: 0;
     height: 46%;
-    background: linear-gradient(to top, rgba(201,168,124,0.52), rgba(201,168,124,0.1));
-    border-radius: 0 0 20px 20px;
+    background: linear-gradient(to top, #6D2F13, #A35C2C);
+    border-radius: 0 0 31px 31px;
     animation: breathe 3.6s ease-in-out infinite;
 }
 .bca-handle {
     position: absolute;
-    right: -17px; top: 16px;
-    width: 17px; height: 34px;
-    border: 1.5px solid rgba(201,168,124,0.42);
+    right: -28px; top: 24px;
+    width: 28px; height: 48px;
+    border: 2px solid rgba(24,14,8,0.54);
     border-left: none;
-    border-radius: 0 17px 17px 0;
+    border-radius: 0 28px 28px 0;
 }
 .bca-saucer {
-    width: 126px; height: 11px;
-    background: linear-gradient(90deg, transparent, rgba(201,168,124,0.13), transparent);
+    width: 174px; height: 14px;
+    background: linear-gradient(90deg, transparent, rgba(24,14,8,0.18), transparent);
     border-radius: 50%;
     margin-top: 3px;
-    border: 1px solid rgba(201,168,124,0.18);
+    border: 1px solid rgba(24,14,8,0.18);
 }
 
 /* ── Shared kicker label ──────────────────────────────────────────────── */
@@ -892,42 +1035,63 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
 /* ── Shared panel base ────────────────────────────────────────────────── */
 .barista-chat-panel {
     background:
-        radial-gradient(circle at top left, rgba(201,168,124,0.07), transparent 40%),
-        linear-gradient(158deg, #121008, #1C1108 55%, #0F0804);
-    border: 1px solid rgba(201,168,124,0.17);
-    border-radius: 18px;
-    box-shadow: 0 22px 68px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.04);
+        radial-gradient(circle at top left, rgba(201,168,124,0.14), transparent 42%),
+        linear-gradient(158deg, #FFF9F1, #F3DFC0 58%, #D8B071);
+    border: 1px solid rgba(126,83,46,0.16);
+    border-radius: 24px;
+    box-shadow: 0 22px 58px rgba(90,55,27,0.13), inset 0 1px 0 rgba(255,255,255,0.8);
     animation: categoryFloatIn 0.7s cubic-bezier(0.22,1,0.36,1) both;
 }
 
 /* ── Chat panel ───────────────────────────────────────────────────────── */
 .barista-chat-panel {
-    padding: 1.35rem 1.35rem 1.1rem;
-    min-height: 520px;
+    padding: 1.45rem;
+    min-height: 610px;
     display: flex;
     flex-direction: column;
 }
 .barista-chat-heading {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    border-bottom: 1px solid rgba(201,168,124,0.1);
+    border-bottom: 1px solid rgba(24,14,8,0.12);
     padding-bottom: 0.95rem;
 }
 .barista-chat-heading .barista-panel-kicker {
     margin-bottom: 0;
 }
 .barista-chat-heading strong {
-    color: rgba(255,255,255,0.72);
-    font-size: 0.86rem;
-    font-weight: 500;
-    text-align: right;
+    display: block;
+    color: rgba(24,14,8,0.76);
+    font-size: 0.94rem;
+    font-weight: 800;
+    text-align: left;
+}
+.barista-reset-link {
+    flex: 0 0 auto;
+    padding: 0.48rem 0.72rem;
+    border-radius: 999px;
+    border: 1px solid rgba(24,14,8,0.14);
+    color: #FFF8EE !important;
+    background: #1A0D06;
+    text-decoration: none !important;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+.barista-reset-link:hover {
+    transform: translateY(-1px);
+    background: #6F3E1E;
+    color: #FFF8EE !important;
 }
 .barista-chat-scroll {
     flex: 1;
     margin-top: 1rem;
-    max-height: 400px;
+    max-height: 490px;
     overflow-y: auto;
     padding-right: 0.25rem;
     scrollbar-width: thin;
@@ -949,8 +1113,8 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
     max-width: min(80%, 580px);
     padding: 0.88rem 1.1rem;
     border-radius: 20px;
-    border: 1px solid rgba(201,168,124,0.13);
-    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(126,83,46,0.12);
+    background: rgba(255,255,255,0.54);
 }
 .msg-label {
     display: block;
@@ -963,16 +1127,16 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
 }
 .barista-message p {
     margin: 0;
-    color: rgba(255,255,255,0.74);
+    color: rgba(24,14,8,0.72);
     line-height: 1.65;
     font-size: 0.9rem;
 }
 .barista-message-row.user .barista-message {
-    background: rgba(255,248,238,0.93);
-    border-color: rgba(201,168,124,0.26);
+    background: #1A0D06;
+    border-color: #1A0D06;
 }
 .barista-message-row.user .barista-message p {
-    color: #1A0D06;
+    color: #FFF8EE;
 }
 .barista-message-row.user .msg-label {
     color: rgba(176,118,58,0.72);
@@ -986,9 +1150,14 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
 
 /* ── Profile panel ────────────────────────────────────────────────────── */
 .barista-profile-panel {
-    padding: 0.2rem 0 0 0.35rem;
+    padding: 1.25rem;
     min-height: 420px;
-    border-left: 1px solid rgba(24,14,8,0.16);
+    border: 1px solid rgba(126,83,46,0.12);
+    border-radius: 18px;
+    background:
+        radial-gradient(circle at 95% 0%, rgba(226,187,115,0.18), transparent 32%),
+        linear-gradient(145deg, rgba(255,249,241,0.96), rgba(242,226,199,0.72));
+    box-shadow: 0 18px 44px rgba(90,55,27,0.10), inset 0 1px 0 rgba(255,255,255,0.72);
     animation: categoryFloatIn 0.7s cubic-bezier(0.22,1,0.36,1) both;
 }
 .barista-profile-panel h2 {
@@ -1007,14 +1176,14 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
 }
 .bpg-tile {
     display: grid;
-    grid-template-columns: 34px 1fr auto;
+    grid-template-columns: 44px 1fr auto;
     align-items: center;
     gap: 0.65rem;
     border: 0;
     border-bottom: 1px solid rgba(24,14,8,0.12);
     background: transparent;
     border-radius: 0;
-    padding: 0.82rem 0;
+    padding: 0.86rem 0.25rem;
     animation: tileStagger 0.5s cubic-bezier(0.22,1,0.36,1) both;
     transition: background 0.3s ease;
 }
@@ -1026,6 +1195,20 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
 .bpg-tile:nth-child(3) { animation-delay: 0.18s; }
 .bpg-tile:nth-child(4) { animation-delay: 0.24s; }
 .bpg-icon     { font-size: 1.05rem; line-height: 1; margin-bottom: 0; }
+.bpg-icon {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #1A0D06;
+    color: #FFF8EE;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
 .bpg-img-icon {
     width: 22px; height: 22px;
     object-fit: contain;
@@ -1052,8 +1235,8 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
 .barista-concern-box {
     margin-top: 1.1rem;
     border-left: 2px solid var(--accent);
-    background: rgba(201,168,124,0.08);
-    border-radius: 0;
+    background: rgba(255,255,255,0.45);
+    border-radius: 12px;
     padding: 0.78rem 0.9rem;
 }
 .barista-concern-box p {
@@ -1070,26 +1253,35 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
 }
 
 /* ── Result panel ─────────────────────────────────────────────────────── */
-.barista-result-panel {
-    margin-top: 2rem;
-    padding: 1.55rem 0;
+.barista-result-card {
+    margin: 2rem 0 0;
+    padding: 1.2rem;
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
     align-items: center;
-    gap: 1.5rem;
-    border-top: 1px solid rgba(24,14,8,0.12);
-    border-bottom: 1px solid rgba(24,14,8,0.12);
+    gap: 1.2rem;
+    border: 1px solid rgba(126,83,46,0.12);
+    border-radius: 20px;
+    background:
+        radial-gradient(circle at 92% 0%, rgba(226,187,115,0.22), transparent 30%),
+        linear-gradient(135deg, rgba(255,249,241,0.92), rgba(241,225,196,0.72));
+    box-shadow: 0 18px 46px rgba(90,55,27,0.11), inset 0 1px 0 rgba(255,255,255,0.78);
     animation: resultBloom 0.7s cubic-bezier(0.22,1,0.36,1) both !important;
 }
-.barista-result-panel h2 {
+.barista-result-card h2 {
     color: var(--espresso) !important;
     font-family: 'Cormorant Garamond', serif !important;
     font-weight: 500 !important;
-    font-size: 2.45rem !important;
+    font-size: clamp(2.2rem, 4vw, 3.6rem) !important;
     margin: 0.45rem 0 0.4rem !important;
+    line-height: 0.98 !important;
+}
+.barista-result-card .barista-panel-kicker {
+    color: rgba(107,68,35,0.72);
 }
 .barista-score {
     display: inline-flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     color: #1A0D06;
@@ -1106,7 +1298,13 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
     animation: scoreCountUp 0.5s cubic-bezier(0.22,1,0.36,1) 0.3s both;
     box-shadow: 0 4px 16px rgba(201,168,124,0.28);
 }
-.barista-result-panel p {
+.barista-score span {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.48rem;
+    letter-spacing: 2px;
+}
+.barista-result-card p {
     color: rgba(24,14,8,0.64);
     line-height: 1.75;
     margin: 0;
@@ -1118,6 +1316,59 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
     color: rgba(24,14,8,0.7);
     padding-left: 1rem;
     font-size: 0.88rem;
+}
+.barista-result-visual {
+    min-height: 320px;
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1.1rem;
+    border-radius: 18px;
+    background:
+        radial-gradient(ellipse at 60% 88%, rgba(90,55,27,0.16), transparent 44%),
+        linear-gradient(145deg, #120A05, #261209);
+    overflow: hidden;
+}
+.barista-result-visual .composition-wrap {
+    grid-template-columns: 1fr;
+    justify-items: center;
+}
+.barista-result-visual .composition-legend {
+    width: 100%;
+}
+.barista-result-visual .cup-viz {
+    transform: scale(0.95);
+    transform-origin: center bottom;
+}
+.barista-why-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+    margin-top: 1rem;
+}
+.barista-why-grid div {
+    padding: 0.72rem 0.8rem;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.48);
+    border: 1px solid rgba(126,83,46,0.10);
+}
+.barista-why-grid span {
+    display: block;
+    color: rgba(90,55,27,0.58);
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.54rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.22rem;
+}
+.barista-why-grid strong {
+    display: block;
+    color: var(--espresso);
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.82rem;
+    line-height: 1.25;
 }
 
 /* ── Why panel ────────────────────────────────────────────────────────── */
@@ -1133,6 +1384,311 @@ hr { border:none !important; border-top:1px solid var(--border) !important; marg
 }
 .barista-why-panel strong {
     color: var(--espresso);
+}
+
+/* ── Barista order desk redesign ─────────────────────────────────────── */
+.barista-desk-hero {
+    width: calc(100% + 6rem);
+    margin-left: -3rem;
+    min-height: 300px;
+    padding: 3.6rem 4rem 4.6rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: center;
+    background:
+        linear-gradient(115deg, rgba(255,250,242,0.96) 0%, rgba(238,214,174,0.88) 58%, rgba(122,77,39,0.92) 100%);
+    border-bottom: 1px solid rgba(126,83,46,0.16);
+}
+.bdh-copy {
+    align-self: center;
+}
+.bdh-copy > span,
+.barista-desk-prompts > div > span,
+.btp-kicker,
+.barista-transcript-panel header span,
+.bdp-checks span {
+    display: block;
+    color: rgba(107,68,35,0.72);
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+.bdh-copy h1 {
+    max-width: 860px;
+    margin: 0.8rem 0 1rem !important;
+    color: #1A0D06 !important;
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: clamp(3.4rem, 6vw, 6.4rem) !important;
+    font-weight: 500 !important;
+    line-height: 0.92 !important;
+}
+.bdh-copy p {
+    max-width: 620px;
+    margin: 0;
+    color: rgba(24,14,8,0.68);
+    font-family: 'Satoshi', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.75;
+}
+.bdh-ticket,
+.barista-ticket-panel,
+.barista-transcript-panel,
+.barista-decision-panel {
+    border: 1px solid rgba(126,83,46,0.16);
+    border-radius: 18px;
+    box-shadow: 0 22px 54px rgba(90,55,27,0.12), inset 0 1px 0 rgba(255,255,255,0.72);
+}
+.bdh-ticket {
+    padding: 1.15rem;
+    background: rgba(24,14,8,0.88);
+    color: #FFF8EE;
+    align-self: center;
+}
+.bdh-ticket-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255,248,238,0.14);
+}
+.bdh-ticket-top span,
+.bdh-ticket-line span {
+    color: rgba(255,248,238,0.52);
+    font-size: 0.58rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+.bdh-ticket-top strong {
+    color: #F1D49B;
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+.bdh-ticket-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.88rem 0;
+    border-bottom: 1px solid rgba(255,248,238,0.09);
+}
+.bdh-ticket-line strong {
+    color: #FFF8EE;
+    font-size: 0.86rem;
+    text-align: right;
+}
+.barista-desk-prompts {
+    width: min(1320px, calc(100% - 2rem));
+    margin: -2.2rem auto 2rem;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 0.72fr 1.28fr;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255,249,241,0.96);
+    border: 1px solid rgba(126,83,46,0.14);
+    border-radius: 20px;
+    box-shadow: 0 20px 52px rgba(90,55,27,0.12);
+}
+.barista-desk-prompts > div {
+    padding: 0.55rem 0.7rem;
+}
+.barista-desk-prompts > div strong {
+    display: block;
+    margin-top: 0.35rem;
+    color: var(--espresso);
+    font-size: 1rem;
+}
+.barista-desk-prompts nav {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.7rem;
+}
+.barista-desk-prompts a {
+    min-height: 82px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0.9rem;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.64);
+    border: 1px solid rgba(126,83,46,0.12);
+    color: #1A0D06 !important;
+    text-decoration: none !important;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 800;
+    line-height: 1.25;
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.barista-desk-prompts a:hover {
+    transform: translateY(-2px);
+    background: #1A0D06;
+    color: #FFF8EE !important;
+    box-shadow: 0 16px 28px rgba(90,55,27,0.16);
+}
+.barista-desk-prompts a span {
+    margin-bottom: 0.3rem;
+    color: rgba(107,68,35,0.64);
+    font-size: 0.52rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+.barista-desk-prompts a:hover span {
+    color: rgba(255,248,238,0.58);
+}
+.barista-ticket-panel,
+.barista-decision-panel {
+    min-height: 520px;
+    padding: 1.25rem;
+    background:
+        linear-gradient(145deg, rgba(255,249,241,0.98), rgba(241,224,194,0.76));
+}
+.barista-ticket-panel h2,
+.barista-decision-panel h2 {
+    margin: 0.6rem 0 1.1rem !important;
+    color: var(--espresso) !important;
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: 2.1rem !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+}
+.btp-list {
+    display: grid;
+    gap: 0.65rem;
+}
+.btp-list div,
+.btp-note,
+.bdp-checks div {
+    padding: 0.85rem;
+    border: 1px solid rgba(126,83,46,0.12);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.58);
+}
+.btp-list span,
+.btp-note span {
+    display: block;
+    color: rgba(107,68,35,0.62);
+    font-size: 0.54rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+.btp-list strong {
+    display: block;
+    margin-top: 0.25rem;
+    color: #1A0D06;
+    font-size: 1.02rem;
+}
+.btp-note {
+    margin-top: 1rem;
+}
+.btp-note p,
+.barista-decision-panel p {
+    margin: 0.35rem 0 0;
+    color: rgba(24,14,8,0.66);
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+.barista-transcript-panel {
+    min-height: 520px;
+    padding: 1.2rem;
+    background:
+        radial-gradient(circle at top right, rgba(201,168,124,0.16), transparent 34%),
+        linear-gradient(150deg, #120904, #271409);
+}
+.barista-transcript-panel header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255,248,238,0.12);
+}
+.barista-transcript-panel header strong {
+    display: block;
+    margin-top: 0.25rem;
+    color: rgba(255,248,238,0.82);
+    font-size: 0.94rem;
+}
+.barista-transcript-panel header a {
+    padding: 0.5rem 0.76rem;
+    border-radius: 999px;
+    background: rgba(255,248,238,0.10);
+    border: 1px solid rgba(255,248,238,0.14);
+    color: rgba(255,248,238,0.76) !important;
+    font-size: 0.62rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none !important;
+}
+.barista-transcript-scroll {
+    max-height: 410px;
+    overflow-y: auto;
+    padding: 1rem 0.2rem 0 0;
+}
+.barista-transcript-row {
+    display: flex;
+    margin-bottom: 0.82rem;
+    animation: messageBubbleIn 0.42s cubic-bezier(0.22,1,0.36,1) both;
+}
+.barista-transcript-row.user {
+    justify-content: flex-end;
+}
+.barista-transcript-row > div {
+    max-width: min(86%, 620px);
+    padding: 0.86rem 1rem;
+    border-radius: 14px;
+    background: rgba(255,248,238,0.10);
+    border: 1px solid rgba(255,248,238,0.10);
+}
+.barista-transcript-row.user > div {
+    background: #FFF8EE;
+}
+.barista-transcript-row span {
+    display: block;
+    margin-bottom: 0.32rem;
+    color: rgba(241,212,155,0.72);
+    font-size: 0.54rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+.barista-transcript-row p {
+    margin: 0;
+    color: rgba(255,248,238,0.74);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+.barista-transcript-row.user span {
+    color: rgba(107,68,35,0.64);
+}
+.barista-transcript-row.user p {
+    color: #1A0D06;
+}
+.barista-desk-input {
+    margin-top: 1rem;
+}
+.barista-decision-panel p {
+    margin-bottom: 1rem;
+}
+.bdp-checks {
+    display: grid;
+    gap: 0.65rem;
+    margin-top: 1rem;
+}
+.bdp-checks strong {
+    display: block;
+    margin-top: 0.25rem;
+    color: #1A0D06;
+    font-size: 0.9rem;
 }
 
 .composition-wrap {
@@ -3132,6 +3688,24 @@ button[kind="primary"]:hover,
     align-items: center;
     justify-content: center;
 }
+.ph-card-cup .cup-mug-body.cup-fill-body {
+    background:
+        linear-gradient(105deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 16%, transparent 31%),
+        var(--drink-fill);
+}
+.ph-card-cup .cup-glass-body.cup-fill-body {
+    background:
+        linear-gradient(105deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 14%, transparent 32%),
+        var(--drink-fill);
+}
+.ph-card-cup .cup-mug-body::before,
+.ph-card-cup .cup-mug-body::after,
+.ph-card-cup .cup-glass-body::before,
+.ph-card-cup .cup-glass-body::after,
+.ph-card-cup .cup-mug-shine,
+.ph-card-cup .cup-glass-shine {
+    display: none;
+}
 .ph-card-body {
     min-width: 0;
     display: flex;
@@ -4418,6 +4992,18 @@ a.home-card:hover .hc-arrow {
     .barista-hero h1 {
         font-size: 3rem !important;
     }
+    .barista-prompt-strip {
+        width: 100%;
+        margin: 1rem 0 1.5rem;
+        grid-template-columns: 1fr;
+        border-radius: 18px;
+    }
+    .barista-step-track {
+        flex-wrap: wrap;
+    }
+    .barista-step-track span + span::before {
+        width: 18px;
+    }
     .barista-chat-heading {
         display: block;
     }
@@ -4427,11 +5013,9 @@ a.home-card:hover .hc-arrow {
         text-align: left;
     }
     .barista-profile-panel {
-        border-left: 0;
-        border-top: 1px solid rgba(24,14,8,0.14);
-        padding: 1.2rem 0 0;
+        padding: 1.1rem;
     }
-    .barista-result-panel {
+    .barista-result-card {
         grid-template-columns: 1fr;
     }
     .barista-score {

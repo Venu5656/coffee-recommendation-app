@@ -39,13 +39,15 @@ if _pill_nav:
 if (
     st.query_params.get("brew_mode", "")
     or st.query_params.get("rec_step", "")
-    or st.query_params.get("result_action", "")
     or any(k.startswith("set_") for k in st.query_params)
 ):
     st.session_state.page = "recommend"
 
 if st.query_params.get("profile_view", ""):
     st.session_state.page = "profile"
+
+if st.query_params.get("barista_prompt", "") or st.query_params.get("barista_action", ""):
+    st.session_state.page = "barista"
 
 
 def _img_b64(filename: str) -> str:

@@ -538,7 +538,6 @@ def render_recommendation_page(client: CoffeeBackendClient) -> None:
     # Handle query params for step / mode transitions
     _mp = st.query_params.get("brew_mode", "")
     _sp = st.query_params.get("rec_step",  "")
-    _action = st.query_params.get("result_action", "")
 
     if _mp or _sp:
         if _mp in ("cafe", "home"):
@@ -558,44 +557,6 @@ def render_recommendation_page(client: CoffeeBackendClient) -> None:
     brew_mode = st.session_state.get("_brew_mode_val", "")
     is_home   = brew_mode == "home"
     rec_step  = st.session_state.get("rec_step", "select")
-
-    if _action and "last_result" in st.session_state:
-        if _action == "try":
-            current = st.session_state["last_result"].get("recommended_drink", "")
-            payload = {
-                **st.session_state.get("last_payload", {}),
-                "try_something_new": True,
-            }
-            result = client.get_recommendation(payload)
-            if (not result.get("_from_backend")) or result.get("recommended_drink") == current:
-                pool = _HOME_ALL if is_home else _CAFE_ALL
-                nxt = random.choice([d for d in pool if d != current] or pool)
-                result = {
-                    **result,
-                    "recommended_drink": nxt,
-                    "match_score": random.randint(70, 94),
-                }
-            st.session_state["last_payload"] = payload
-            st.session_state["last_result"] = result
-        elif _action == "save":
-            r = st.session_state["last_result"]
-            p = st.session_state.get("last_payload", {})
-            HistoryTracker().add_recommendation(
-                drink_name=r.get("recommended_drink", "Unknown"),
-                mood=p.get("mood", ""),
-                time_of_day=p.get("time_of_day", ""),
-                temperature=p.get("temperature_preference", "hot"),
-                location="home" if st.session_state.get("last_is_home") else "cafe",
-                match_score=r.get("match_score", 0),
-                composition=r.get("composition", {}),
-            )
-            st.session_state["rec_saved_notice"] = True
-        elif _action == "start":
-            for k in ("last_result", "last_payload", "_brew_mode_val"):
-                st.session_state.pop(k, None)
-            st.session_state["rec_step"] = "select"
-        st.query_params.clear()
-        st.rerun()
 
     # ── Step 0: mode selection ────────────────────────────────────────────────
     if rec_step == "select" or not brew_mode:
@@ -632,16 +593,42 @@ def render_recommendation_page(client: CoffeeBackendClient) -> None:
         )
         if st.session_state.pop("rec_saved_notice", False):
             st.success("Saved to history.")
-        st.markdown(
-            """
-            <div class="rec-result-action-row">
-              <a href="?result_action=try">Try another</a>
-              <a href="?result_action=save">Save to history</a>
-              <a href="?result_action=start">Start over</a>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        _marker, _btn1, _btn2, _btn3 = st.columns([0.001, 1, 1, 1])
+        with _marker:
+            st.markdown('<div id="rec-result-actions"></div>', unsafe_allow_html=True)
+        with _btn1:
+            if st.button("Try another", key="rec_try_btn", use_container_width=True):
+                current = st.session_state["last_result"].get("recommended_drink", "")
+                payload = {**st.session_state.get("last_payload", {}), "try_something_new": True}
+                result = client.get_recommendation(payload)
+                if (not result.get("_from_backend")) or result.get("recommended_drink") == current:
+                    pool = _HOME_ALL if is_home else _CAFE_ALL
+                    nxt = random.choice([d for d in pool if d != current] or pool)
+                    result = {**result, "recommended_drink": nxt, "match_score": random.randint(70, 94)}
+                st.session_state["last_payload"] = payload
+                st.session_state["last_result"] = result
+                st.rerun()
+        with _btn2:
+            if st.button("Save to history", key="rec_save_btn", use_container_width=True):
+                r = st.session_state["last_result"]
+                p = st.session_state.get("last_payload", {})
+                HistoryTracker().add_recommendation(
+                    drink_name=r.get("recommended_drink", "Unknown"),
+                    mood=p.get("mood", ""),
+                    time_of_day=p.get("time_of_day", ""),
+                    temperature=p.get("temperature_preference", "hot"),
+                    location="home" if st.session_state.get("last_is_home") else "cafe",
+                    match_score=r.get("match_score", 0),
+                    composition=r.get("composition", {}),
+                )
+                st.session_state["rec_saved_notice"] = True
+                st.rerun()
+        with _btn3:
+            if st.button("Start over", key="rec_start_btn", use_container_width=True):
+                for k in ("last_result", "last_payload", "_brew_mode_val"):
+                    st.session_state.pop(k, None)
+                st.session_state["rec_step"] = "select"
+                st.rerun()
         return
 
     # ── Preference form ───────────────────────────────────────────────────────
