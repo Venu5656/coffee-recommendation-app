@@ -419,7 +419,10 @@ def _render_dashboard_preview(dashboard: dict[str, object]) -> None:
             <div><span>Top drink</span><strong>{escape(str(stats.get("favorite_drink", "None yet")))}</strong></div>
             <div><span>Explorer score</span><strong>{escape(str(exploration.get("share", 0)))}%</strong></div>
           </div>
-          <a class="hdp-link" href="?pill_nav=profile">Open profile dashboard</a>
+          <a class="hdp-link" href="?pill_nav=profile" target="_self"
+             onclick="event.preventDefault();window.parent.location.href='?pill_nav=profile';return false;">
+            Open profile dashboard
+          </a>
         </section>
         """,
         unsafe_allow_html=True,
@@ -875,8 +878,8 @@ if page == "home":
             f"""
             <div id="pill-expand-circle"></div>
             <div class="rowa-pill-outer">
-                <a class="rowa-pill" id="rowa-cta-pill" href="?pill_nav=recommend" style="animation: fadeInUp 0.9s cubic-bezier(0.22,1,0.36,1) both; animation-delay:1.25s;"
-                   onclick="event.preventDefault();if(window._pillExpanding)return false;window._pillExpanding=true;var o=document.getElementById('pill-expand-circle');if(o){{o.classList.add('zooming');}}setTimeout(function(){{window._pillExpanding=false;window.location.href='?pill_nav=recommend';}},520);return false;">
+                <a class="rowa-pill" id="rowa-cta-pill" href="?pill_nav=recommend" target="_self" style="animation: fadeInUp 0.9s cubic-bezier(0.22,1,0.36,1) both; animation-delay:1.25s;"
+                   onclick="event.preventDefault();if(window._pillExpanding)return false;window._pillExpanding=true;var o=document.getElementById('pill-expand-circle');if(o){{o.classList.add('zooming');}}setTimeout(function(){{window._pillExpanding=false;window.parent.location.href='?pill_nav=recommend';}},520);return false;">
                     <span class="rowa-pill-icon" style="background-image:{bean_bg};"></span>
                     <span class="rowa-pill-text">Get Recommendation</span>
                 </a>
@@ -904,7 +907,7 @@ if page == "home":
     fav_display = favorite if favorite != "None yet" else "Start exploring"
 
     st.markdown(
-        f"""<div class="home-grid" style="margin-top:3rem;"><a href="?pill_nav=insights" class="home-card hc-insights"><div class="hc-arrow">&#8599;</div><div class="hc-inner"><span class="hc-label">Discover</span><div class="hc-title">Explore<br>Insights</div><div class="hc-sub">Trends, science and global facts behind your perfect cup</div></div></a><div class="home-grid-right"><div class="home-grid-top"><a href="?pill_nav=profile" class="home-card hc-stats"><div class="hc-arrow">&#8599;</div><div class="hc-inner"><span class="hc-label">Your Profile</span><span class="hc-stat-num">{total_drinks}</span><span class="hc-stat-unit">{brew_word} logged</span><div class="hc-sub">Favourite - {fav_display}</div></div></a><div class="home-card hc-tip hc-static-tip"><div class="hc-inner"><span class="hc-label">Today's Tip</span><div class="hc-title">Stay<br>Hydrated</div><div class="hc-sub">Drinking water between coffees reduces jitters and sharpens taste</div></div></div></div><div class="home-card hc-fact hc-static-fact"><div class="hc-inner"><span class="hc-label">Coffee Fact</span><div class="hc-title">Finland drinks more coffee per person than any country.</div><div class="hc-sub">10.1 kg per person each year, which is a lot of morning rituals.</div></div></div></div></div>""",
+        f"""<div class="home-grid" style="margin-top:3rem;"><a href="?pill_nav=insights" target="_self" class="home-card hc-insights" onclick="event.preventDefault();window.parent.location.href='?pill_nav=insights';return false;"><div class="hc-arrow">&#8599;</div><div class="hc-inner"><span class="hc-label">Discover</span><div class="hc-title">Explore<br>Insights</div><div class="hc-sub">Trends, science and global facts behind your perfect cup</div></div></a><div class="home-grid-right"><div class="home-grid-top"><a href="?pill_nav=profile" target="_self" class="home-card hc-stats" onclick="event.preventDefault();window.parent.location.href='?pill_nav=profile';return false;"><div class="hc-arrow">&#8599;</div><div class="hc-inner"><span class="hc-label">Your Profile</span><span class="hc-stat-num">{total_drinks}</span><span class="hc-stat-unit">{brew_word} logged</span><div class="hc-sub">Favourite - {fav_display}</div></div></a><div class="home-card hc-tip hc-static-tip"><div class="hc-inner"><span class="hc-label">Today's Tip</span><div class="hc-title">Stay<br>Hydrated</div><div class="hc-sub">Drinking water between coffees reduces jitters and sharpens taste</div></div></div></div><div class="home-card hc-fact hc-static-fact"><div class="hc-inner"><span class="hc-label">Coffee Fact</span><div class="hc-title">Finland drinks more coffee per person than any country.</div><div class="hc-sub">10.1 kg per person each year, which is a lot of morning rituals.</div></div></div></div></div>""",
         unsafe_allow_html=True,
     )
     _render_dashboard_preview(dashboard)
