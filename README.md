@@ -151,6 +151,8 @@ DATABASE_URL=your_postgres_connection_string
 JWT_SECRET=replace_this_before_production
 ```
 
+On Railway, attach a PostgreSQL service and add its `DATABASE_URL` to the web service variables to enable persistent accounts and history. Without `DATABASE_URL`, the app still runs recommendations and barista chat, while auth/history use an in-memory fallback that resets on redeploy.
+
 ## Notes for the next UI integration step
 
 The current home page is intentionally temporary. When your custom home page design is ready, the UI can be swapped in while keeping the shared data model, API routes, recommendation engine, and personalization logic intact.

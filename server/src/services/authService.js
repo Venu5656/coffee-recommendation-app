@@ -9,7 +9,7 @@ const TOKEN_EXPIRY = "7d";
 const _memUsers = new Map();
 
 function isDbError(err) {
-  return err?.code === "ENOENT" || err?.code === "ECONNREFUSED" ||
+  return err?.code === "DB_UNAVAILABLE" || err?.code === "ENOENT" || err?.code === "ECONNREFUSED" ||
     err?.message?.includes("ENOENT") || err?.message?.includes("connect");
 }
 

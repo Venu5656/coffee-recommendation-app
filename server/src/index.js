@@ -39,10 +39,17 @@ app.use((error, _req, res, _next) => {
 });
 
 try {
-  await initializeDatabase();
+  const database = await initializeDatabase();
+  if (database.connected) {
+    console.log("Database connected; authenticated persistence is enabled.");
+  } else {
+    console.log(
+      `${database.reason} Starting API with guest mode and in-memory auth/history fallback.`
+    );
+  }
 } catch (error) {
   console.warn(
-    "Database unavailable; starting API with unauthenticated routes only.",
+    "Database unavailable; starting API with guest mode and in-memory auth/history fallback.",
     error.message || error
   );
 }

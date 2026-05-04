@@ -1,12 +1,11 @@
 import { Pool } from "pg";
 import crypto from "node:crypto";
 
-const databaseUrl =
-  process.env.DATABASE_URL || "postgresql:///postgres?host=/tmp";
+const databaseUrl = process.env.DATABASE_URL || "";
 
-const pool = new Pool({
-  connectionString: databaseUrl
-});
+const pool = databaseUrl
+  ? new Pool({ connectionString: databaseUrl })
+  : null;
 
 const schemaStatements = [
   `
@@ -39,18 +38,28 @@ const schemaStatements = [
 ];
 
 export async function initializeDatabase() {
+  if (!pool) {
+    return { connected: false, reason: "DATABASE_URL is not configured." };
+  }
+
   const client = await pool.connect();
 
   try {
     for (const statement of schemaStatements) {
       await client.query(statement);
     }
+    return { connected: true };
   } finally {
     client.release();
   }
 }
 
 export async function query(text, params = []) {
+  if (!pool) {
+    const error = new Error("Database is not configured. Set DATABASE_URL to enable persistent accounts and history.");
+    error.code = "DB_UNAVAILABLE";
+    throw error;
+  }
   return pool.query(text, params);
 }
 
@@ -59,5 +68,8 @@ export function createId() {
 }
 
 export async function closeDatabase() {
+  if (!pool) {
+    return;
+  }
   await pool.end();
 }
