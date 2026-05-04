@@ -153,6 +153,29 @@ JWT_SECRET=replace_this_before_production
 
 On Railway, attach a PostgreSQL service and add its `DATABASE_URL` to the web service variables to enable persistent accounts and history. Without `DATABASE_URL`, the app still runs recommendations and barista chat, while auth/history use an in-memory fallback that resets on redeploy.
 
+### Railway PostgreSQL setup
+
+The Node API automatically creates the `users` and `user_events` tables on startup. To make accounts and recommendation history survive redeploys and multiple logins:
+
+1. In Railway, open the project for this app.
+2. Add a new PostgreSQL database service.
+3. Open the app/web service variables and add:
+
+```env
+DATABASE_URL=${{ Postgres.DATABASE_URL }}
+JWT_SECRET=generate-a-long-random-secret
+API_PORT=8787
+BACKEND_URL=http://127.0.0.1:8787/api
+```
+
+If the database service has a different name, replace `Postgres` in the reference variable with the exact Railway service name. The server can also connect from individual Railway PostgreSQL variables (`PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`, `PGDATABASE`) if `DATABASE_URL` is not used. Set `PGSSLMODE=require` only if the selected hosted connection requires SSL.
+
+After saving variables, deploy/redeploy the app service. Startup logs should include:
+
+```text
+Database connected; authenticated persistence is enabled.
+```
+
 ## Notes for the next UI integration step
 
 The current home page is intentionally temporary. When your custom home page design is ready, the UI can be swapped in while keeping the shared data model, API routes, recommendation engine, and personalization logic intact.

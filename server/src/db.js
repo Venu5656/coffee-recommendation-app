@@ -2,9 +2,43 @@ import { Pool } from "pg";
 import crypto from "node:crypto";
 
 const databaseUrl = process.env.DATABASE_URL || "";
+const hasPgVars = Boolean(process.env.PGHOST && process.env.PGUSER && process.env.PGDATABASE);
 
-const pool = databaseUrl
-  ? new Pool({ connectionString: databaseUrl })
+function sslConfig() {
+  const sslMode = (process.env.PGSSLMODE || "").toLowerCase();
+
+  if (!sslMode || sslMode === "disable") {
+    return undefined;
+  }
+
+  if (sslMode === "no-verify" || sslMode === "require") {
+    return { rejectUnauthorized: false };
+  }
+
+  return true;
+}
+
+const poolConfig = databaseUrl
+  ? { connectionString: databaseUrl }
+  : hasPgVars
+    ? {
+        host: process.env.PGHOST,
+        port: Number(process.env.PGPORT || 5432),
+        user: process.env.PGUSER,
+        password: process.env.PGPASSWORD,
+        database: process.env.PGDATABASE
+      }
+    : null;
+
+if (poolConfig) {
+  const ssl = sslConfig();
+  if (ssl) {
+    poolConfig.ssl = ssl;
+  }
+}
+
+const pool = poolConfig
+  ? new Pool(poolConfig)
   : null;
 
 const schemaStatements = [
@@ -39,7 +73,7 @@ const schemaStatements = [
 
 export async function initializeDatabase() {
   if (!pool) {
-    return { connected: false, reason: "DATABASE_URL is not configured." };
+    return { connected: false, reason: "PostgreSQL is not configured. Set DATABASE_URL or PGHOST/PGUSER/PGDATABASE." };
   }
 
   const client = await pool.connect();
@@ -56,7 +90,7 @@ export async function initializeDatabase() {
 
 export async function query(text, params = []) {
   if (!pool) {
-    const error = new Error("Database is not configured. Set DATABASE_URL to enable persistent accounts and history.");
+    const error = new Error("Database is not configured. Set DATABASE_URL or Railway PostgreSQL variables to enable persistent accounts and history.");
     error.code = "DB_UNAVAILABLE";
     throw error;
   }
