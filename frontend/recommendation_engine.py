@@ -566,11 +566,13 @@ def _show_result(result: dict, payload: dict, is_home: bool) -> None:
         '<div class="cafe-order-note">Quick café order · minimal friction · barista friendly</div>'
       )
 
+    mood_badge = f'<span class="res-badge">{mood.capitalize()} mood</span>' if mood else ""
     badges = (
         f'<span class="res-badge">{temp.capitalize()}</span>'
         f'<span class="res-badge">{caffeine.capitalize()} caffeine</span>'
-        f'{"<span class=\"res-badge\">" + mood.capitalize() + " mood</span>" if mood else ""}'
+        f'{mood_badge}'
     )
+    warning_html = f'<div class="res-warning">{warning}</div>' if warning else ""
 
     st.markdown(f"""
     <div class="res-layout">
@@ -580,7 +582,7 @@ def _show_result(result: dict, payload: dict, is_home: bool) -> None:
         <div class="res-badges">{badges}</div>
         <p class="res-desc">{desc}</p>
         {detail}
-        {"<div class=\"res-warning\">" + warning + "</div>" if warning else ""}
+        {warning_html}
       </div>
       <div class="res-right">
         {_score_ring(score)}
