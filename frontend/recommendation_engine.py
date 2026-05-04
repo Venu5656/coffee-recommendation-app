@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+from html import escape
 import math
 import random
 from pathlib import Path
@@ -94,6 +95,67 @@ _BREW_STEPS = {
     "Iced Coffee":       ["Medium grind · brew at 1:8 ratio (double strength)", "Fill glass with ice", "Pour hot coffee directly over ice", "Add milk or cream to taste", "Drink immediately for best flavour"],
 }
 
+_BREW_STEP_ALIASES = {
+    "Pour Over": "Pour-Over",
+    "Cold Brew": "Cold Brew (DIY)",
+}
+
+_RECIPE_STEPS = {
+    "Affogato": [
+        "Chill a small bowl or glass.",
+        "Add one scoop of vanilla gelato or ice cream.",
+        "Pull a fresh espresso shot or brew a very strong coffee concentrate.",
+        "Pour the hot coffee over the cold scoop just before serving.",
+        "Eat immediately while the edges melt into a creamy coffee sauce.",
+    ],
+    "Ristretto": [
+        "Use a fine espresso grind and a slightly smaller dose of water.",
+        "Pull a short concentrated shot, stopping around 15-20 seconds.",
+        "Serve immediately while the crema is still intact.",
+    ],
+    "Doppio": [
+        "Dose enough coffee for a double espresso.",
+        "Pull two concentrated shots into a warmed cup.",
+        "Serve straight, or add a tiny splash of hot water if you want it softer.",
+    ],
+    "Cafe au Lait": [
+        "Brew a strong cup of drip coffee or French press.",
+        "Warm milk until steamy but not boiling.",
+        "Pour equal parts coffee and warm milk into a mug.",
+        "Stir gently and serve while hot.",
+    ],
+    "Vanilla Latte": [
+        "Add vanilla syrup to the cup first.",
+        "Pull espresso or brew a small strong coffee concentrate.",
+        "Steam or warm milk until smooth.",
+        "Pour milk over the coffee and stir gently.",
+    ],
+    "Caramel Latte": [
+        "Add caramel sauce or syrup to the cup.",
+        "Pull espresso or brew a small strong coffee concentrate.",
+        "Steam or warm milk until smooth.",
+        "Combine, then drizzle a little caramel on top.",
+    ],
+    "Mocha": [
+        "Whisk cocoa or chocolate syrup with a small splash of hot coffee.",
+        "Pull espresso or brew a strong coffee base.",
+        "Add steamed milk and stir until glossy.",
+        "Finish with foam or a light dusting of cocoa.",
+    ],
+    "Iced Vanilla Latte": [
+        "Fill a glass with ice.",
+        "Add vanilla syrup and cold milk.",
+        "Pour espresso or strong coffee over the milk.",
+        "Stir gently and serve cold.",
+    ],
+    "Iced Caramel Macchiato": [
+        "Fill a glass with ice and cold milk.",
+        "Add vanilla syrup, then pour espresso over the top.",
+        "Drizzle caramel across the surface.",
+        "Stir just before drinking if you want a sweeter first sip.",
+    ],
+}
+
 _METHOD_TO_DRINK = {
     "french-press": "French Press",
     "pour-over":    "Pour-Over",
@@ -104,6 +166,31 @@ _METHOD_TO_DRINK = {
     "cold-brew":    "Cold Brew (DIY)",
     "iced-coffee":  "Iced Coffee",
 }
+
+def _homebrew_steps_for(drink: str, composition: dict, temp: str) -> list[str]:
+    mapped_drink = _BREW_STEP_ALIASES.get(drink, drink)
+    if mapped_drink in _BREW_STEPS:
+        return _BREW_STEPS[mapped_drink]
+    if drink in _RECIPE_STEPS:
+        return _RECIPE_STEPS[drink]
+
+    normalized = {str(key).lower(): value for key, value in (composition or {}).items() if value}
+    steps = ["Brew a strong coffee base with your preferred home method."]
+
+    if normalized.get("sugar", 0) > 0:
+        steps.append("Stir in sweetener while the coffee is still warm so it dissolves evenly.")
+    if normalized.get("water", 0) >= 25:
+        steps.append("Dilute with hot water for a cleaner cup, or cold water if serving iced.")
+    if normalized.get("milk", 0) > 0 or normalized.get("cream", 0) > 0:
+        milk_action = "cold milk or cream" if str(temp).lower() == "iced" else "warm milk or cream"
+        steps.append(f"Add {milk_action} slowly until the body matches the recommendation.")
+    if normalized.get("foam", 0) > 0:
+        steps.append("Spoon foam over the top as the final layer.")
+    if normalized.get("ice", 0) > 0 or str(temp).lower() == "iced":
+        steps.append("Serve over fresh ice so the drink stays bright.")
+
+    steps.append("Taste once, then adjust sweetness or dilution only if needed.")
+    return steps[:5]
 
 # Cup layers list: (hex_color, label, flex_weight) — bottom → top
 _LAYERS: dict[str, list[tuple[str, str, int]]] = {
@@ -506,7 +593,8 @@ def _show_mode_select() -> None:
         <p class="mode-select-sub">Choose your experience to begin</p>
       </div>
       <div class="mode-cards-grid">
-        <a class="mode-card" href="?brew_mode=cafe&rec_step=form" {cafe_bg_s}>
+        <a class="mode-card" href="?brew_mode=cafe&rec_step=form" target="_self"
+           onclick="event.preventDefault();window.location.href='?brew_mode=cafe&rec_step=form';return false;" {cafe_bg_s}>
           <div class="mc-overlay"></div>
           <div class="mc-inner">
             <div class="mc-icon-wrap">{cafe_icon}</div>
@@ -520,7 +608,8 @@ def _show_mode_select() -> None:
             <div class="mc-cta">Open Menu <span class="mc-arrow">→</span></div>
           </div>
         </a>
-        <a class="mode-card" href="?brew_mode=home&rec_step=form" {home_bg_s}>
+        <a class="mode-card" href="?brew_mode=home&rec_step=form" target="_self"
+           onclick="event.preventDefault();window.location.href='?brew_mode=home&rec_step=form';return false;" {home_bg_s}>
           <div class="mc-overlay mc-overlay--home"></div>
           <div class="mc-inner">
             <div class="mc-icon-wrap">{home_icon}</div>
@@ -552,13 +641,13 @@ def _show_result(result: dict, payload: dict, is_home: bool) -> None:
     cup_html = _composition_cup_html(composition, temp == "iced") or _cup_html(drink)
 
     if is_home:
-        steps   = _BREW_STEPS.get(drink, ["Brew and enjoy!"])
+        steps   = _homebrew_steps_for(drink, composition, temp)
         steps_h = "".join(
             f'<li class="res-step" style="--d:{0.1 + i * 0.1:.2f}s">'
-            f'<span class="res-step-n">{i + 1}</span><span>{s}</span></li>'
+            f'<span class="res-step-n">{i + 1}</span><span>{escape(str(s))}</span></li>'
             for i, s in enumerate(steps)
         )
-        detail = f'<div class="res-detail-label">PREPARATION</div><ul class="res-steps">{steps_h}</ul>'
+        detail = f'<div class="res-detail-label">PREPARATION</div><ul class="res-steps home-brew-steps">{steps_h}</ul>'
     else:
       detail = (
         '<div class="res-detail-label">HOW TO ORDER</div>'
@@ -637,7 +726,8 @@ def render_recommendation_page(client: CoffeeBackendClient) -> None:
     <div class="form-header{cafe_shell_cls}" {bg_style}>
       <div class="fh-overlay"></div>
       <div class="fh-content">
-        <a class="fh-back" href="?rec_step=select">← Back</a>
+        <a class="fh-back" href="?rec_step=select" target="_self"
+           onclick="event.preventDefault();window.location.href='?rec_step=select';return false;">← Back</a>
         <div class="fh-badge">
           <div class="fh-icon-wrap">{icon_tag}</div>
           <span class="fh-mode-name">{mode_label}</span>

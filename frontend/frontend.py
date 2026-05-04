@@ -161,22 +161,28 @@ def _render_login_page(auth_client: CoffeeBackendClient, backend_live: bool) -> 
         f"""<style>
         :root{{--login-bg:{bg_image};}}
         html, body, .stApp {{
-            height: 100vh !important;
-            overflow: hidden !important;
+            min-height: 100vh !important;
+            height: auto !important;
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
             background-image:
                 linear-gradient(170deg, rgba(6,3,1,0.78) 0%, rgba(12,6,2,0.42) 48%, rgba(6,3,1,0.82) 100%),
                 {bg_image} !important;
             background-size: cover !important;
             background-position: center !important;
+            background-attachment: fixed !important;
         }}
         [data-testid="stAppViewContainer"] {{
-            height: 100vh !important;
-            overflow: hidden !important;
+            min-height: 100vh !important;
+            height: auto !important;
+            overflow: visible !important;
             background: transparent !important;
         }}
         [data-testid="stMain"] {{
-            height: 100vh !important;
-            overflow: hidden !important;
+            min-height: 100vh !important;
+            height: auto !important;
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
             background: transparent !important;
             display: flex !important;
             flex-direction: column !important;
@@ -184,9 +190,9 @@ def _render_login_page(auth_client: CoffeeBackendClient, backend_live: bool) -> 
         }}
         [data-testid="stMainBlockContainer"] {{
             background: transparent !important;
-            overflow: hidden !important;
+            overflow: visible !important;
             padding-top: 0 !important;
-            padding-bottom: 0 !important;
+            padding-bottom: 2rem !important;
         }}
         [data-testid="stBottom"] {{ background: transparent !important; }}
         </style>""",
@@ -473,7 +479,7 @@ def _render_dashboard_preview(dashboard: dict[str, object]) -> None:
             <div><span>Explorer score</span><strong>{escape(str(exploration.get("share", 0)))}%</strong></div>
           </div>
           <a class="hdp-link" href="?pill_nav=profile" target="_self"
-             onclick="event.preventDefault();window.parent.location.href='?pill_nav=profile';return false;">
+             onclick="event.preventDefault();window.location.href='?pill_nav=profile';return false;">
             Open profile dashboard
           </a>
         </section>
@@ -615,7 +621,8 @@ def _render_profile_dashboard(dashboard: dict[str, object]) -> None:
     active_time = requested_time if requested_time in avail_times else (avail_times[0] if avail_times else "")
     time_chips = "".join(
         f'<a class="{"active" if t == active_time else ""}" '
-        f'href="?profile_view=dashboard&dash_time={escape(t)}&dash_mood={escape(_dashboard_key(st.query_params.get("dash_mood", "")))}">'
+        f'target="_self" href="?profile_view=dashboard&dash_time={escape(t)}&dash_mood={escape(_dashboard_key(st.query_params.get("dash_mood", "")))}" '
+        f'onclick="event.preventDefault();window.location.href=this.getAttribute(\'href\');return false;">'
         f'{escape(_format_dashboard_label(t))}</a>'
         for t in (avail_times or ["morning", "afternoon", "night"])
     )
@@ -626,7 +633,8 @@ def _render_profile_dashboard(dashboard: dict[str, object]) -> None:
     active_mood = requested_mood if requested_mood in avail_moods else (avail_moods[0] if avail_moods else "")
     mood_chips = "".join(
         f'<a class="{"active" if m == active_mood else ""}" '
-        f'href="?profile_view=dashboard&dash_time={escape(_dashboard_key(st.query_params.get("dash_time", "")))}&dash_mood={escape(m)}">'
+        f'target="_self" href="?profile_view=dashboard&dash_time={escape(_dashboard_key(st.query_params.get("dash_time", "")))}&dash_mood={escape(m)}" '
+        f'onclick="event.preventDefault();window.location.href=this.getAttribute(\'href\');return false;">'
         f'{escape(_format_dashboard_label(m))}</a>'
         for m in (avail_moods or ["tired", "relaxed", "energetic"])
     )
@@ -693,8 +701,10 @@ def _render_profile_subnav(active: str) -> None:
     st.markdown(
         f"""
         <div class="profile-subnav">
-          <a class="{dash_active}" href="?profile_view=dashboard">Dashboard</a>
-          <a class="{hist_active}" href="?profile_view=history">Brew History</a>
+          <a class="{dash_active}" href="?profile_view=dashboard" target="_self"
+             onclick="event.preventDefault();window.location.href='?profile_view=dashboard';return false;">Dashboard</a>
+          <a class="{hist_active}" href="?profile_view=history" target="_self"
+             onclick="event.preventDefault();window.location.href='?profile_view=history';return false;">Brew History</a>
         </div>
         """,
         unsafe_allow_html=True,
@@ -705,7 +715,8 @@ def _render_profile_corner_logout(user_name: str) -> None:
     initial = escape(str(user_name or "C").strip()[:1].upper() or "C")
     st.markdown(
         f"""
-        <a class="profile-corner-logout" href="?profile_action=logout" title="Sign out">
+        <a class="profile-corner-logout" href="?profile_action=logout" target="_self"
+           onclick="event.preventDefault();window.location.href='?profile_action=logout';return false;" title="Sign out">
           <span class="pcl-avatar">{initial}</span>
           <span class="pcl-copy">
             <em>Profile</em>
@@ -938,7 +949,7 @@ if page == "home":
             <div id="pill-expand-circle"></div>
             <div class="rowa-pill-outer">
                 <a class="rowa-pill" id="rowa-cta-pill" href="?pill_nav=recommend" target="_self" style="animation: fadeInUp 0.9s cubic-bezier(0.22,1,0.36,1) both; animation-delay:1.25s;"
-                   onclick="event.preventDefault();if(window._pillExpanding)return false;window._pillExpanding=true;var o=document.getElementById('pill-expand-circle');if(o){{o.classList.add('zooming');}}setTimeout(function(){{window._pillExpanding=false;window.parent.location.href='?pill_nav=recommend';}},520);return false;">
+                   onclick="event.preventDefault();if(window._pillExpanding)return false;window._pillExpanding=true;var o=document.getElementById('pill-expand-circle');if(o){{o.classList.add('zooming');}}setTimeout(function(){{window._pillExpanding=false;window.location.href='?pill_nav=recommend';}},520);return false;">
                     <span class="rowa-pill-icon" style="background-image:{bean_bg};"></span>
                     <span class="rowa-pill-text">Get Recommendation</span>
                 </a>
@@ -966,7 +977,7 @@ if page == "home":
     fav_display = favorite if favorite != "None yet" else "Start exploring"
 
     st.markdown(
-        f"""<div class="home-grid" style="margin-top:3rem;"><a href="?pill_nav=insights" target="_self" class="home-card hc-insights" onclick="event.preventDefault();window.parent.location.href='?pill_nav=insights';return false;"><div class="hc-arrow">&#8599;</div><div class="hc-inner"><span class="hc-label">Discover</span><div class="hc-title">Explore<br>Insights</div><div class="hc-sub">Trends, science and global facts behind your perfect cup</div></div></a><div class="home-grid-right"><div class="home-grid-top"><a href="?pill_nav=profile" target="_self" class="home-card hc-stats" onclick="event.preventDefault();window.parent.location.href='?pill_nav=profile';return false;"><div class="hc-arrow">&#8599;</div><div class="hc-inner"><span class="hc-label">Your Profile</span><span class="hc-stat-num">{total_drinks}</span><span class="hc-stat-unit">{brew_word} logged</span><div class="hc-sub">Favourite - {fav_display}</div></div></a><div class="home-card hc-tip hc-static-tip"><div class="hc-inner"><span class="hc-label">Today's Tip</span><div class="hc-title">Stay<br>Hydrated</div><div class="hc-sub">Drinking water between coffees reduces jitters and sharpens taste</div></div></div></div><div class="home-card hc-fact hc-static-fact"><div class="hc-inner"><span class="hc-label">Coffee Fact</span><div class="hc-title">Finland drinks more coffee per person than any country.</div><div class="hc-sub">10.1 kg per person each year, which is a lot of morning rituals.</div></div></div></div></div>""",
+        f"""<div class="home-grid" style="margin-top:3rem;"><a href="?pill_nav=insights" target="_self" class="home-card hc-insights" onclick="event.preventDefault();window.location.href='?pill_nav=insights';return false;"><div class="hc-arrow">&#8599;</div><div class="hc-inner"><span class="hc-label">Discover</span><div class="hc-title">Explore<br>Insights</div><div class="hc-sub">Trends, science and global facts behind your perfect cup</div></div></a><div class="home-grid-right"><div class="home-grid-top"><a href="?pill_nav=profile" target="_self" class="home-card hc-stats" onclick="event.preventDefault();window.location.href='?pill_nav=profile';return false;"><div class="hc-arrow">&#8599;</div><div class="hc-inner"><span class="hc-label">Your Profile</span><span class="hc-stat-num">{total_drinks}</span><span class="hc-stat-unit">{brew_word} logged</span><div class="hc-sub">Favourite - {fav_display}</div></div></a><div class="home-card hc-tip hc-static-tip"><div class="hc-inner"><span class="hc-label">Today's Tip</span><div class="hc-title">Stay<br>Hydrated</div><div class="hc-sub">Drinking water between coffees reduces jitters and sharpens taste</div></div></div></div><div class="home-card hc-fact hc-static-fact"><div class="hc-inner"><span class="hc-label">Coffee Fact</span><div class="hc-title">Luxembourg leads this dataset in coffee per person.</div><div class="hc-sub">25.2 kg per person each year, based on the 2010-2019 average.</div></div></div></div></div>""",
         unsafe_allow_html=True,
     )
     _render_dashboard_preview(dashboard)
@@ -976,7 +987,7 @@ if page == "home":
         f'<div class="ticker-item"><span class="ticker-dot"></span> <strong>{total_drinks}</strong> drinks explored</div>',
         f'<div class="ticker-item"><span class="ticker-dot"></span> Favourite: <strong>{favorite}</strong></div>',
         f'<div class="ticker-item"><span class="ticker-dot"></span> Avg match score: <strong>{avg_score}%</strong></div>',
-        '<div class="ticker-item"><span class="ticker-dot"></span> Finland leads global consumption: <strong>10.1 kg / person</strong></div>',
+        '<div class="ticker-item"><span class="ticker-dot"></span> Luxembourg leads this dataset: <strong>25.2 kg / person</strong></div>',
         '<div class="ticker-item"><span class="ticker-dot"></span> Culture explains <strong>85%</strong> of cross-country variance</div>',
         '<div class="ticker-item"><span class="ticker-dot"></span> Work hours ≈ <strong>no effect</strong> on coffee intake</div>',
     ]

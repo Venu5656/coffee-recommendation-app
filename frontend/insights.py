@@ -24,23 +24,25 @@ _LINE      = "#A06535"
 _MUTED     = "#5A3010"
 _GRID      = "#E8D8C4"
 
+_FALLBACK_LEADER = ("Luxembourg", 25.2)
+
 _STATS = [
-    ("10.1 kg", "Finland — highest per-capita"),
+    (f"{_FALLBACK_LEADER[1]:.1f} kg", f"{_FALLBACK_LEADER[0]} — highest per-capita"),
     ("85%",     "Variance explained by culture"),
     ("0.12",    "Work-hours correlation"),
     ("< 8%",    "Global shift, 2010–2019"),
 ]
 
-_FINDINGS = [
+_FINDING_TEMPLATES = [
     (
         "Culture beats pressure",
         "Culture and geography explain <strong>85%</strong> of cross-country variance in coffee consumption — making it a ritual before it is a productivity tool.",
         "85% variance",
     ),
     (
-        "Finland sets the pace",
-        "Finland leads global consumption at <strong>10.1 kg</strong> per person per year — nearly double the worldwide average. Scandinavia claims four of the top five spots.",
-        "10.1 kg / yr",
+        "The dataset leader sets the pace",
+        "{leader_country} leads this dataset at <strong>{leader_value:.1f} kg</strong> per person per year, based on the 2010–2019 average shown in the chart.",
+        "{leader_value:.1f} kg / yr",
     ),
     (
         "Work hours are a weak signal",
@@ -65,7 +67,7 @@ _FINDINGS = [
 ]
 
 _EVIDENCE = [
-    ("Consumption leader", "Finland",         "10.1 kg per person / yr"),
+    ("Consumption leader", _FALLBACK_LEADER[0], f"{_FALLBACK_LEADER[1]:.1f} kg per person / yr"),
     ("Weakest myth",       "Work hours",      "r = 0.12"),
     ("Strongest driver",   "Culture",         "85% of variance"),
     ("Trend stability",    "Global 2010–19",  "< 8% variation"),
@@ -82,6 +84,46 @@ def _load_data() -> pd.DataFrame:
         return df
     except Exception:
         return pd.DataFrame()
+
+
+def _consumption_leader(df: pd.DataFrame) -> tuple[str, float]:
+    if df.empty:
+        return _FALLBACK_LEADER
+
+    country_avg = df.groupby("country")["coffee_kg_pc"].mean().sort_values(ascending=False)
+    if country_avg.empty:
+        return _FALLBACK_LEADER
+
+    return str(country_avg.index[0]), float(country_avg.iloc[0])
+
+
+def _leader_context(df: pd.DataFrame) -> dict[str, object]:
+    country, value = _consumption_leader(df)
+    return {"leader_country": country, "leader_value": value}
+
+
+def _stats_for(df: pd.DataFrame) -> list[tuple[str, str]]:
+    context = _leader_context(df)
+    return [
+        (f"{context['leader_value']:.1f} kg", f"{context['leader_country']} — highest per-capita"),
+        *_STATS[1:],
+    ]
+
+
+def _findings_for(df: pd.DataFrame) -> list[tuple[str, str, str]]:
+    context = _leader_context(df)
+    return [
+        (title.format(**context), body.format(**context), metric.format(**context))
+        for title, body, metric in _FINDING_TEMPLATES
+    ]
+
+
+def _evidence_for(df: pd.DataFrame) -> list[tuple[str, str, str]]:
+    context = _leader_context(df)
+    return [
+        ("Consumption leader", str(context["leader_country"]), f"{context['leader_value']:.1f} kg per person / yr"),
+        *_EVIDENCE[1:],
+    ]
 
 
 def _styled_fig(w: float, h: float):
@@ -209,11 +251,15 @@ def _render_charts(df_full: pd.DataFrame) -> None:
 
 
 def render_insights_page(client: CoffeeBackendClient) -> None:
+    df_full = _load_data()
+    stats = _stats_for(df_full)
+    findings = _findings_for(df_full)
+    evidence = _evidence_for(df_full)
 
     # ── 1. Hero ───────────────────────────────────────────────────────────────
     hero_stats = "".join(
         f'<div class="ip-hero-stat"><strong>{num}</strong><span>{escape(label)}</span></div>'
-        for num, label in _STATS
+        for num, label in stats
     )
     st.markdown(
         f"""
@@ -239,7 +285,6 @@ def render_insights_page(client: CoffeeBackendClient) -> None:
         unsafe_allow_html=True,
     )
 
-    df_full = _load_data()
     if df_full.empty:
         st.warning("Dataset not found — charts unavailable.")
     else:
@@ -255,7 +300,7 @@ def render_insights_page(client: CoffeeBackendClient) -> None:
           <p>{body}</p>
           <span class="ip-fn-badge">{escape(metric)}</span>
         </div>"""
-        for i, (title, body, metric) in enumerate(_FINDINGS)
+        for i, (title, body, metric) in enumerate(findings)
     )
     st.markdown(
         f"""
@@ -275,7 +320,7 @@ def render_insights_page(client: CoffeeBackendClient) -> None:
           <strong>{escape(value)}</strong>
           <em>{escape(note)}</em>
         </div>"""
-        for label, value, note in _EVIDENCE
+        for label, value, note in evidence
     )
     st.markdown(
         f'<div class="ip-evidence-strip">{ev_items}</div>',
