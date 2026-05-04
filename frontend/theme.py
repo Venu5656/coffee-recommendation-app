@@ -3650,15 +3650,20 @@ button[kind="primary"]:hover,
     gap: 0.42rem;
     margin: -0.35rem 0 0.7rem;
 }
-.pp-filter-chips span {
+.pp-filter-chips span,
+.pp-filter-chips a {
     border-radius: 999px;
     padding: 0.35rem 0.58rem;
     background: rgba(255,249,241,0.72);
     color: rgba(24,14,8,0.66);
     font-size: 0.72rem;
     font-weight: 800;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
 }
-.pp-filter-chips span.active {
+.pp-filter-chips span.active,
+.pp-filter-chips a.active {
     background: #6B4423;
     color: #FFF8EE;
 }

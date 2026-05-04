@@ -287,6 +287,10 @@ def _format_dashboard_label(value: object, fallback: str = "Still learning") -> 
     return text.replace("-", " ").title() if text else fallback
 
 
+def _dashboard_key(value: object) -> str:
+    return str(value or "").strip().lower().replace(" ", "-")
+
+
 def _profile_for_dashboard_drink(drink_name: str, profiles: dict[str, dict]) -> dict:
     if drink_name in profiles:
         return profiles[drink_name]
@@ -332,10 +336,10 @@ def _build_streamlit_dashboard(tracker: HistoryTracker, user_name: str) -> dict[
         }
 
     drinks = [rec.drink_name for rec in recs]
-    moods = [rec.mood for rec in recs if rec.mood]
-    times = [rec.time_of_day for rec in recs if rec.time_of_day]
-    locations = [rec.location for rec in recs if rec.location]
-    temps = [rec.temperature for rec in recs if rec.temperature]
+    moods = [_dashboard_key(rec.mood) for rec in recs if _dashboard_key(rec.mood)]
+    times = [_dashboard_key(rec.time_of_day) for rec in recs if _dashboard_key(rec.time_of_day)]
+    locations = [_dashboard_key(rec.location) for rec in recs if _dashboard_key(rec.location)]
+    temps = [_dashboard_key(rec.temperature) for rec in recs if _dashboard_key(rec.temperature)]
     scores = [int(rec.match_score or 0) for rec in recs]
     profile_rows = [_profile_for_dashboard_drink(name, profiles) for name in drinks]
     profile_rows = [profile for profile in profile_rows if profile]
@@ -399,14 +403,19 @@ def _build_streamlit_dashboard(tracker: HistoryTracker, user_name: str) -> dict[
         return [drink_visual(name, count) for name, count in counts]
 
     def leaders_for(key: str, value: str) -> list[dict[str, object]]:
-        counts = Counter(getattr(rec, "drink_name") for rec in recs if getattr(rec, key) == value).most_common(3)
+        target = _dashboard_key(value)
+        counts = Counter(
+            getattr(rec, "drink_name")
+            for rec in recs
+            if _dashboard_key(getattr(rec, key, "")) == target
+        ).most_common(3)
         return drink_summaries(counts)
 
     _all_times = ["morning", "afternoon", "night", "evening"]
     time_drink_groups = {
         t: leaders_for("time_of_day", t)
         for t in _all_times
-        if any(getattr(rec, "time_of_day", None) == t for rec in recs)
+        if any(_dashboard_key(getattr(rec, "time_of_day", None)) == t for rec in recs)
     }
     mood_drink_groups = {
         m: leaders_for("mood", m)
@@ -602,17 +611,23 @@ def _render_profile_dashboard(dashboard: dict[str, object]) -> None:
 
     # ── Section 4: Drinking Rhythm + Mood Match ───────────────────────────────
     avail_times = [t for t in ["morning", "afternoon", "night", "evening"] if t in time_drink_groups]
-    active_time = avail_times[0] if avail_times else ""
+    requested_time = _dashboard_key(st.query_params.get("dash_time", ""))
+    active_time = requested_time if requested_time in avail_times else (avail_times[0] if avail_times else "")
     time_chips = "".join(
-        f'<span class="{"active" if t == active_time else ""}">{escape(_format_dashboard_label(t))}</span>'
+        f'<a class="{"active" if t == active_time else ""}" '
+        f'href="?profile_view=dashboard&dash_time={escape(t)}&dash_mood={escape(_dashboard_key(st.query_params.get("dash_mood", "")))}">'
+        f'{escape(_format_dashboard_label(t))}</a>'
         for t in (avail_times or ["morning", "afternoon", "night"])
     )
     time_grid = _drink_grid_html(time_drink_groups.get(active_time, []), limit=3)
 
     avail_moods = sorted(mood_drink_groups.keys())
-    active_mood = avail_moods[0] if avail_moods else ""
+    requested_mood = _dashboard_key(st.query_params.get("dash_mood", ""))
+    active_mood = requested_mood if requested_mood in avail_moods else (avail_moods[0] if avail_moods else "")
     mood_chips = "".join(
-        f'<span class="{"active" if m == active_mood else ""}">{escape(_format_dashboard_label(m))}</span>'
+        f'<a class="{"active" if m == active_mood else ""}" '
+        f'href="?profile_view=dashboard&dash_time={escape(_dashboard_key(st.query_params.get("dash_time", "")))}&dash_mood={escape(m)}">'
+        f'{escape(_format_dashboard_label(m))}</a>'
         for m in (avail_moods or ["tired", "relaxed", "energetic"])
     )
     mood_grid = _drink_grid_html(mood_drink_groups.get(active_mood, []), limit=3)
