@@ -1,0 +1,9 @@
+node_modules
+client/dist
+frontend/__pycache__
+frontend/.coffee_history.json
+.git
+.DS_Store
+.env
+npm-debug.log
+Dockerfile

@@ -331,10 +331,10 @@ section[data-testid="stSidebar"] {
     z-index: 2;
     padding: 0 1rem;
 }
-[data-testid="stHorizontalBlock"]:has(#login-form-marker) > [data-testid="column"]:not(:has(#login-form-marker)) {
+[data-testid="stHorizontalBlock"]:has(#login-form-marker) > :is([data-testid="column"],[data-testid="stColumn"]):not(:has(#login-form-marker)) {
     display: none !important;
 }
-[data-testid="column"]:has(#login-form-marker) {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#login-form-marker) {
     margin-top: 0;
     flex: 0 1 min(980px, calc(100vw - 7rem)) !important;
     width: min(980px, calc(100vw - 7rem)) !important;
@@ -353,7 +353,7 @@ section[data-testid="stSidebar"] {
     animation: categoryFloatIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.12s both;
     transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
 }
-[data-testid="column"]:has(#login-form-marker):hover {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#login-form-marker):hover {
     border-color: rgba(255,255,255,0.22) !important;
     box-shadow:
         0 36px 96px rgba(0,0,0,0.38),
@@ -424,13 +424,13 @@ section[data-testid="stSidebar"] {
     text-align: center;
     line-height: 1.6;
 }
-[data-testid="column"]:has(#login-form-marker) [data-baseweb="tab-list"] {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#login-form-marker) [data-baseweb="tab-list"] {
     gap: 0.4rem;
     border-bottom: 1px solid rgba(255,255,255,0.12);
     margin-bottom: 1rem;
     overflow: visible !important;
 }
-[data-testid="column"]:has(#login-form-marker) [data-baseweb="tab"] {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#login-form-marker) [data-baseweb="tab"] {
     color: rgba(255,248,238,0.42);
     font-weight: 700;
     min-width: 0 !important;
@@ -439,10 +439,10 @@ section[data-testid="stSidebar"] {
     padding-right: 1.1rem !important;
     white-space: nowrap !important;
 }
-[data-testid="column"]:has(#login-form-marker) [aria-selected="true"] {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#login-form-marker) [aria-selected="true"] {
     color: #FFF8EE !important;
 }
-[data-testid="column"]:has(#login-form-marker) .stTextInput input {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#login-form-marker) .stTextInput input {
     background: rgba(255,255,255,0.18) !important;
     border: 1px solid rgba(255,255,255,0.22) !important;
     border-radius: 6px !important;
@@ -452,32 +452,32 @@ section[data-testid="stSidebar"] {
     min-height: 48px !important;
     transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease !important;
 }
-[data-testid="column"]:has(#login-form-marker) .stTextInput input:focus,
-[data-testid="column"]:has(#login-form-marker) .stTextInput input:active,
-[data-testid="column"]:has(#login-form-marker) .stTextInput input:not(:placeholder-shown) {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#login-form-marker) .stTextInput input:focus,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#login-form-marker) .stTextInput input:active,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#login-form-marker) .stTextInput input:not(:placeholder-shown) {
     color: #2A1208 !important;
     -webkit-text-fill-color: #2A1208 !important;
     caret-color: #2A1208 !important;
 }
-[data-testid="column"]:has(#login-form-marker) .stTextInput input::placeholder {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#login-form-marker) .stTextInput input::placeholder {
     color: rgba(42,18,8,0.42) !important;
     -webkit-text-fill-color: rgba(42,18,8,0.42) !important;
 }
-[data-testid="column"]:has(#login-form-marker) .stTextInput input:focus {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#login-form-marker) .stTextInput input:focus {
     border-color: var(--gold) !important;
     box-shadow: 0 0 0 3px rgba(212,169,106,0.18) !important;
     background: rgba(255,255,255,0.24) !important;
 }
-[data-testid="column"]:has(#login-form-marker) .stForm {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#login-form-marker) .stForm {
     border: 0;
     padding: 0;
 }
-[data-testid="column"]:has(#login-form-marker) .stForm label,
-[data-testid="column"]:has(#login-form-marker) .stTextInput label {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#login-form-marker) .stForm label,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#login-form-marker) .stTextInput label {
     color: rgba(255,248,238,0.72) !important;
     font-weight: 700 !important;
 }
-[data-testid="column"]:has(#login-form-marker) .stFormSubmitButton button {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#login-form-marker) .stFormSubmitButton button {
     background: linear-gradient(135deg, #8B5E34 0%, #5E3A18 100%) !important;
     color: #FFF8EE !important;
     border: 0 !important;
@@ -489,7 +489,7 @@ section[data-testid="stSidebar"] {
     box-shadow: 0 4px 20px rgba(0,0,0,0.30) !important;
     transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease !important;
 }
-[data-testid="column"]:has(#login-form-marker) .stFormSubmitButton button:hover {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#login-form-marker) .stFormSubmitButton button:hover {
     transform: translateY(-2px) !important;
     box-shadow: 0 14px 36px rgba(0,0,0,0.40) !important;
     filter: brightness(1.12) !important;
@@ -1860,7 +1860,7 @@ div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stBut
     font-weight: 900;
 }
 /* Column-level dark card — targets the column containing #barista-chat-col-marker */
-[data-testid="column"]:has(#barista-chat-col-marker) {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#barista-chat-col-marker) {
     min-height: 580px;
     border-radius: 18px;
     border: 1px solid rgba(126,83,46,0.14);
@@ -1870,7 +1870,7 @@ div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stBut
         radial-gradient(circle at top right, rgba(201,168,124,0.16), transparent 35%),
         linear-gradient(150deg, #160A04 0%, #2B160A 100%);
 }
-[data-testid="column"]:has(#barista-chat-col-marker) > div {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#barista-chat-col-marker) > div {
     gap: 0 !important;
 }
 #barista-chat-col-marker { display: none; }
@@ -2240,7 +2240,7 @@ div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stBut
    CLICKABLE CARD BUTTON  — the main dark recommend card IS the button
    Targeted via a #marker-div that lives in the same column via :has()
 ══════════════════════════════════════════════════════════════════════════ */
-[data-testid="column"]:has(#card-btn-marker) .stButton > button {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#card-btn-marker) .stButton > button {
     background: var(--espresso) !important;
     color: rgba(255,255,255,0.88) !important;
     border: none !important;
@@ -2263,7 +2263,7 @@ div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stBut
     transform: none !important;
     display: flex !important;
 }
-[data-testid="column"]:has(#card-btn-marker) .stButton > button::before {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#card-btn-marker) .stButton > button::before {
     content: '';
     position: absolute;
     font-size: 11rem; line-height: 1;
@@ -2271,13 +2271,13 @@ div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stBut
     transition: transform 0.5s ease, opacity 0.4s ease;
     pointer-events: none;
 }
-[data-testid="column"]:has(#card-btn-marker) .stButton > button:hover {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#card-btn-marker) .stButton > button:hover {
     background: #2A1810 !important;
     color: #FFFFFF !important;
     transform: none !important;
     box-shadow: 0 24px 64px rgba(0,0,0,0.28) !important;
 }
-[data-testid="column"]:has(#card-btn-marker) .stButton > button:hover::before {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#card-btn-marker) .stButton > button:hover::before {
     transform: scale(1.08) rotate(8deg);
     opacity: 0.09;
 }
@@ -2401,8 +2401,8 @@ div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stBut
 
 /* ── Step 1: Quiz form setup ─────────────────────────────────────────── */
 /* ── Step 2: Quiz form cards (both columns) ──────────────────────────── */
-[data-testid="column"]:has(#rec-quiz-marker),
-[data-testid="column"]:has(#rec-quiz-marker-2) {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker),
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) {
     background:
         linear-gradient(90deg, rgba(126,83,46,0.14) 0 7px, transparent 7px),
         radial-gradient(circle at 12% 0%, rgba(201,168,124,0.24), transparent 30%),
@@ -2417,8 +2417,8 @@ div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stBut
     position: relative;
     overflow: hidden;
 }
-[data-testid="column"]:has(#rec-quiz-marker):hover,
-[data-testid="column"]:has(#rec-quiz-marker-2):hover {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker):hover,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2):hover {
     border-color: rgba(126,83,46,0.28) !important;
     box-shadow: 0 28px 62px rgba(90,55,27,0.15), inset 0 1px 0 rgba(255,255,255,0.78) !important;
     transform: translateY(-2px);
@@ -2485,8 +2485,8 @@ div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stBut
 }
 
 /* Backend-backed recommendation picker: native Streamlit pills, styled as premium controls */
-[data-testid="column"]:has(#rec-quiz-marker) [data-testid="stPills"],
-[data-testid="column"]:has(#rec-quiz-marker-2) [data-testid="stPills"] {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) [data-testid="stPills"],
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) [data-testid="stPills"] {
     margin-bottom: 1.05rem !important;
     --primary-color: #C9A87C !important;
     --primary-color-background: rgba(201,168,124,0.18) !important;
@@ -2514,8 +2514,8 @@ div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stBut
 .st-key-rec_group_caffeine { animation-delay: 0.90s; }
 .st-key-rec_group_sweetness_preference { animation-delay: 1.02s; }
 .st-key-rec_group_texture_preference { animation-delay: 1.14s; }
-[data-testid="column"]:has(#rec-quiz-marker) [data-testid="stPills"] button,
-[data-testid="column"]:has(#rec-quiz-marker-2) [data-testid="stPills"] button {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) [data-testid="stPills"] button,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) [data-testid="stPills"] button {
     border: 1px solid rgba(201,168,124,0.22) !important;
     border-radius: 999px !important;
     background: rgba(255,255,255,0.04) !important;
@@ -2526,24 +2526,24 @@ div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stBut
     margin: 0.18rem 0.32rem !important;
     transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, color 0.18s ease !important;
 }
-[data-testid="column"]:has(#rec-quiz-marker) [data-testid="stPills"] button:hover,
-[data-testid="column"]:has(#rec-quiz-marker-2) [data-testid="stPills"] button:hover {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) [data-testid="stPills"] button:hover,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) [data-testid="stPills"] button:hover {
     transform: translateY(-2px) !important;
     border-color: rgba(201,168,124,0.7) !important;
     color: #FFFFFF !important;
     background: rgba(201,168,124,0.10) !important;
 }
 /* Selected pill — scoped to rec columns */
-[data-testid="column"]:has(#rec-quiz-marker) [data-testid="stPills"] button[aria-pressed="true"],
-[data-testid="column"]:has(#rec-quiz-marker-2) [data-testid="stPills"] button[aria-pressed="true"],
-[data-testid="column"]:has(#rec-quiz-marker) [data-testid="stPills"] button[aria-selected="true"],
-[data-testid="column"]:has(#rec-quiz-marker-2) [data-testid="stPills"] button[aria-selected="true"],
-[data-testid="column"]:has(#rec-quiz-marker) [data-testid="stPills"] button[aria-checked="true"],
-[data-testid="column"]:has(#rec-quiz-marker-2) [data-testid="stPills"] button[aria-checked="true"],
-[data-testid="column"]:has(#rec-quiz-marker) [data-testid="stPills"] button[data-selected="true"],
-[data-testid="column"]:has(#rec-quiz-marker-2) [data-testid="stPills"] button[data-selected="true"],
-[data-testid="column"]:has(#rec-quiz-marker) [data-testid="stPills"] button:focus,
-[data-testid="column"]:has(#rec-quiz-marker-2) [data-testid="stPills"] button:focus {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) [data-testid="stPills"] button[aria-pressed="true"],
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) [data-testid="stPills"] button[aria-pressed="true"],
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) [data-testid="stPills"] button[aria-selected="true"],
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) [data-testid="stPills"] button[aria-selected="true"],
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) [data-testid="stPills"] button[aria-checked="true"],
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) [data-testid="stPills"] button[aria-checked="true"],
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) [data-testid="stPills"] button[data-selected="true"],
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) [data-testid="stPills"] button[data-selected="true"],
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) [data-testid="stPills"] button:focus,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) [data-testid="stPills"] button:focus {
     background: #7B4A28 !important;
     background-color: #7B4A28 !important;
     border-color: #A06535 !important;
@@ -2575,37 +2575,37 @@ div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stBut
 [data-testid="stPills"] button[data-selected="true"] small {
     color: #FFFFFF !important;
 }
-[data-testid="column"]:has(#rec-quiz-marker) [data-testid="stPills"] button *,
-[data-testid="column"]:has(#rec-quiz-marker-2) [data-testid="stPills"] button * {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) [data-testid="stPills"] button *,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) [data-testid="stPills"] button * {
     color: inherit !important;
 }
 
 /* ── Pill chips: hide native radio circle, style label as pill ── */
 /* Works across Streamlit versions by targeting both data-baseweb and role attrs */
-[data-testid="column"]:has(#rec-quiz-marker) .stRadio [data-baseweb="radio"] > div:first-child,
-[data-testid="column"]:has(#rec-quiz-marker-2) .stRadio [data-baseweb="radio"] > div:first-child,
-[data-testid="column"]:has(#rec-quiz-marker) .stRadio div[role="radio"],
-[data-testid="column"]:has(#rec-quiz-marker-2) .stRadio div[role="radio"] {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .stRadio [data-baseweb="radio"] > div:first-child,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stRadio [data-baseweb="radio"] > div:first-child,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .stRadio div[role="radio"],
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stRadio div[role="radio"] {
     display: none !important;
 }
-[data-testid="column"]:has(#rec-quiz-marker) .stRadio > label,
-[data-testid="column"]:has(#rec-quiz-marker-2) .stRadio > label,
-[data-testid="column"]:has(#rec-quiz-marker) .stRadio [data-testid="stWidgetLabel"],
-[data-testid="column"]:has(#rec-quiz-marker-2) .stRadio [data-testid="stWidgetLabel"] {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .stRadio > label,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stRadio > label,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .stRadio [data-testid="stWidgetLabel"],
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stRadio [data-testid="stWidgetLabel"] {
     display: none !important;
 }
-[data-testid="column"]:has(#rec-quiz-marker) .stRadio [data-baseweb="radio-group"],
-[data-testid="column"]:has(#rec-quiz-marker-2) .stRadio [data-baseweb="radio-group"],
-[data-testid="column"]:has(#rec-quiz-marker) .stRadio > div > div,
-[data-testid="column"]:has(#rec-quiz-marker-2) .stRadio > div > div {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .stRadio [data-baseweb="radio-group"],
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stRadio [data-baseweb="radio-group"],
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .stRadio > div > div,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stRadio > div > div {
     display: flex !important;
     flex-wrap: wrap !important;
     gap: 0.62rem !important;
     margin: 0.1rem 0 1.05rem !important;
 }
 /* Label pill styling — all descendants of the marked columns */
-[data-testid="column"]:has(#rec-quiz-marker) .stRadio label,
-[data-testid="column"]:has(#rec-quiz-marker-2) .stRadio label {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .stRadio label,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stRadio label {
     border: 1px solid rgba(126,83,46,0.22) !important;
     border-radius: 14px !important;
     padding: 0.62rem 1rem !important;
@@ -2624,16 +2624,16 @@ div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stBut
     user-select: none !important;
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.74), 0 7px 16px rgba(90,55,27,0.06);
 }
-[data-testid="column"]:has(#rec-quiz-marker) .stRadio label:hover,
-[data-testid="column"]:has(#rec-quiz-marker-2) .stRadio label:hover {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .stRadio label:hover,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stRadio label:hover {
     border-color: rgba(126,83,46,0.52) !important;
     color: var(--espresso) !important;
     background: rgba(255,248,237,0.96) !important;
     transform: translateY(-1px);
 }
 /* Selected state via :has(input:checked) */
-[data-testid="column"]:has(#rec-quiz-marker) .stRadio label:has(input:checked),
-[data-testid="column"]:has(#rec-quiz-marker-2) .stRadio label:has(input:checked) {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .stRadio label:has(input:checked),
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stRadio label:has(input:checked) {
     background: linear-gradient(135deg, #9B6942, #7E4C2C) !important;
     border-color: rgba(95,54,28,0.72) !important;
     color: #FFF8EE !important;
@@ -2641,29 +2641,29 @@ div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stBut
     box-shadow: 0 12px 26px rgba(90,55,27,0.16), inset 0 1px 0 rgba(255,255,255,0.22);
 }
 /* Fallback selected state via aria-checked on parent div */
-[data-testid="column"]:has(#rec-quiz-marker) .stRadio [aria-checked="true"] label,
-[data-testid="column"]:has(#rec-quiz-marker-2) .stRadio [aria-checked="true"] label {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .stRadio [aria-checked="true"] label,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stRadio [aria-checked="true"] label {
     background: linear-gradient(135deg, #9B6942, #7E4C2C) !important;
     border-color: rgba(95,54,28,0.72) !important;
     color: #FFF8EE !important;
     font-weight: 800 !important;
 }
-[data-testid="column"]:has(#rec-quiz-marker) .stRadio label:has(input:checked) *,
-[data-testid="column"]:has(#rec-quiz-marker-2) .stRadio label:has(input:checked) *,
-[data-testid="column"]:has(#rec-quiz-marker) .stRadio [aria-checked="true"] label *,
-[data-testid="column"]:has(#rec-quiz-marker-2) .stRadio [aria-checked="true"] label * {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .stRadio label:has(input:checked) *,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stRadio label:has(input:checked) *,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .stRadio [aria-checked="true"] label *,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stRadio [aria-checked="true"] label * {
     color: #FFF8EE !important;
 }
 /* Hide the native radio input inside the label */
-[data-testid="column"]:has(#rec-quiz-marker) .stRadio label input,
-[data-testid="column"]:has(#rec-quiz-marker-2) .stRadio label input {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .stRadio label input,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stRadio label input {
     position: absolute !important;
     opacity: 0 !important;
     width: 0 !important; height: 0 !important;
     pointer-events: none !important;
 }
 
-[data-testid="column"]:has(#rec-quiz-marker-2) .stCheckbox {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stCheckbox {
     margin-top: 1.1rem !important;
     padding: 0.85rem 0.95rem !important;
     border-radius: 14px !important;
@@ -2671,12 +2671,12 @@ div[data-testid="stHorizontalBlock"]:has(input[placeholder*="I'm tired"]) .stBut
     background: rgba(255,253,248,0.70) !important;
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
 }
-[data-testid="column"]:has(#rec-quiz-marker-2) .stCheckbox label {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stCheckbox label {
     color: var(--espresso) !important;
     font-weight: 800 !important;
     letter-spacing: 0.2px !important;
 }
-[data-testid="column"]:has(#rec-quiz-marker-2) .stCheckbox label span {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stCheckbox label span {
     color: inherit !important;
 }
 
@@ -2700,16 +2700,16 @@ button[kind="primary"]:hover,
 }
 
 /* Slider inside right quiz column */
-[data-testid="column"]:has(#rec-quiz-marker-2) .stSlider > div > div > div {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stSlider > div > div > div {
     background: rgba(201,168,124,0.15) !important;
 }
-[data-testid="column"]:has(#rec-quiz-marker-2) .stSlider [role="slider"] {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stSlider [role="slider"] {
     background: var(--accent) !important;
     box-shadow: 0 0 0 4px rgba(201,168,124,0.2) !important;
 }
-[data-testid="column"]:has(#rec-quiz-marker-2) .stSlider > div > div > p,
-[data-testid="column"]:has(#rec-quiz-marker-2) .stSlider [data-testid="stTickBarMin"],
-[data-testid="column"]:has(#rec-quiz-marker-2) .stSlider [data-testid="stTickBarMax"] {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stSlider > div > div > p,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stSlider [data-testid="stTickBarMin"],
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stSlider [data-testid="stTickBarMax"] {
     color: rgba(255,255,255,0.3) !important;
 }
 
@@ -5291,38 +5291,38 @@ a.home-card:hover .hc-arrow {
 }
 
 /* Staged preference form reveals */
-[data-testid="column"]:has(#rec-quiz-marker),
-[data-testid="column"]:has(#rec-quiz-marker-2) {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker),
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) {
     animation: dropIn 0.65s cubic-bezier(0.34,1.2,0.64,1) both;
 }
-[data-testid="column"]:has(#rec-quiz-marker) { animation-delay: 0.08s; }
-[data-testid="column"]:has(#rec-quiz-marker-2) { animation-delay: 0.16s; }
-[data-testid="column"]:has(#rec-quiz-marker) .rec-col-title,
-[data-testid="column"]:has(#rec-quiz-marker-2) .rec-col-title,
-[data-testid="column"]:has(#rec-quiz-marker) .rec-col-subtitle,
-[data-testid="column"]:has(#rec-quiz-marker-2) .rec-col-subtitle,
-[data-testid="column"]:has(#rec-quiz-marker) .rec-chip-label,
-[data-testid="column"]:has(#rec-quiz-marker-2) .rec-chip-label {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) { animation-delay: 0.08s; }
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) { animation-delay: 0.16s; }
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .rec-col-title,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .rec-col-title,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .rec-col-subtitle,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .rec-col-subtitle,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .rec-chip-label,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .rec-chip-label {
     animation: fadeInUp 0.55s ease-out both;
 }
-[data-testid="column"]:has(#rec-quiz-marker) .rec-col-title { animation-delay: 0.14s; }
-[data-testid="column"]:has(#rec-quiz-marker-2) .rec-col-title { animation-delay: 0.18s; }
-[data-testid="column"]:has(#rec-quiz-marker) .rec-col-subtitle { animation-delay: 0.18s; }
-[data-testid="column"]:has(#rec-quiz-marker-2) .rec-col-subtitle { animation-delay: 0.22s; }
-[data-testid="column"]:has(#rec-quiz-marker) .stRadio,
-[data-testid="column"]:has(#rec-quiz-marker-2) .stRadio,
-[data-testid="column"]:has(#rec-quiz-marker) [data-testid="stPills"],
-[data-testid="column"]:has(#rec-quiz-marker-2) [data-testid="stPills"],
-[data-testid="column"]:has(#rec-quiz-marker) .stSlider,
-[data-testid="column"]:has(#rec-quiz-marker-2) .stSlider {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .rec-col-title { animation-delay: 0.14s; }
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .rec-col-title { animation-delay: 0.18s; }
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .rec-col-subtitle { animation-delay: 0.18s; }
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .rec-col-subtitle { animation-delay: 0.22s; }
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .stRadio,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stRadio,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) [data-testid="stPills"],
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) [data-testid="stPills"],
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .stSlider,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stSlider {
     animation: fadeInUp 0.55s ease-out both;
 }
-[data-testid="column"]:has(#rec-quiz-marker) .stRadio { animation-delay: 0.2s; }
-[data-testid="column"]:has(#rec-quiz-marker-2) .stRadio { animation-delay: 0.24s; }
-[data-testid="column"]:has(#rec-quiz-marker) [data-testid="stPills"] { animation-delay: 0.22s; }
-[data-testid="column"]:has(#rec-quiz-marker-2) [data-testid="stPills"] { animation-delay: 0.26s; }
-[data-testid="column"]:has(#rec-quiz-marker) .stSlider,
-[data-testid="column"]:has(#rec-quiz-marker-2) .stSlider { animation-delay: 0.28s; }
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .stRadio { animation-delay: 0.2s; }
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stRadio { animation-delay: 0.24s; }
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) [data-testid="stPills"] { animation-delay: 0.22s; }
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) [data-testid="stPills"] { animation-delay: 0.26s; }
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker) .stSlider,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-quiz-marker-2) .stSlider { animation-delay: 0.28s; }
 
 /* CTA microinteraction */
 [data-testid="stHorizontalBlock"] .stButton > button,
@@ -5349,9 +5349,9 @@ a.home-card:hover .hc-arrow {
     box-shadow: 0 0 0 0 rgba(201,168,124,0.0), 0 0 0 6px rgba(201,168,124,0.18) !important;
 }
 
-[data-testid="column"]:has(#rec-result-actions) + [data-testid="column"] .stButton > button,
-[data-testid="column"]:has(#rec-result-actions) + [data-testid="column"] + [data-testid="column"] .stButton > button,
-[data-testid="column"]:has(#rec-result-actions) + [data-testid="column"] + [data-testid="column"] + [data-testid="column"] .stButton > button {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-result-actions) + :is([data-testid="column"],[data-testid="stColumn"]) .stButton > button,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-result-actions) + :is([data-testid="column"],[data-testid="stColumn"]) + :is([data-testid="column"],[data-testid="stColumn"]) .stButton > button,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-result-actions) + :is([data-testid="column"],[data-testid="stColumn"]) + :is([data-testid="column"],[data-testid="stColumn"]) + :is([data-testid="column"],[data-testid="stColumn"]) .stButton > button {
     border-radius: 999px !important;
     min-height: 3.2rem !important;
     background: var(--espresso) !important;
@@ -5359,9 +5359,9 @@ a.home-card:hover .hc-arrow {
     border: 1px solid rgba(24,14,8,0.84) !important;
     box-shadow: 0 12px 26px rgba(90,55,27,0.12) !important;
 }
-[data-testid="column"]:has(#rec-result-actions) + [data-testid="column"] .stButton > button:hover,
-[data-testid="column"]:has(#rec-result-actions) + [data-testid="column"] + [data-testid="column"] .stButton > button:hover,
-[data-testid="column"]:has(#rec-result-actions) + [data-testid="column"] + [data-testid="column"] + [data-testid="column"] .stButton > button:hover {
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-result-actions) + :is([data-testid="column"],[data-testid="stColumn"]) .stButton > button:hover,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-result-actions) + :is([data-testid="column"],[data-testid="stColumn"]) + :is([data-testid="column"],[data-testid="stColumn"]) .stButton > button:hover,
+:is([data-testid="column"],[data-testid="stColumn"]):has(#rec-result-actions) + :is([data-testid="column"],[data-testid="stColumn"]) + :is([data-testid="column"],[data-testid="stColumn"]) + :is([data-testid="column"],[data-testid="stColumn"]) .stButton > button:hover {
     transform: translateY(-2px) !important;
     background: #2A1A10 !important;
     color: #FFF8EE !important;
@@ -5472,7 +5472,7 @@ a.home-card:hover .hc-arrow {
         background-size: cover;
         background-position: center;
     }
-    [data-testid="column"]:has(#login-form-marker) {
+    :is([data-testid="column"],[data-testid="stColumn"]):has(#login-form-marker) {
         margin-top: 0;
         width: calc(100vw - 2.2rem) !important;
         max-width: calc(100vw - 2.2rem) !important;
@@ -5523,7 +5523,7 @@ a.home-card:hover .hc-arrow {
 .composition-wrap .cup-layer {
     background: var(--lbg) !important;
     min-height: 14px;
-    filter: saturate(1.8) brightness(1.18);
+    filter: saturate(1.08) brightness(1.02);
     opacity: 1 !important;
     box-shadow:
         inset 0 2px 0 rgba(255,255,255,0.20),
@@ -5533,7 +5533,7 @@ a.home-card:hover .hc-arrow {
 .res-right .cup-layer[style*="180604"],
 .composition-wrap .cup-layer[style*="2A0E04"],
 .composition-wrap .cup-layer[style*="180604"] {
-    background: linear-gradient(180deg, #A8572F 0%, #6F2C17 100%) !important;
+    background: linear-gradient(180deg, #4A2112 0%, #1D0904 100%) !important;
 }
 .res-right .cup-layer[style*="C8A882"],
 .composition-wrap .cup-layer[style*="C8A882"] {
@@ -5551,6 +5551,24 @@ a.home-card:hover .hc-arrow {
 .composition-wrap .cup-layer[style*="C8E8F8"] {
     background: linear-gradient(180deg, #DDF8FF 0%, #78C1E4 100%) !important;
 }
+.res-right .cup-layer[style*="BCEEFF"],
+.composition-wrap .cup-layer[style*="BCEEFF"] {
+    background: linear-gradient(180deg, #F1FCFF 0%, #8EDDF4 100%) !important;
+}
+.res-right .cup-layer[style*="8FD7EA"],
+.composition-wrap .cup-layer[style*="8FD7EA"],
+.res-right .cup-layer[style*="4A2010"],
+.composition-wrap .cup-layer[style*="4A2010"],
+.res-right .cup-layer[style*="5A2A10"],
+.composition-wrap .cup-layer[style*="5A2A10"],
+.res-right .cup-layer[style*="B88850"],
+.composition-wrap .cup-layer[style*="B88850"] {
+    background: linear-gradient(180deg, #D9F7FF 0%, #75C9E2 100%) !important;
+}
+.res-right .cup-layer[style*="F7DEB0"],
+.composition-wrap .cup-layer[style*="F7DEB0"] {
+    background: linear-gradient(180deg, #FFF0C8 0%, #EBC27F 100%) !important;
+}
 .res-right .cup-layer[style*="C0966A"],
 .composition-wrap .cup-layer[style*="C0966A"] {
     background: linear-gradient(180deg, #D8B282 0%, #8D5730 100%) !important;
@@ -5558,10 +5576,6 @@ a.home-card:hover .hc-arrow {
 .res-right .cup-layer[style*="6B3F2B"],
 .composition-wrap .cup-layer[style*="6B3F2B"] {
     background: linear-gradient(180deg, #9C6547 0%, #5E2D1E 100%) !important;
-}
-.res-right .cup-layer[style*="5A2A10"],
-.composition-wrap .cup-layer[style*="5A2A10"] {
-    background: linear-gradient(180deg, #8E5133 0%, #4B2110 100%) !important;
 }
 .cup-lbl {
     font-size: 0.5rem; letter-spacing: 1.5px; text-transform: uppercase;
@@ -5805,6 +5819,8 @@ a.home-card:hover .hc-arrow {
 .personality-result-cup .cup-fill-body .cup-glass-layers {
     background: transparent;
 }
+.cup-fill-body .cup-mug-layers,
+.cup-fill-body .cup-glass-layers,
 .res-right .cup-fill-body .cup-mug-layers,
 .res-right .cup-fill-body .cup-glass-layers {
     display: none;
@@ -5820,7 +5836,7 @@ a.home-card:hover .hc-arrow {
 }
 .res-right .cup-composition-fill,
 .personality-result-cup .cup-composition-fill {
-    filter: saturate(1.04) brightness(1.06);
+    filter: saturate(0.95) brightness(0.96);
     box-shadow:
         inset 0 2px 0 rgba(255,255,255,0.18),
         inset 0 -2px 0 rgba(0,0,0,0.18);
@@ -5852,6 +5868,12 @@ a.home-card:hover .hc-arrow {
     text-transform: uppercase;
     text-shadow: 0 1px 5px rgba(0,0,0,0.62);
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+}
+.cup-composition-label.is-small {
+    font-size: 0.5rem;
+    letter-spacing: 1.2px;
 }
 .cup-composition-label:first-child {
     border-bottom-color: rgba(255,255,255,0.16);

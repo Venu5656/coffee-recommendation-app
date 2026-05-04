@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: coffee-companion
+    env: docker
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: API_PORT
+        value: 8787
+      - key: BACKEND_URL
+        value: http://127.0.0.1:8787/api
+      - key: JWT_SECRET
+        generateValue: true

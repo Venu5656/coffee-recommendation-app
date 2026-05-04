@@ -129,6 +129,28 @@ npm run build
 npm start
 ```
 
+## Deploy the Streamlit app + API together
+
+The polished Streamlit experience in `frontend/frontend.py` needs the Node API for live recommendations and barista chat. The included Docker deployment runs both in one web service:
+
+- Streamlit listens on the platform-provided public `PORT`
+- The Node API runs internally on `API_PORT=8787`
+- `BACKEND_URL` points Streamlit to `http://127.0.0.1:8787/api`
+
+Render can use the included `render.yaml` blueprint, or any Docker host can run:
+
+```bash
+docker build -t coffee-companion .
+docker run -p 8501:8501 coffee-companion
+```
+
+For production accounts/history, add a hosted PostgreSQL database and set:
+
+```env
+DATABASE_URL=your_postgres_connection_string
+JWT_SECRET=replace_this_before_production
+```
+
 ## Notes for the next UI integration step
 
 The current home page is intentionally temporary. When your custom home page design is ready, the UI can be swapped in while keeping the shared data model, API routes, recommendation engine, and personalization logic intact.

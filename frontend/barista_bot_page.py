@@ -103,13 +103,6 @@ def render_barista_bot_page(client: CoffeeBackendClient | None = None):
 
     st.markdown(
         f"""
-        <section class="barista-local-hero">
-          <div>
-            <span>Local Barista Assistant</span>
-            <h1>Ask for a drink, a brew guide, or coffee knowledge.</h1>
-          </div>
-          <a href="?barista_action=reset">Clear chat</a>
-        </section>
         <section class="barista-mode-strip">
           <div>
             <span>Quick starts</span>
@@ -132,67 +125,63 @@ def render_barista_bot_page(client: CoffeeBackendClient | None = None):
         ]
 
     barista = st.session_state.barista_bot
+    backend_client = client or CoffeeBackendClient()
+    _refresh_mock_latest_if_live(barista, backend_client)
 
     if not st.session_state.barista_bot_started:
         st.session_state.barista_bot_started = True
 
     quick_prompt = st.query_params.get("barista_prompt", "")
     if quick_prompt:
-        _send_barista_message(quick_prompt, barista, client or CoffeeBackendClient(use_mock=True))
+        _send_barista_message(quick_prompt, barista, backend_client)
         st.query_params.clear()
         st.rerun()
 
     context = barista.get_context()
     concerns = ", ".join(context.concerns) if context.concerns else "None yet"
 
-    st.markdown(
-        f"""
-        <section class="barista-signal-row">
-          <div><span>Mood</span><strong>{escape(context.mood.title())}</strong></div>
-          <div><span>Temperature</span><strong>{escape(context.temperature_pref.title())}</strong></div>
-          <div><span>Setting</span><strong>{escape(context.location.title())}</strong></div>
-          <div><span>Effort</span><strong>{escape(context.effort_pref.title())}</strong></div>
-          <div><span>Watchouts</span><strong>{escape(concerns.title())}</strong></div>
-        </section>
-        """,
-        unsafe_allow_html=True,
-    )
-
     chat_col, latest_col = st.columns([1.04, 0.96], gap="large")
 
     with chat_col:
-        st.markdown(
-            """
-            <section class="barista-ai-chat-panel">
-              <header>
-                <div>
-                  <span>Conversation</span>
-                  <strong>Tell the assistant what kind of answer you want.</strong>
-                </div>
-              </header>
-              <div class="barista-ai-scroll">
-            """,
-            unsafe_allow_html=True,
-        )
-
         total = len(st.session_state.barista_bot_messages)
+        rows_html = ""
         for i, message in enumerate(st.session_state.barista_bot_messages):
-            role = "user" if message["role"] == "user" else "barista"
-            label = "Customer" if role == "user" else "Barista"
-            delay = max(0.0, (total - 1 - i) * 0.055)
-            st.markdown(
-                f"""
-                <div class="barista-ai-row {role}" style="animation-delay:{delay:.2f}s">
-                  <div>
-                    <span>{label}</span>
-                    <p>{escape(message["content"])}</p>
-                  </div>
-                </div>
-                """,
-                unsafe_allow_html=True,
+            is_user = message["role"] == "user"
+            label = "Customer" if is_user else "Barista"
+            bubble_bg  = "#FFF8EE" if is_user else "rgba(255,248,238,0.10)"
+            bubble_bdr = "rgba(255,248,238,0.10)" if not is_user else "transparent"
+            text_color = "rgba(24,14,8,0.82)" if is_user else "rgba(255,248,238,0.82)"
+            lbl_color  = "rgba(24,14,8,0.46)" if is_user else "rgba(255,248,238,0.46)"
+            align = "flex-end" if is_user else "flex-start"
+            rows_html += (
+                f'<div style="display:flex;justify-content:{align};margin-bottom:0.82rem;">'
+                f'<div style="max-width:88%;padding:0.88rem 1rem;border-radius:14px;'
+                f'background:{bubble_bg};border:1px solid {bubble_bdr};">'
+                f'<span style="display:block;font-size:0.62rem;letter-spacing:2px;'
+                f'text-transform:uppercase;color:{lbl_color};font-family:sans-serif;margin-bottom:0.25rem;">{label}</span>'
+                f'<p style="margin:0;color:{text_color};font-size:0.92rem;line-height:1.58;">'
+                f'{escape(message["content"])}</p>'
+                f'</div></div>'
             )
 
-        st.markdown("</div></section>", unsafe_allow_html=True)
+        st.markdown(
+            f'''<div style="
+                background:linear-gradient(150deg,#160A04 0%,#2B160A 100%);
+                border-radius:18px;padding:1.2rem 1.2rem 1rem;
+                min-height:420px;border:1px solid rgba(126,83,46,0.14);
+                box-shadow:0 22px 52px rgba(90,55,27,0.10);">
+              <div style="padding-bottom:0.9rem;border-bottom:1px solid rgba(255,248,238,0.12);margin-bottom:0.9rem;">
+                <span style="display:block;font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;
+                  color:rgba(255,248,238,0.46);font-family:sans-serif;">Conversation</span>
+                <strong style="display:block;margin-top:0.25rem;color:rgba(255,248,238,0.84);font-size:0.98rem;">
+                  Tell the assistant what kind of answer you want.</strong>
+              </div>
+              <div style="max-height:440px;overflow-y:auto;padding-right:0.25rem;">
+                {rows_html}
+              </div>
+            </div>''',
+            unsafe_allow_html=True,
+        )
 
         with st.form("barista_ai_form", clear_on_submit=True):
             st.markdown('<div id="barista-ai-input-marker"></div>', unsafe_allow_html=True)
@@ -208,11 +197,20 @@ def render_barista_bot_page(client: CoffeeBackendClient | None = None):
             with send_col:
                 send_button = st.form_submit_button("Ask Barista", use_container_width=True)
 
+        st.markdown(
+            """
+            <div class="barista-clear-chat-row">
+              <a href="?barista_action=reset">Clear chat</a>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
         if send_button and user_input.strip():
             _send_barista_message(
                 user_input,
                 barista,
-                client or CoffeeBackendClient(use_mock=True),
+                backend_client,
             )
             st.rerun()
 
@@ -226,6 +224,27 @@ def _send_barista_message(message: str, barista: BaristaBot, backend_client: Cof
     latest = _build_barista_response(message, barista, backend_client, conversation)
     st.session_state.barista_latest = latest
     st.session_state.barista_bot_messages.append({"role": "barista", "content": str(latest.get("reply", ""))})
+
+
+def _refresh_mock_latest_if_live(barista: BaristaBot, backend_client: CoffeeBackendClient) -> None:
+    if not _is_mock_recommendation(st.session_state.get("barista_latest")):
+        return
+    if not backend_client.health_check():
+        return
+
+    backend_client.use_mock = False
+    messages = st.session_state.get("barista_bot_messages", [])
+    last_user = next((m for m in reversed(messages) if m.get("role") == "user" and m.get("content")), None)
+    if not last_user:
+        return
+
+    if messages and messages[-1].get("role") == "barista":
+        messages.pop()
+    conversation = _backend_conversation(messages)
+    latest = _build_barista_response(str(last_user["content"]), barista, backend_client, conversation)
+    st.session_state.barista_latest = latest
+    messages.append({"role": "barista", "content": str(latest.get("reply", ""))})
+    st.session_state.barista_bot_messages = messages
 
 
 def _backend_conversation(messages: list[dict]) -> list[dict[str, str]]:
@@ -343,6 +362,28 @@ def _build_barista_response(
     return _build_local_barista_response(message, barista, backend_client)
 
 
+def _is_mock_recommendation(latest: dict | None) -> bool:
+    if not isinstance(latest, dict):
+        return False
+    text = " ".join(
+        str(value)
+        for value in (
+            latest.get("assistantEngine", ""),
+            latest.get("reply", ""),
+            (latest.get("recommendation") or {}).get("explanation", ""),
+            (latest.get("recommendation_card") or {}).get("explanation", ""),
+        )
+    ).lower()
+    return "local-fallback" in text or "mock recommendation" in text or "start the backend" in text
+
+
+def _clean_mock_text(text: str, drink_name: str = "that drink") -> str:
+    lowered = text.lower()
+    if "mock recommendation" in lowered or "start the backend" in lowered:
+        return f"{drink_name} fits your current mood and taste preferences."
+    return text
+
+
 def _build_local_barista_response(message: str, barista: BaristaBot, backend_client: CoffeeBackendClient) -> dict:
     mode = _classify_barista_intent(message)
     preferences = _barista_extracted_preferences(message, barista)
@@ -363,7 +404,10 @@ def _build_local_barista_response(message: str, barista: BaristaBot, backend_cli
     if not recommendation:
         warning = backend_client.last_error or "The backend chat service is unavailable."
         return {"mode": "empty", "reply": f"I could not reach the backend barista yet. {warning}", "preferences": preferences, "assistantEngine": "local-fallback"}
-    return {"mode": "recommendation", "reply": f"Based on what you said, I would recommend {recommendation['drink_name']}. {recommendation.get('explanation', '')}", "recommendation": recommendation, "preferences": preferences, "assistantEngine": "local-fallback"}
+    engine = "backend-recommendation" if recommendation.get("_from_backend") else "local-fallback"
+    explanation = _clean_mock_text(str(recommendation.get("explanation", "")), str(recommendation["drink_name"]))
+    recommendation["explanation"] = explanation
+    return {"mode": "recommendation", "reply": f"Based on what you said, I would recommend {recommendation['drink_name']}. {explanation}", "recommendation": recommendation, "preferences": preferences, "assistantEngine": engine}
 
 
 def _classify_barista_intent(message: str) -> str:
@@ -649,6 +693,7 @@ def _get_barista_recommendation(barista: BaristaBot, backend_client: CoffeeBacke
         drink_name = recommendation.get("recommended_drink", "Unknown")
         match_score = _score_percent(recommendation.get("match_score", 0))
         explanation = recommendation.get("explanation", "Based on our chat.")
+        explanation = _clean_mock_text(str(explanation), str(drink_name))
         warning = recommendation.get("warning")
         composition = _composition_for_drink(str(drink_name), recommendation)
 
@@ -668,6 +713,7 @@ def _get_barista_recommendation(barista: BaristaBot, backend_client: CoffeeBacke
             "explanation": explanation,
             "warning": warning,
             "composition": composition,
+            "_from_backend": recommendation.get("_from_backend", False),
         }
 
     except Exception as e:

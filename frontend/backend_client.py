@@ -112,7 +112,10 @@ class CoffeeBackendClient:
 
     def get_recommendation(self, payload: dict[str, Any]) -> dict[str, Any]:
         if self.use_mock:
-            return self._mock_recommendation(payload)
+            if self.health_check():
+                self.use_mock = False
+            else:
+                return self._mock_recommendation(payload)
 
         preferences = _map_preferences(payload)
         data = self._post_json("/recommend", {"preferences": preferences})
@@ -143,8 +146,11 @@ class CoffeeBackendClient:
     ) -> dict[str, Any] | None:
         """Ask the backend barista assistant for the same response used by the web app."""
         if self.use_mock:
-            self.last_error = "Backend mock mode is enabled."
-            return None
+            if self.health_check():
+                self.use_mock = False
+            else:
+                self.last_error = "Backend mock mode is enabled."
+                return None
         return self._post_json(
             "/chat",
             {
@@ -256,13 +262,22 @@ class CoffeeBackendClient:
         else:
             drink = "Americano"
 
+        _compositions = {
+            "Cold Brew":   {"coffee": 85, "milk": 15},
+            "Iced Latte":  {"coffee": 25, "milk": 65, "ice": 10},
+            "Espresso":    {"coffee": 100},
+            "Latte":       {"coffee": 20, "milk": 70, "foam": 10},
+            "Americano":   {"coffee": 40, "water": 60},
+        }
+
         return {
             "recommended_drink":  drink,
             "match_score":        86,
             "caffeine_level":     caffeine,
             "preparation_effort": str(payload.get("effort_level", "medium")),
-            "explanation":        "Mock recommendation — start the backend to get live results.",
+            "explanation":        f"{drink} fits your current mood and taste preferences.",
             "warning":            note,
+            "composition":        _compositions.get(drink, {"coffee": 60, "milk": 40}),
             "_from_backend":      False,
         }
 

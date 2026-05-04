@@ -81,8 +81,7 @@ def _img_data_uri(filename: str) -> str:
     return f"data:{mime};base64,{base64.b64encode(data).decode()}"
 
 
-# ── Backend client — probe once per server lifetime, cache result ─────────────
-@st.cache_resource
+# ── Backend client — probe on every rerun so the UI recovers after the API starts.
 def _check_backend() -> bool:
     return CoffeeBackendClient().health_check()
 
@@ -864,8 +863,8 @@ with nav[5]:
 st.markdown('<hr class="nav-divider">', unsafe_allow_html=True)
 
 # Tiny status dot in the nav area
-_status_color = "#4CAF50" if _backend_live else "#888"
-_status_label = "Live" if _backend_live else "Mock"
+_status_color = "#4CAF50" if _backend_live else "#D87828"
+_status_label = "Live" if _backend_live else "Offline"
 st.markdown(
     f"<div style='position:fixed;bottom:1.1rem;right:1.4rem;z-index:999;"
     f"font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;"

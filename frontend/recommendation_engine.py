@@ -113,15 +113,15 @@ _LAYERS: dict[str, list[tuple[str, str, int]]] = {
     "Macchiato":         [("#2A0E04","Espresso",3),("#EDD8B8","Foam",1)],
     "Cortado":           [("#2A0E04","Espresso",2),("#C0966A","Milk",2)],
     "Latte":             [("#2A0E04","Espresso",1),("#C8A882","Milk",3),("#EDD8B8","Foam",1)],
-    "Americano":         [("#2A0E04","Espresso",1),("#5A2A10","Water",3)],
+    "Americano":         [("#2A0E04","Espresso",1),("#8FD7EA","Water",3)],
     "Oat Latte":         [("#2A0E04","Espresso",1),("#B89060","Oat Milk",3),("#E0C89A","Foam",1)],
     "Cold Brew":         [("#0C0402","Cold Brew",3),("#C0966A","Cream",1)],
     "Iced Latte":        [("#0C0402","Espresso",1),("#C8A882","Milk",2),("#C8E8F8","Ice",1)],
-    "Iced Americano":    [("#0C0402","Espresso",1),("#4A2010","Water",2),("#C8E8F8","Ice",1)],
+    "Iced Americano":    [("#0C0402","Espresso",1),("#8FD7EA","Water",2),("#C8E8F8","Ice",1)],
     "Iced Cappuccino":   [("#0C0402","Espresso",1),("#C8A882","Milk",1),("#C8E8F8","Ice",1),("#EDD8B8","Foam",1)],
     "French Press":      [("#2A1208","Coffee",4)],
     "Pour-Over":         [("#3A1A08","Coffee",4)],
-    "Aeropress":         [("#2A0E04","Concentrate",3),("#B88850","Water",1)],
+    "Aeropress":         [("#2A0E04","Concentrate",3),("#8FD7EA","Water",1)],
     "Moka Pot Espresso": [("#180604","Espresso",4)],
     "Drip Coffee":       [("#3A1A08","Coffee",3),("#C0966A","Milk",1)],
     "Chemex":            [("#402010","Coffee",4)],
@@ -149,27 +149,27 @@ _BASE_REQUIRED_FIELDS = [
 ]
 
 _COMPOSITION_COLORS = {
-    "coffee": "#6E2F19",
-    "espresso": "#3F160A",
-    "milk": "#FFE7A8",
-    "foam": "#FFF9DE",
-    "ice": "#A9E2F2",
-    "water": "#C89A72",
+    "coffee": "#3B1A0E",
+    "espresso": "#241008",
+    "milk": "#F7DEB0",
+    "foam": "#FFF8E5",
+    "ice": "#BCEEFF",
+    "water": "#8FD7EA",
     "sugar": "#D39A3F",
     "chocolate": "#4E2719",
-    "cream": "#E7C88C",
+    "cream": "#F0D7A6",
 }
 
 _COMPOSITION_FILL_COLORS = {
-    "coffee": "#6E2F19",
-    "espresso": "#3F160A",
-    "milk": "#FFE7A8",
-    "foam": "#FFF9DE",
-    "ice": "#A9E2F2",
-    "water": "#C89A72",
+    "coffee": "#3B1A0E",
+    "espresso": "#241008",
+    "milk": "#F7DEB0",
+    "foam": "#FFF8E5",
+    "ice": "#BCEEFF",
+    "water": "#8FD7EA",
     "sugar": "#D39A3F",
     "chocolate": "#4E2719",
-    "cream": "#E7C88C",
+    "cream": "#F0D7A6",
 }
 
 _COMPOSITION_STACK_ORDER = {
@@ -186,6 +186,66 @@ _COMPOSITION_STACK_ORDER = {
 
 
 # ── Visual helpers ────────────────────────────────────────────────────────────
+
+def _composition_from_layers(drink: str) -> dict[str, int]:
+    layer_key_map = {
+        "coffee": "coffee",
+        "cold brew": "coffee",
+        "espresso": "coffee",
+        "concentrate": "coffee",
+        "milk": "milk",
+        "oat milk": "milk",
+        "cream": "cream",
+        "foam": "foam",
+        "ice": "ice",
+        "water": "water",
+    }
+    totals: dict[str, float] = {}
+    for _, label, weight in _LAYERS.get(drink, []):
+        key = layer_key_map.get(label.lower())
+        if key:
+            totals[key] = totals.get(key, 0) + float(weight)
+    total = sum(totals.values())
+    if total <= 0:
+        return {}
+    return {key: round(value / total * 100) for key, value in totals.items()}
+
+
+def _local_result_for_drink(base_result: dict, drink: str, score: int | None = None) -> dict:
+    result = {
+        **base_result,
+        "recommended_drink": drink,
+        "description": _DESC.get(drink, base_result.get("description", "")),
+        "composition": _composition_from_layers(drink),
+        "_from_backend": bool(base_result.get("_from_backend", False)),
+    }
+    if score is not None:
+        result["match_score"] = score
+    return result
+
+
+def _alternate_drink(current: str, is_home: bool, payload: dict, result: dict) -> str:
+    pool = _HOME_ALL if is_home else _CAFE_ALL
+    temp = str(payload.get("temperature_preference", "")).lower()
+    if temp == "iced":
+        pool = _HOME_ICED if is_home else _CAFE_ICED
+    elif temp == "hot":
+        pool = _HOME_HOT if is_home else _CAFE_HOT
+
+    previous = set(st.session_state.get("rec_tried_drinks", []))
+    previous.add(current)
+
+    backend_alternatives = [
+        name
+        for name in result.get("alternatives", [])
+        if isinstance(name, str) and name in pool and name not in previous
+    ]
+    candidates = backend_alternatives or [drink for drink in pool if drink not in previous]
+    if not candidates:
+        st.session_state["rec_tried_drinks"] = [current]
+        candidates = [drink for drink in pool if drink != current] or pool
+    return random.choice(candidates)
+
 
 def _pick_drink(pool: list[str], temperature: str, is_home: bool = False) -> str:
     if temperature == "iced":
@@ -304,19 +364,16 @@ def _composition_cup_html(composition: dict, is_iced: bool, compact: bool = Fals
         cursor += pct
         color = _COMPOSITION_FILL_COLORS.get(name, _COMPOSITION_COLORS.get(name, "#8B6B4A"))
         stops.append(f"{color} {start:.2f}% {cursor:.2f}%")
-        label_blocks.append(
-            f'<span class="cup-composition-label" style="bottom:{start:.2f}%;height:{pct:.2f}%;">'
-            f'{_format_choice(name)} {pct:.0f}%</span>'
-        )
+        if pct >= 18:
+            label_class = "cup-composition-label is-small" if pct < 26 else "cup-composition-label"
+            label_blocks.append(
+                f'<span class="{label_class}" style="bottom:{start:.2f}%;height:{pct:.2f}%;">'
+                f'{_format_choice(name)} {pct:.0f}%</span>'
+            )
     fill_gradient = f"linear-gradient(to top, {', '.join(stops)})"
     labels_html = "".join(label_blocks)
 
-    layers_html = "".join(
-        f'<div class="cup-layer" style="--lbg:{_COMPOSITION_COLORS.get(name, "#8B6B4A")};'
-        f'--lf:{max(1, value)};--ld:{i*0.12:.2f}s;">'
-        f'<span class="cup-lbl">{_format_choice(name)} {value / total * 100:.0f}%</span></div>'
-        for i, (name, value) in enumerate(segments)
-    )
+    layers_html = ""
     legend_html = "".join(
         f'<div class="composition-legend-item">'
         f'<span style="background:{_COMPOSITION_COLORS.get(name, "#8B6B4A")}"></span>'
@@ -544,6 +601,7 @@ def render_recommendation_page(client: CoffeeBackendClient) -> None:
             if st.session_state.get("_brew_mode_val") != _mp:
                 st.session_state.pop("last_result",  None)
                 st.session_state.pop("last_payload", None)
+                st.session_state.pop("rec_tried_drinks", None)
                 for key in (*_BASE_REQUIRED_FIELDS, "try_something_new", "brew_method"):
                     st.session_state.pop(key, None)
             st.session_state["_brew_mode_val"] = _mp
@@ -552,6 +610,7 @@ def render_recommendation_page(client: CoffeeBackendClient) -> None:
             if _sp == "select":
                 st.session_state.pop("last_result",  None)
                 st.session_state.pop("last_payload", None)
+                st.session_state.pop("rec_tried_drinks", None)
         st.query_params.clear()
 
     brew_mode = st.session_state.get("_brew_mode_val", "")
@@ -601,10 +660,19 @@ def render_recommendation_page(client: CoffeeBackendClient) -> None:
                 current = st.session_state["last_result"].get("recommended_drink", "")
                 payload = {**st.session_state.get("last_payload", {}), "try_something_new": True}
                 result = client.get_recommendation(payload)
-                if (not result.get("_from_backend")) or result.get("recommended_drink") == current:
-                    pool = _HOME_ALL if is_home else _CAFE_ALL
-                    nxt = random.choice([d for d in pool if d != current] or pool)
-                    result = {**result, "recommended_drink": nxt, "match_score": random.randint(70, 94)}
+                if result.get("recommended_drink") == current:
+                    nxt = _alternate_drink(current, is_home, payload, result)
+                    result = _local_result_for_drink(result, nxt, random.randint(70, 94))
+                elif not result.get("_from_backend"):
+                    result = _local_result_for_drink(
+                        result,
+                        str(result.get("recommended_drink") or _alternate_drink(current, is_home, payload, result)),
+                        random.randint(70, 94),
+                    )
+                st.session_state["rec_tried_drinks"] = [
+                    *st.session_state.get("rec_tried_drinks", []),
+                    result.get("recommended_drink", ""),
+                ]
                 st.session_state["last_payload"] = payload
                 st.session_state["last_result"] = result
                 st.rerun()
@@ -625,7 +693,7 @@ def render_recommendation_page(client: CoffeeBackendClient) -> None:
                 st.rerun()
         with _btn3:
             if st.button("Start over", key="rec_start_btn", use_container_width=True):
-                for k in ("last_result", "last_payload", "_brew_mode_val"):
+                for k in ("last_result", "last_payload", "rec_tried_drinks", "_brew_mode_val"):
                     st.session_state.pop(k, None)
                 st.session_state["rec_step"] = "select"
                 st.rerun()
@@ -710,18 +778,19 @@ def render_recommendation_page(client: CoffeeBackendClient) -> None:
         }
         with st.spinner("Brewing your recommendation..."):
             result = client.get_recommendation(payload)
+        st.session_state["rec_tried_drinks"] = [result.get("recommended_drink", "")]
         # Only override with local pick when the backend is unavailable (mock mode)
         if not result.get("_from_backend"):
             chosen_method = st.session_state.get("brew_method") if is_home else None
             if chosen_method and chosen_method in _METHOD_TO_DRINK:
-                result["recommended_drink"] = _METHOD_TO_DRINK[chosen_method]
+                result = _local_result_for_drink(result, _METHOD_TO_DRINK[chosen_method])
             else:
                 pool = _HOME_ALL if is_home else _CAFE_ALL
-                result["recommended_drink"] = _pick_drink(
-                    pool,
-                    payload["temperature_preference"],
-                    is_home,
+                result = _local_result_for_drink(
+                    result,
+                    _pick_drink(pool, payload["temperature_preference"], is_home),
                 )
+            st.session_state["rec_tried_drinks"] = [result.get("recommended_drink", "")]
         st.session_state["last_result"]  = result
         st.session_state["last_payload"] = payload
         st.session_state["last_is_home"] = is_home
