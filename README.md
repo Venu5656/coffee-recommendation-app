@@ -1,181 +1,376 @@
 # Coffee Recommendation System with Data-Driven Insight Integration
 
-This project turns a prior midterm analysis of global coffee consumption into a practical application. It combines a rule-based recommendation engine, an AI chat workflow, PostgreSQL-backed user accounts and history, an exploration layer for variety, a beaker-style ingredient visualization, and a separate "Did You Know?" section that presents the earlier analysis findings without affecting recommendation logic.
+This project turns a midterm analysis of global coffee consumption into a user-facing product. It combines a coffee recommendation engine, a conversational barista assistant, personalized history, a dashboard, coffee-composition visuals, and a separate insight section that presents the original analysis without influencing recommendation logic.
+
+## Project overview
+
+The app has two main layers:
+
+- `frontend/`: the primary Streamlit UI your team is using now
+- `server/`: the Node.js + Express API that powers recommendations, chat, auth, and persistence
+
+Shared recommendation data and logic live in `shared/` so the backend stays consistent across recommendation flows.
+
+## What the app does
+
+- Recommends coffee from structured user preferences
+- Supports a conversational barista assistant
+- Encourages discovery with exploration-mode behavior
+- Visualizes drink composition
+- Tracks user history and preferences
+- Shows coffee history, traditions, and consumption insights separately from recommendations
 
 ## How this extends the midterm analysis
 
-The earlier analysis found that coffee consumption is stable in high-income countries, weakly tied to GDP growth, inversely related to work intensity in several cases, and strongly shaped by cultural context. Those findings appear in the UI as readable insight cards so the project preserves the analytical narrative while keeping recommendation decisions independent.
+The earlier analysis found that:
 
-## Core features
+- coffee consumption is relatively stable in high-income countries
+- GDP growth has limited direct explanatory power
+- work intensity can relate inversely to consumption in some contexts
+- culture and region matter more than simple economic indicators
 
-- Filter-based recommendation using mood, taste, time, temperature, and effort
-- Shared coffee profile model across rule-based and chat-based recommendation flows
-- Exploration mode that occasionally diversifies suggestions outside familiar user patterns
-- AI chatbot endpoint that extracts preferences from free text and maps them to the same drink profiles
-- PostgreSQL-backed account system with registration, login, and synced recommendation history
-- Beaker-style composition graph for ingredient percentages
-- Guest-mode local history plus authenticated database persistence for real users
-- Separate "Did You Know?" page for prior analytical insights
+Those insights appear in the app as their own educational and visual section. They are intentionally separated from recommendation logic, so the app preserves the original analytical findings without using them to decide what drink a person should receive.
 
-## Recommendation logic
+## Current app architecture
 
-The backend scores each coffee profile against:
+### 1. Streamlit frontend
 
-- mood match
-- taste match
-- time suitability
-- temperature compatibility
-- effort compatibility
-- previous likes in local history
+The current main UI is in `frontend/`.
 
-If the user explicitly asks to try something new, or if history shows repetitive patterns, the engine introduces controlled exploration. The system still favors familiar matches most of the time, but it can shift about 20-30% toward a nearby but less expected option.
+Key files:
 
-## Chatbot flow
+- `frontend/frontend.py`: app entrypoint and page routing
+- `frontend/recommendation_engine.py`: form-based recommendation page
+- `frontend/barista_bot_page.py`: barista chat UI
+- `frontend/dashboard.py`: user dashboard
+- `frontend/history.py`: history and session tracking UI
+- `frontend/insights.py`: “Did You Know?” and data-insight views
+- `frontend/visualization.py`: drink rendering and composition visuals
+- `frontend/backend_client.py`: adapter between Streamlit and the API
+- `frontend/theme.py`: custom UI styling
+- `frontend/coffee_profiles.json`: frontend drink metadata used by the Streamlit UI
 
-`POST /api/chat` accepts free-form user text and local interaction history.
+### 2. Backend API
 
-- If `OPENAI_API_KEY` is present, the server calls the OpenAI API to extract structured preferences.
-- If no API key is configured, the server falls back to keyword-based extraction.
-- In both cases, the extracted preferences are passed into the same shared recommendation engine used by the filter flow.
+The backend is in `server/`.
 
-This keeps the chatbot and rule-based recommendation outputs aligned.
+Key files:
 
-## Authentication and persistence
+- `server/src/index.js`: Express server startup
+- `server/src/routes/api.js`: API routes
+- `server/src/db.js`: PostgreSQL connection and schema bootstrap
+- `server/src/services/authService.js`: registration/login/token logic
+- `server/src/services/historyService.js`: persistent user event history
+- `server/src/services/chatService.js`: local barista assistant behavior
+- `server/src/middleware/auth.js`: auth middleware
 
-The backend now supports:
+### 3. Shared domain logic
+
+Reusable coffee logic lives in `shared/`.
+
+Key files:
+
+- `shared/coffeeProfiles.js`: coffee profile catalog
+- `shared/recommendation.js`: recommendation scoring and reasoning
+- `shared/personalization.js`: adaptive preference modeling
+- `shared/dashboard.js`: derived dashboard data
+- `shared/insights.js`: data-insight content
+- `shared/baristaKnowledge.js`: barista knowledge topics and off-menu drinks
+
+### 4. Legacy React frontend
+
+There is also a `client/` folder containing an earlier React/Vite frontend. It is still in the repo, but the current teammate-built UI is the Streamlit app in `frontend/`.
+
+## Core product features
+
+### Filter-based recommendation
+
+The recommendation engine scores drinks using user-facing signals such as:
+
+- mood
+- taste
+- time of day
+- temperature
+- effort
+- caffeine preference
+- sweetness preference
+- texture preference
+- drink style
+
+The output includes:
+
+- drink name
+- description
+- caffeine level
+- effort
+- alternatives
+- reasoning text
+
+### Conversational barista assistant
+
+The current chatbot is a local domain assistant, not a general-purpose LLM.
+
+It can:
+
+- recommend drinks from free-form text
+- keep recommendations aligned with the same backend engine used by the structured recommender
+- guide users on how to make drinks at home
+- answer coffee history and tradition questions
+- explain brewing methods, bean types, roast levels, and coffee terms
+- suggest off-menu drinks like Vietnamese Iced Coffee or Espresso Tonic
+
+### Exploration and discovery
+
+The system supports controlled novelty so recommendations do not stay trapped in the same comfort zone. When the input or user pattern indicates exploration, the engine can shift toward nearby but less expected drinks.
+
+### Personalization
+
+The app stores user events and feedback to improve recommendations over time. Personalized behavior is based on:
+
+- saved recommendations
+- likes/dislikes
+- repeated patterns
+- learned preference tendencies
+
+### Dashboard
+
+The dashboard is designed to summarize a user’s coffee behavior with elements like:
+
+- passport-style identity summary
+- taste profile
+- time-based drink behavior
+- mood-based drink recall
+- exploration score
+- top drinks
+- habit insights
+
+### Data insight section
+
+The “Did You Know?” section and related insight views present:
+
+- midterm findings
+- global coffee patterns
+- country-level trends
+- coffee traditions and history
+
+These are kept separate from recommendation outputs.
+
+## Recommendation model
+
+The recommendation system is rule-based with weighted scoring and personalization.
+
+It uses:
+
+- explicit preference matching
+- mismatch penalties when a drink conflicts with direct user intent
+- adaptive user-history weighting
+- exploration handling
+- reasoning generation
+
+Important design rule:
+
+- explicit current user intent should outrank passive history bias
+
+That prevents the system from overfitting to old habits when the user asks clearly for something different.
+
+## Chatbot design
+
+The current chatbot does not rely on the OpenAI API.
+
+Instead, it uses:
+
+- intent classification
+- keyword and phrase-based preference extraction
+- coffee-domain knowledge retrieval
+- conversation-state-aware refinement
+- the same backend recommendation model used by the form flow
+
+This makes it more consistent with the product, even though it is narrower than a true general LLM.
+
+## Authentication and database behavior
+
+The backend supports:
 
 - `POST /api/auth/register`
 - `POST /api/auth/login`
 - `GET /api/auth/me`
 - `GET /api/history`
+- `GET /api/dashboard`
 - `POST /api/feedback`
 
-Signed-in users store recommendations and feedback in PostgreSQL. Guests can still browse and test the app without an account, but their history remains browser-local only.
+Accounts and persistent user history are intended to use PostgreSQL.
 
-## Database choice
+Important current behavior:
 
-PostgreSQL is the right fit for this phase because it supports concurrent users, durable storage, hosted deployment, and straightforward backup workflows. It is a much stronger production path than relying only on browser storage or JSON files.
+- if PostgreSQL is not configured, the app still runs in guest mode
+- recommendation and chat features still work
+- real account creation/login should be treated as unavailable until the database is configured
 
-For convenience, the server can fall back to a local Unix-socket PostgreSQL connection when `DATABASE_URL` is not set. For normal local development and deployment, set `DATABASE_URL` explicitly.
+In other words:
 
-## Backup strategy
+- guest usage works without a database
+- persistent multi-user accounts require PostgreSQL
 
-User accounts and recommendation history should now be backed up at the database level.
+## PostgreSQL setup
 
-Example backup:
+The backend reads either:
 
-```bash
-mkdir -p backups
-pg_dump "$DATABASE_URL" > backups/coffee_recommendation_app.sql
+- `DATABASE_URL`
+
+or individual variables:
+
+- `PGHOST`
+- `PGPORT`
+- `PGUSER`
+- `PGPASSWORD`
+- `PGDATABASE`
+
+Optional:
+
+- `PGSSLMODE=require`
+- `JWT_SECRET=your_long_random_secret`
+
+Example:
+
+```env
+PORT=8787
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DBNAME
+JWT_SECRET=replace_this_before_production
+PGSSLMODE=require
 ```
 
-Example restore:
+When the backend starts with a valid database, it auto-creates:
 
-```bash
-psql "$DATABASE_URL" < backups/coffee_recommendation_app.sql
-```
+- `users`
+- `user_events`
 
-## Beaker visualization
+## Local development
 
-Each coffee profile includes ingredient composition percentages that total 100. The result page renders those percentages as a vertical beaker with stacked ingredient segments for coffee, milk, sugar, foam, water, and chocolate.
-
-## Project structure
-
-```text
-client/   React + Vite frontend
-server/   Express API, PostgreSQL access, and authentication
-shared/   Shared coffee profiles, insights, and recommendation logic
-```
-
-## Setup
-
-1. Install dependencies:
+### 1. Install Node dependencies
 
 ```bash
 npm install
 ```
 
-2. Create a `.env` file in the repository root:
+### 2. Create the backend environment file
 
 ```bash
 cp .env.example .env
 ```
 
-3. Configure the environment variables:
+Then update `.env` with your real values.
 
-```env
-OPENAI_API_KEY=your_key_here
-OPENAI_MODEL=gpt-4o-mini
-PORT=8787
-DATABASE_URL=postgresql://localhost:5432/coffee_recommendation_app
-JWT_SECRET=replace_this_before_production
-```
-
-4. Make sure PostgreSQL is available locally, then start the frontend and backend together:
+### 3. Create the Python virtual environment for the Streamlit UI
 
 ```bash
-npm run dev
+python3 -m venv .venv
+.venv/bin/python -m pip install -r frontend/requirements.txt
 ```
 
-5. Build the frontend:
+### 4. Start the backend
 
 ```bash
-npm run build
+npm run dev --workspace server
 ```
 
-6. Run the production server:
+### 5. Start the Streamlit frontend
 
 ```bash
-npm start
+.venv/bin/python -m streamlit run frontend/frontend.py --server.port 8501 --server.address 127.0.0.1
 ```
 
-## Deploy the Streamlit app + API together
+### 6. Open the app
 
-The polished Streamlit experience in `frontend/frontend.py` needs the Node API for live recommendations and barista chat. The included Docker deployment runs both in one web service:
+- Streamlit frontend: `http://127.0.0.1:8501`
+- Backend health: `http://127.0.0.1:8787/api/health`
 
-- Streamlit listens on the platform-provided public `PORT`
-- The Node API runs internally on `API_PORT=8787`
-- `BACKEND_URL` points Streamlit to `http://127.0.0.1:8787/api`
+## Production notes
 
-Render can use the included `render.yaml` blueprint, or any Docker host can run:
+For production, you should provide:
 
-```bash
-docker build -t coffee-companion .
-docker run -p 8501:8501 coffee-companion
-```
+- a real PostgreSQL database
+- a real `JWT_SECRET`
+- environment variables through your host platform
 
-For production accounts/history, add a hosted PostgreSQL database and set:
+Hosted PostgreSQL providers that fit this project well:
 
-```env
-DATABASE_URL=your_postgres_connection_string
-JWT_SECRET=replace_this_before_production
-```
+- Railway
+- Neon
+- Supabase
+- Render PostgreSQL
 
-On Railway, attach a PostgreSQL service and add its `DATABASE_URL` to the web service variables to enable persistent accounts and history. Without `DATABASE_URL`, the app still runs recommendations and barista chat, while auth/history use an in-memory fallback that resets on redeploy.
-
-### Railway PostgreSQL setup
-
-The Node API automatically creates the `users` and `user_events` tables on startup. To make accounts and recommendation history survive redeploys and multiple logins:
-
-1. In Railway, open the project for this app.
-2. Add a new PostgreSQL database service.
-3. Open the app/web service variables and add:
-
-```env
-DATABASE_URL=${{ Postgres.DATABASE_URL }}
-JWT_SECRET=generate-a-long-random-secret
-API_PORT=8787
-BACKEND_URL=http://127.0.0.1:8787/api
-```
-
-If the database service has a different name, replace `Postgres` in the reference variable with the exact Railway service name. The server can also connect from individual Railway PostgreSQL variables (`PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`, `PGDATABASE`) if `DATABASE_URL` is not used. Set `PGSSLMODE=require` only if the selected hosted connection requires SSL.
-
-After saving variables, deploy/redeploy the app service. Startup logs should include:
+## Repository structure
 
 ```text
-Database connected; authenticated persistence is enabled.
+frontend/
+  frontend.py
+  backend_client.py
+  recommendation_engine.py
+  barista_bot_page.py
+  dashboard.py
+  history.py
+  insights.py
+  visualization.py
+  theme.py
+  coffee_profiles.json
+  data/cleaned_dataset.csv
+
+server/
+  src/
+    index.js
+    db.js
+    routes/api.js
+    middleware/auth.js
+    services/
+      authService.js
+      chatService.js
+      historyService.js
+
+shared/
+  coffeeProfiles.js
+  recommendation.js
+  personalization.js
+  dashboard.js
+  insights.js
+  baristaKnowledge.js
+
+client/
+  src/
+    ...
 ```
 
-## Notes for the next UI integration step
+## Current status
 
-The current home page is intentionally temporary. When your custom home page design is ready, the UI can be swapped in while keeping the shared data model, API routes, recommendation engine, and personalization logic intact.
+Implemented:
+
+- Streamlit frontend UI
+- Node/Express backend
+- coffee profile catalog
+- rule-based recommendation engine
+- inline reasoning
+- local barista assistant
+- off-menu drink support
+- home brewing guidance
+- dashboard and history flows
+- data insight section
+- PostgreSQL schema bootstrap
+
+Still dependent on environment setup:
+
+- real persistent accounts require a valid PostgreSQL connection
+- production deployment requires real environment variables
+
+## Summary
+
+This repo now contains a complete coffee-product stack:
+
+- a polished primary frontend in Streamlit
+- an API-driven backend in Node
+- shared recommendation and personalization logic
+- educational coffee knowledge and insights
+- a path to real multi-user persistence through PostgreSQL
+
+The main thing to understand operationally is simple:
+
+- the app can run without PostgreSQL in guest mode
+- but real accounts and true profile persistence require a configured database

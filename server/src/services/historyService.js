@@ -1,7 +1,5 @@
 import { createId, query } from "../db.js";
 
-const memoryEventsByUser = new Map();
-
 function isDbError(err) {
   return err?.code === "DB_UNAVAILABLE" || err?.code === "ENOENT" || err?.code === "ECONNREFUSED" ||
     err?.message?.includes("ENOENT") || err?.message?.includes("connect") ||
@@ -39,10 +37,12 @@ export async function listUserEvents(userId, limit = 50) {
 
     return result.rows.map(mapEvent);
   } catch (err) {
-    if (!isDbError(err)) {
-      throw err;
+    if (isDbError(err)) {
+      const error = new Error("Persistent history requires a configured PostgreSQL database.");
+      error.code = "HISTORY_DB_REQUIRED";
+      throw error;
     }
-    return (memoryEventsByUser.get(userId) || []).slice(0, limit);
+    throw err;
   }
 }
 
@@ -73,25 +73,12 @@ export async function createUserEvent(userId, entry) {
 
     return mapEvent(result.rows[0]);
   } catch (err) {
-    if (!isDbError(err)) {
-      throw err;
+    if (isDbError(err)) {
+      const error = new Error("Persistent history requires a configured PostgreSQL database.");
+      error.code = "HISTORY_DB_REQUIRED";
+      throw error;
     }
-
-    const event = {
-      id: createId(),
-      userId,
-      type: entry.type,
-      recommendation: entry.recommendation || null,
-      prompt: entry.prompt || null,
-      preferences: entry.preferences || null,
-      extractedPreferences: entry.extractedPreferences || null,
-      feedback: entry.feedback || null,
-      metadata: entry.metadata || {},
-      timestamp: new Date().toISOString()
-    };
-    const events = memoryEventsByUser.get(userId) || [];
-    memoryEventsByUser.set(userId, [event, ...events].slice(0, 200));
-    return event;
+    throw err;
   }
 }
 

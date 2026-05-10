@@ -89,10 +89,14 @@ class CoffeeBackendClient:
     _token: str = field(default="", repr=False, compare=False)
     last_error: str = field(default="", init=False, repr=False, compare=False)
 
+    def server_status(self) -> dict[str, Any]:
+        data = self._get_json("/health")
+        return data if isinstance(data, dict) else {}
+
     # ── Public API ─────────────────────────────────────────────────────────
 
     def health_check(self) -> bool:
-        data = self._get_json("/health")
+        data = self.server_status()
         return isinstance(data, dict) and data.get("ok") is True
 
     def login(self, email: str, password: str) -> dict[str, Any] | None:

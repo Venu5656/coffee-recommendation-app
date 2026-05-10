@@ -41,6 +41,10 @@ const pool = poolConfig
   ? new Pool(poolConfig)
   : null;
 
+let databaseStatus = pool
+  ? { configured: true, connected: false, reason: "Database has not been initialized yet." }
+  : { configured: false, connected: false, reason: "PostgreSQL is not configured. Set DATABASE_URL or PGHOST/PGUSER/PGDATABASE." };
+
 const schemaStatements = [
   `
     CREATE TABLE IF NOT EXISTS users (
@@ -73,7 +77,12 @@ const schemaStatements = [
 
 export async function initializeDatabase() {
   if (!pool) {
-    return { connected: false, reason: "PostgreSQL is not configured. Set DATABASE_URL or PGHOST/PGUSER/PGDATABASE." };
+    databaseStatus = {
+      configured: false,
+      connected: false,
+      reason: "PostgreSQL is not configured. Set DATABASE_URL or PGHOST/PGUSER/PGDATABASE."
+    };
+    return databaseStatus;
   }
 
   const client = await pool.connect();
@@ -82,7 +91,8 @@ export async function initializeDatabase() {
     for (const statement of schemaStatements) {
       await client.query(statement);
     }
-    return { connected: true };
+    databaseStatus = { configured: true, connected: true, reason: "" };
+    return databaseStatus;
   } finally {
     client.release();
   }
@@ -106,4 +116,8 @@ export async function closeDatabase() {
     return;
   }
   await pool.end();
+}
+
+export function getDatabaseStatus() {
+  return databaseStatus;
 }

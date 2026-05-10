@@ -5,12 +5,15 @@ import { createId, query } from "../db.js";
 const JWT_SECRET = process.env.JWT_SECRET || "development-only-secret";
 const TOKEN_EXPIRY = "7d";
 
-// In-memory fallback store used when PostgreSQL is unavailable
-const _memUsers = new Map();
-
 function isDbError(err) {
   return err?.code === "DB_UNAVAILABLE" || err?.code === "ENOENT" || err?.code === "ECONNREFUSED" ||
     err?.message?.includes("ENOENT") || err?.message?.includes("connect");
+}
+
+function databaseRequiredError() {
+  const error = new Error("Persistent accounts require a configured PostgreSQL database. Set DATABASE_URL and restart the server.");
+  error.code = "AUTH_DB_REQUIRED";
+  return error;
 }
 
 function sanitizeUser(row) {
@@ -32,8 +35,7 @@ export async function findUserById(id) {
     return sanitizeUser(result.rows[0]);
   } catch (err) {
     if (isDbError(err)) {
-      const u = _memUsers.get(id);
-      return u ? sanitizeUser(u) : null;
+      throw databaseRequiredError();
     }
     throw err;
   }
@@ -55,17 +57,8 @@ export async function registerUser({ name, email, password }) {
     const user = sanitizeUser(result.rows[0]);
     return { user, token: signToken(user) };
   } catch (err) {
-    if (!isDbError(err)) throw err;
-
-    // DB unavailable — use in-memory store
-    for (const u of _memUsers.values()) {
-      if (u.email === normalizedEmail) throw new Error("An account with that email already exists.");
-    }
-    const passwordHash = await bcrypt.hash(password, 10);
-    const id = createId();
-    const user = { id, name: name.trim(), email: normalizedEmail, createdAt: new Date().toISOString() };
-    _memUsers.set(id, { ...user, password_hash: passwordHash });
-    return { user, token: signToken(user) };
+    if (isDbError(err)) throw databaseRequiredError();
+    throw err;
   }
 }
 
@@ -84,17 +77,7 @@ export async function loginUser({ email, password }) {
     const user = sanitizeUser(row);
     return { user, token: signToken(user) };
   } catch (err) {
-    if (!isDbError(err)) throw err;
-
-    // DB unavailable — use in-memory store
-    let found = null;
-    for (const u of _memUsers.values()) {
-      if (u.email === normalizedEmail) { found = u; break; }
-    }
-    if (!found) throw new Error("Invalid email or password.");
-    const passwordMatches = await bcrypt.compare(password, found.password_hash);
-    if (!passwordMatches) throw new Error("Invalid email or password.");
-    const user = sanitizeUser(found);
-    return { user, token: signToken(user) };
+    if (isDbError(err)) throw databaseRequiredError();
+    throw err;
   }
 }

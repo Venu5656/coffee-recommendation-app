@@ -4,6 +4,7 @@ import { deriveDashboardData } from "@coffee/shared/dashboard";
 import { didYouKnowInsights, insightsDashboard } from "@coffee/shared/insights";
 import { recommendCoffee } from "@coffee/shared/recommendation";
 import { getChatRecommendation } from "../services/chatService.js";
+import { getDatabaseStatus } from "../db.js";
 import { loginUser, registerUser } from "../services/authService.js";
 import { buildRecommendationHistory, createUserEvent, listUserEvents } from "../services/historyService.js";
 import { optionalAuth, requireAuth } from "../middleware/auth.js";
@@ -13,7 +14,12 @@ const router = Router();
 router.use(optionalAuth);
 
 router.get("/health", (_req, res) => {
-  res.json({ ok: true });
+  const db = getDatabaseStatus();
+  res.json({
+    ok: true,
+    database: db,
+    authReady: db.connected
+  });
 });
 
 router.post("/auth/register", async (req, res, next) => {

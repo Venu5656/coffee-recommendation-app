@@ -31,6 +31,8 @@ app.use((error, _req, res, _next) => {
   const statusCode = error.message?.includes("Invalid email or password") ||
     error.message?.includes("already exists")
     ? 400
+    : error.code === "AUTH_DB_REQUIRED" || error.code === "HISTORY_DB_REQUIRED"
+      ? 503
     : 500;
 
   res.status(statusCode).json({
@@ -44,12 +46,12 @@ try {
     console.log("Database connected; authenticated persistence is enabled.");
   } else {
     console.log(
-      `${database.reason} Starting API with guest mode and in-memory auth/history fallback.`
+      `${database.reason} Starting API with guest mode only. Real accounts and persistent history remain disabled until PostgreSQL is configured.`
     );
   }
 } catch (error) {
   console.warn(
-    "Database unavailable; starting API with guest mode and in-memory auth/history fallback.",
+    "Database unavailable; starting API with guest mode only. Real accounts and persistent history are disabled.",
     error.message || error
   );
 }

@@ -82,8 +82,8 @@ def _img_data_uri(filename: str) -> str:
 
 
 # ── Backend client — probe on every rerun so the UI recovers after the API starts.
-def _check_backend() -> bool:
-    return CoffeeBackendClient().health_check()
+def _backend_status() -> dict[str, object]:
+    return CoffeeBackendClient().server_status()
 
 
 @st.cache_resource
@@ -91,7 +91,10 @@ def _auth_cache() -> dict[str, object]:
     return {}
 
 
-_backend_live = _check_backend()
+_backend_status_payload = _backend_status()
+_backend_live = bool(_backend_status_payload.get("ok"))
+_auth_ready = bool(_backend_status_payload.get("authReady"))
+_db_reason = str((_backend_status_payload.get("database") or {}).get("reason", ""))
 client = CoffeeBackendClient(use_mock=not _backend_live)
 
 _cached_auth = _auth_cache()
@@ -154,7 +157,7 @@ def _login_bg_url(filename: str) -> str:
     return f"url('data:{mime};base64,{b64}')"
 
 
-def _render_login_page(auth_client: CoffeeBackendClient, backend_live: bool) -> None:
+def _render_login_page(auth_client: CoffeeBackendClient, backend_live: bool, auth_ready: bool, db_reason: str) -> None:
     beans_url = _login_bg_url("login_bg.jpg")
     bg_image = beans_url or "linear-gradient(180deg,#2A1208 0%,#0F0804 100%)"
     st.markdown(
@@ -237,23 +240,25 @@ def _render_login_page(auth_client: CoffeeBackendClient, backend_live: bool) -> 
             f"""
             <div class="login-form-heading">
               <h2>Log in</h2>
-              <p>{'Your tasting notes are ready. Pick up where your last cup left off.' if backend_live else 'Demo tasting room open. Use any email and password to step inside.'}</p>
+              <p>{'Your tasting notes are ready. Pick up where your last cup left off.' if auth_ready else 'Connect PostgreSQL first to enable real accounts and persistent profiles.'}</p>
             </div>
             """,
             unsafe_allow_html=True,
         )
+        if not auth_ready:
+            st.warning(db_reason or "Real account login is disabled until the backend is connected to PostgreSQL.")
 
         login_tab, register_tab = st.tabs(["Login", "Create account"])
         with login_tab:
             with st.form("login_form", clear_on_submit=False):
                 email = st.text_input("Email", placeholder="you@example.com", key="login_email")
                 password = st.text_input("Password", type="password", key="login_password")
-                submitted = st.form_submit_button("Login", use_container_width=True)
+                submitted = st.form_submit_button("Login", use_container_width=True, disabled=not auth_ready)
 
             if submitted:
                 if not email.strip() or not password.strip():
                     st.error("Enter your email and password.")
-                elif backend_live:
+                elif auth_ready:
                     data = auth_client.login(email.strip(), password)
                     if data and data.get("token"):
                         user = data.get("user") or {"name": email.split("@")[0], "email": email.strip()}
@@ -262,20 +267,19 @@ def _render_login_page(auth_client: CoffeeBackendClient, backend_live: bool) -> 
                     else:
                         st.error(auth_client.last_error or "Could not log in with those credentials.")
                 else:
-                    _set_logged_in_user({"name": email.split("@")[0], "email": email.strip()}, "demo-token")
-                    st.rerun()
+                    st.error("Real login is disabled until PostgreSQL is configured.")
 
         with register_tab:
             with st.form("register_form", clear_on_submit=False):
                 name = st.text_input("Name", placeholder="Alex", key="register_name")
                 new_email = st.text_input("Email", placeholder="you@example.com", key="register_email")
                 new_password = st.text_input("Password", type="password", key="register_password")
-                created = st.form_submit_button("Create account", use_container_width=True)
+                created = st.form_submit_button("Create account", use_container_width=True, disabled=not auth_ready)
 
             if created:
                 if not name.strip() or not new_email.strip() or len(new_password) < 8:
                     st.error("Add a name, email, and password with at least 8 characters.")
-                elif backend_live:
+                elif auth_ready:
                     data = auth_client.register(name.strip(), new_email.strip(), new_password)
                     if data and data.get("token"):
                         user = data.get("user") or {"name": name.strip(), "email": new_email.strip()}
@@ -284,8 +288,7 @@ def _render_login_page(auth_client: CoffeeBackendClient, backend_live: bool) -> 
                     else:
                         st.error(auth_client.last_error or "Could not create that account.")
                 else:
-                    _set_logged_in_user({"name": name.strip(), "email": new_email.strip()}, "demo-token")
-                    st.rerun()
+                    st.error("Create account is disabled until PostgreSQL is configured.")
 
 
 def _format_dashboard_label(value: object, fallback: str = "Still learning") -> str:
@@ -836,7 +839,7 @@ def _render_profile_history(tracker: HistoryTracker) -> None:
 
 
 if not st.session_state.get("is_authenticated"):
-    _render_login_page(client, _backend_live)
+    _render_login_page(client, _backend_live, _auth_ready, _db_reason)
     st.stop()
 
 
